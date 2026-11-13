@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  UV_PYTHON_DOWNLOADS: never
+  QT_QPA_PLATFORM: offscreen
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        id: python
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - name: Install dependencies
+        run: uv sync --locked --python "${{ steps.python.outputs.python-path }}"
+      - name: Lint
+        run: |
+          uv run --no-sync ruff check .
+          uv run --no-sync ruff format --check .
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+        python: ["3.12", "3.14"]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        id: python
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - name: System libraries for offscreen Qt (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libegl1 libxkbcommon0 libfontconfig1 libdbus-1-3
+      - name: Install dependencies
+        run: uv sync --locked --python "${{ steps.python.outputs.python-path }}"
+      - name: Tests
+        run: uv run --no-sync pytest
+
+  # the oldest PySide6 that pyproject.toml allows, so the ">=" stays true
+  lowest:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        id: python
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - name: System libraries for offscreen Qt
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libegl1 libxkbcommon0 libfontconfig1 libdbus-1-3
+      - name: Install the lowest allowed dependencies
+        run: |
+          uv sync --resolution lowest-direct --python "${{ steps.python.outputs.python-path }}"
+          uv run --no-sync python -c "import PySide6; print('PySide6', PySide6.__version__)"
+      - name: Tests
+        run: uv run --no-sync pytest
+
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        id: python
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+      - name: Install dependencies
+        run: uv sync --locked --python "${{ steps.python.outputs.python-path }}"
+      - name: Known vulnerabilities in dependencies
+        run: |
+          uv export --locked --no-emit-project --format requirements-txt -o "$RUNNER_TEMP/requirements.txt"
+          uv run --no-sync pip-audit --strict --require-hashes --disable-pip -r "$RUNNER_TEMP/requirements.txt"

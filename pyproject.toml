@@ -1,0 +1,38 @@
+[project]
+name = "side-vim"
+version = "0.1.0"
+description = "Vim mode for PySide6's QPlainTextEdit"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "sprytnyk.dev" }]
+requires-python = ">=3.12"
+dependencies = ["PySide6-Essentials>=6.8"]
+
+[project.urls]
+Repository = "https://github.com/sprytnyk/side-vim"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.8",
+    "pip-audit>=2.7",
+]
+
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+# the package sits at the repo root, not under src/
+module-root = ""
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
