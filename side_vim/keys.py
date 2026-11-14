@@ -6,6 +6,7 @@ or the app as usual.
 """
 
 import sys
+import unicodedata
 
 from PySide6.QtCore import QCoreApplication, Qt
 from PySide6.QtGui import QKeyEvent
@@ -69,6 +70,16 @@ def _name(key: int) -> str | None:
     return None
 
 
+def _is_text(text: str) -> bool:
+    """True if a key typed text. Not str.isprintable: that refuses the joiner in a
+    family emoji, and the key would then type in Normal mode."""
+    return bool(text) and all(unicodedata.category(ch)[0] != "C" or ch in _JOINERS for ch in text)
+
+
+# invisible characters that are part of what people type (emoji, Indic scripts)
+_JOINERS = frozenset({"\u200c", "\u200d"})
+
+
 def key_token(event: QKeyEvent, mac: bool = IS_MAC) -> str | None:
     """The vim token for a key press, or None if the key isn't for vim."""
     key = event.key()
@@ -95,7 +106,7 @@ def key_token(event: QKeyEvent, mac: bool = IS_MAC) -> str | None:
         return f"<{alt}{shift}{NAMED[key]}>"
     if text == "\x1b":
         return ESC
-    if text and text.isprintable():
+    if _is_text(text):
         # on macOS, Option is how people type characters, so its text is just text
         return f"<A-{text}>" if alt and not mac else text
     return None

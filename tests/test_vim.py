@@ -11,7 +11,7 @@ from PySide6.QtCore import QEvent, QPoint, Qt
 from PySide6.QtGui import QInputMethodEvent, QKeyEvent
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
-from qtkeys import cursor_of, put_cursor, send, text_of
+from qtkeys import cursor_of, put_cursor, send, text_of, type_text
 
 from side_vim import Mode, VimMode
 from side_vim.motions import Pos
@@ -186,6 +186,14 @@ def test_normal_mode_keys_never_edit(editor: QPlainTextEdit, keys: str) -> None:
     send(editor, keys)
     assert text_of(editor) == "abc\ndef"
     assert cursor_of(editor) == Pos(0, 1)
+
+
+@pytest.mark.parametrize("text", [FAMILY, UA, "e\u0301", "\u200d"])
+def test_normal_mode_never_types_joined_characters(editor: QPlainTextEdit, text: str) -> None:
+    """One key press that types a whole emoji, as some keyboards send it."""
+    start(editor, "abc", 0, 1)
+    type_text(editor, text)
+    assert text_of(editor) == "abc"
 
 
 def test_insert_key_doesnt_turn_on_overwrite(editor: QPlainTextEdit) -> None:

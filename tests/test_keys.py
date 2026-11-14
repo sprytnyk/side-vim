@@ -10,6 +10,7 @@ from side_vim.keys import ESC, control_modifier, key_token
 K = Qt.Key
 M = Qt.KeyboardModifier
 NONE = M.NoModifier
+FAMILY = "\U0001f468\u200d\U0001f469\u200d\U0001f467"
 
 
 def token(
@@ -63,6 +64,11 @@ def token(
         (K.Key_Alt, M.AltModifier, "", None),
         (K.Key_CapsLock, NONE, "", None),
         (K.Key_W, M.GroupSwitchModifier, "w", "w"),  # AltGr
+        (K.Key_unknown, NONE, FAMILY, FAMILY),  # joined with U+200D
+        (K.Key_unknown, NONE, "\U0001f1fa\U0001f1e6", "\U0001f1fa\U0001f1e6"),
+        (K.Key_unknown, NONE, "e\u0301", "e\u0301"),
+        (K.Key_unknown, NONE, "\x00", None),
+        (K.Key_unknown, NONE, "\ue000", None),  # private use
     ],
 )
 def test_linux_and_windows(
