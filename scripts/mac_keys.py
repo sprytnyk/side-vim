@@ -571,7 +571,8 @@ def check_vim_checkbox():
     return ok, f"disabled={off} plain typing={typed} enabled Normal={on} x works again={x_works}"
 
 
-def main() -> None:
+def run_checks() -> bool:
+    """Runs every check and prints the results. True if they all passed."""
     saved = save_pasteboard()
     try:
         demo.show()
@@ -592,7 +593,16 @@ def main() -> None:
         print(f"{'PASS' if ok else 'FAIL'}  {name}\n      {detail}")
     passed = sum(ok for _, ok, _ in results)
     print(f"{passed}/{len(results)} passed")
-    app.exit(0 if passed == len(results) else 1)
+    return passed == len(results)
+
+
+def main() -> None:
+    all_passed = False
+    try:
+        all_passed = run_checks()
+    finally:
+        # Quit even when something outside the checks fails, so make doesn't wait forever.
+        app.exit(0 if all_passed else 1)
 
 
 QTimer.singleShot(0, main)
