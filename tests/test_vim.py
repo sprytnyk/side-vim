@@ -202,17 +202,52 @@ def test_insert_key_doesnt_turn_on_overwrite(editor: QPlainTextEdit) -> None:
     assert not editor.overwriteMode()
 
 
+def commit(editor: QPlainTextEdit, text: str) -> None:
+    """Text from an input method, the way IBus or Fcitx send it."""
+    event = QInputMethodEvent()
+    event.setCommitString(text)
+    QApplication.sendEvent(editor, event)
+
+
 def test_input_method_types_only_in_insert_mode(editor: QPlainTextEdit) -> None:
-    start(editor, "abc")
-    event = QInputMethodEvent()
-    event.setCommitString("x")
-    QApplication.sendEvent(editor, event)
-    assert text_of(editor) == "abc"
+    """Outside Insert mode its text works as keys: here x deletes a character."""
+    start(editor, "abc def")
+    commit(editor, "x")
+    assert text_of(editor) == "bc def"
+    commit(editor, "日")
+    assert text_of(editor) == "bc def"
     send(editor, "i")
-    event = QInputMethodEvent()
-    event.setCommitString("日")
-    QApplication.sendEvent(editor, event)
-    assert text_of(editor) == "日abc"
+    commit(editor, "日")
+    assert text_of(editor) == "日bc def"
+
+
+def test_input_method_text_on_the_ukrainian_layout(editor: QPlainTextEdit) -> None:
+    vim = start(editor, "abc def ghi")
+    commit(editor, "ц")  # w
+    assert cursor_of(editor) == Pos(0, 4)
+    commit(editor, "в")  # d, then w
+    commit(editor, "ц")
+    assert text_of(editor) == "abc ghi"
+    commit(editor, "2")
+    commit(editor, "д")  # 2l
+    assert cursor_of(editor) == Pos(0, 6)
+    commit(editor, "м")  # v
+    assert vim.mode is Mode.VISUAL
+    commit(editor, "<")  # not a letter: no map, and not a key vim knows
+    commit(editor, "н")  # y
+    assert vim.mode is Mode.NORMAL
+    vim.layout_map = None
+    commit(editor, "ц")
+    assert cursor_of(editor) == Pos(0, 6)
+
+
+def test_input_method_text_that_starts_insert_mode(editor: QPlainTextEdit) -> None:
+    vim = start(editor, "abc")
+    commit(editor, "Шxy")  # I, then x and y are typed
+    assert vim.mode is Mode.INSERT
+    assert text_of(editor) == "xyabc"
+    send(editor, "<Esc>u")
+    assert text_of(editor) == "abc"
 
 
 def test_other_ctrl_keys_go_to_the_editor(editor: QPlainTextEdit) -> None:

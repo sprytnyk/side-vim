@@ -5,7 +5,8 @@ from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QApplication
 
-from side_vim.keys import ESC, control_modifier, key_token
+from side_vim.keys import ESC, control_modifier, key_token, map_layout
+from side_vim.layouts import UKRAINIAN
 
 K = Qt.Key
 M = Qt.KeyboardModifier
@@ -109,3 +110,42 @@ def test_control_modifier(qapp: QApplication) -> None:
         assert token(K.Key_R, M.ControlModifier, "\x12", mac=True) == "<C-r>"
     finally:
         QApplication.setAttribute(swap, False)
+
+
+def test_the_ukrainian_map_matches_the_keyboard() -> None:
+    rows = [
+        ("йцукенгшщзхї", "qwertyuiop[]", "QWERTYUIOP{}"),
+        ("фівапролджє", "asdfghjkl;'", 'ASDFGHJKL:"'),
+        ("ячсмитьбю", "zxcvbnm,.", "ZXCVBNM<>"),
+    ]
+    for cyrillic, lower, upper in rows:
+        for ch, a, b in zip(cyrillic, lower, upper, strict=True):
+            assert UKRAINIAN[ch] == a
+            assert UKRAINIAN[ch.upper()] == b
+    assert len(UKRAINIAN) == 2 * sum(len(row[0]) for row in rows)
+    assert "ґ" not in UKRAINIAN
+    assert "Ґ" not in UKRAINIAN
+
+
+@pytest.mark.parametrize(
+    ("token", "expected"),
+    [
+        ("к", "r"),
+        ("К", "R"),
+        ("х", "["),
+        ("Ж", ":"),
+        ("<C-к>", "<C-r>"),
+        ("<C-S-к>", "<C-S-r>"),
+        ("<C-A-ш>", "<C-A-i>"),
+        ("<C-х>", ESC),  # the key of Ctrl+[
+        ("<C-S-х>", "<C-S-[>"),
+        ("<C-Left>", "<C-Left>"),
+        (".", "."),
+        ("w", "w"),
+        ("ґ", "ґ"),
+        ("<Esc>", "<Esc>"),
+    ],
+)
+def test_map_layout(token: str, expected: str) -> None:
+    assert map_layout(token, UKRAINIAN) == expected
+    assert map_layout(token, None) == token

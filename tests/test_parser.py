@@ -1,6 +1,14 @@
 import pytest
 
-from side_vim.parser import LINE, Command, Parser
+from side_vim.parser import (
+    CTRL_KEYS,
+    LINE,
+    NORMAL_ACTIONS,
+    VISUAL_ACTIONS,
+    Command,
+    Parser,
+    changes_text,
+)
 
 
 def feed(keys: list[str] | str, visual: bool = False) -> tuple[list[Command | None], str]:
@@ -142,3 +150,50 @@ def test_visual_leaves_out_other_keys(keys: str) -> None:
     results, pending = feed([keys], visual=True)
     assert results == [None]
     assert pending == ""
+
+
+@pytest.mark.parametrize("key", ["<C-e>", "<C-y>", "<C-d>", "<C-u>", "<C-f>", "<C-b>"])
+def test_scrolling_keys(key: str) -> None:
+    assert last([key]) == Command(key)
+    assert last(["1", "2", key]) == Command(key, 12)
+    assert last(["3", key], visual=True) == Command(key, 3)
+    assert last(["d", key]) is None
+
+
+# --- the command table ---
+
+
+def test_ctrl_keys() -> None:
+    assert {"<C-r>", "<C-e>", "<C-y>", "<C-d>", "<C-u>", "<C-f>", "<C-b>"} == CTRL_KEYS
+
+
+@pytest.mark.parametrize(
+    ("command", "visual", "changes"),
+    [
+        (Command("move", None, "w"), False, False),
+        (Command("move", None, "w"), True, False),
+        (Command("d", None, "w"), False, True),
+        (Command("c", None, "w"), False, True),
+        (Command("y", None, "w"), False, False),
+        (Command("d"), True, True),
+        (Command("y"), True, False),
+        (Command("o"), False, True),  # opens a line
+        (Command("o"), True, False),  # goes to the other end
+        (Command("p"), True, True),
+        (Command("u"), False, True),
+        (Command("<C-r>"), False, True),
+        (Command("v"), False, False),
+        (Command("n"), True, False),
+        (Command("<C-d>"), False, False),
+        (Command("/"), True, False),
+    ],
+)
+def test_changes_text(command: Command, visual: bool, changes: bool) -> None:
+    assert changes_text(command, visual) is changes
+
+
+def test_every_key_in_the_tables_makes_its_command() -> None:
+    for key in NORMAL_ACTIONS:
+        assert Parser().feed(key) == Command(key)
+    for key in VISUAL_ACTIONS:
+        assert Parser().feed(key, visual=True) == Command(key)

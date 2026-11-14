@@ -6,6 +6,10 @@ the editor types as usual, and only Esc (or Ctrl+[) is taken.
 
 In Visual mode the selection is the editor's own, set to exactly what vim selects, and
 caret.Caret draws vim's cursor over it. A mouse drag in Normal mode starts Visual mode.
+The Caret also draws the cursor in a read-only editor, where Qt draws none.
+
+Outside Insert mode, keys typed on the Ukrainian layout work as the Latin keys in the
+same place (layout_map), so `к` is `r` and Ctrl+к is Ctrl+R.
 
 Every position goes through text.Lines, which works in whole characters (a family
 emoji is one) and converts to Qt's UTF-16 positions.
@@ -18,37 +22,51 @@ session's steps are undone and its whole change is made again as one block. An a
 that watches textChanged sees the text change a few times then, ending as it was.
 """
 
-from collections.abc import Iterator, Sequence
+from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass
 from typing import overload
 
 from PySide6.QtCore import QEvent, QObject, Qt, QTimer, Signal
-from PySide6.QtGui import QGuiApplication, QKeyEvent, QTextCursor, QTextDocument
+from PySide6.QtGui import (
+    QGuiApplication,
+    QInputMethodEvent,
+    QKeyEvent,
+    QTextCursor,
+    QTextDocument,
+)
 from PySide6.QtWidgets import QPlainTextEdit
 
 from side_vim.caret import Caret, char_width
 from side_vim.edits import Register, join, join_parts, undo_cursor, visual_start
-from side_vim.keys import ESC, key_token
+from side_vim.keys import ESC, key_token, map_layout
+from side_vim.layouts import UKRAINIAN
 from side_vim.mode import Mode
 from side_vim.motions import (
     BLANKS,
     Pos,
     Range,
+    column_for,
     first_non_blank,
     line_range,
     move,
     operator_range,
     range_text,
+    screen_col,
     visual_range,
 )
-from side_vim.parser import LINE, OPERATORS, Command, Parser
-from side_vim.text import PARAGRAPH_SEPARATOR, Lines, utf16_len
-
-# The Ctrl keys vim takes in Normal and Visual mode. Other Ctrl keys go to the app.
-VIM_CTRL_KEYS = frozenset({"<C-r>"})
-
-INSERT_COMMANDS = frozenset({"i", "a", "I", "A", "o", "O"})
+from side_vim.parser import (
+    CTRL_KEYS,
+    INSERT_COMMANDS,
+    LINE,
+    OPERATORS,
+    Command,
+    Parser,
+    changes_text,
+)
+from side_vim.scroll import SCROLL_KEYS, scroll
+from side_vim.search import search
+from side_vim.text import PARAGRAPH_SEPARATOR, Lines, split_clusters, utf16_len
 
 VISUAL_MODES = frozenset({Mode.VISUAL, Mode.VISUAL_LINE})
 
@@ -87,6 +105,12 @@ class VimMode(QObject):
 
     clipboard: False keeps yanked and deleted text in vim's own register. True puts
     it on the system clipboard, and p pastes from there.
+    escape_hook: called first on every Esc that reaches the editor. If it returns True
+    (it closed a popup, say), vim does nothing else with that Esc.
+    search_hook: `/` calls it with True, `?` with False. The app shows its search, and
+    passes the text to set_search.
+    layout_map: keys outside Insert mode go through it, so a Cyrillic letter works as
+    the Latin key in the same place. UKRAINIAN by default; None turns it off.
     """
 
     mode_changed = Signal(Mode)
@@ -101,6 +125,12 @@ class VimMode(QObject):
     def __init__(self, editor: QPlainTextEdit) -> None:
         super().__init__(editor)
         self.clipboard = False
+        self.escape_hook: Callable[[], bool] | None = None
+        self.search_hook: Callable[[bool], None] | None = None
+        self.layout_map: dict[str, str] | None = UKRAINIAN
+        self._search: tuple[str, bool] | None = None
+        # what Ctrl+D and Ctrl+U scroll, once a count set it (vim's 'scroll')
+        self._scroll_amount: int | None = None
         self._editor = editor
         self._parser = Parser()
         self._pending = ""
@@ -134,6 +164,40 @@ class VimMode(QObject):
         # the app can move the anchor alone, which doesn't move the cursor
         editor.selectionChanged.connect(self._on_cursor_moved)
         self._on_cursor_moved()
+        self._normal_handlers, self._visual_handlers = self._handlers()
+
+    def _handlers(
+        self,
+    ) -> tuple[dict[str, Callable[[Command], None]], dict[str, Callable[[Command], None]]]:
+        """What runs each command, in Normal mode and in Visual mode. They cover every
+        name in the parser's tables, and the tests check that."""
+        both: dict[str, Callable[[Command], None]] = {
+            "move": self._move,
+            "n": self._search_next,
+            "N": self._search_next,
+            "/": self._open_search,
+            "?": self._open_search,
+        }
+        both |= dict.fromkeys(SCROLL_KEYS, self._scroll)
+        normal = both | dict.fromkeys(OPERATORS, self._operate)
+        normal |= dict.fromkeys(INSERT_COMMANDS, self._start_insert)
+        normal |= {
+            "p": self._paste,
+            "P": self._paste,
+            "J": self._join,
+            "u": self._undo_command,
+            "<C-r>": self._undo_command,
+            "v": self._start_visual_command,
+            "V": self._start_visual_command,
+        }
+        visual = both | dict.fromkeys(OPERATORS, self._visual_operate)
+        visual |= {
+            "p": self._visual_paste,
+            "o": self._swap_ends,
+            "v": self._switch_visual,
+            "V": self._switch_visual,
+        }
+        return normal, visual
 
     # --- the app's side ---
 
@@ -144,6 +208,12 @@ class VimMode(QObject):
     @property
     def enabled(self) -> bool:
         return self._enabled
+
+    def set_search(self, text: str, forward: bool = True) -> None:
+        """The text n and N look for, as plain text. forward: n searches down, N up;
+        False the other way round, like after `?`."""
+        text = text.replace("\r\n", "\n").replace(PARAGRAPH_SEPARATOR, "\n")
+        self._search = (text, forward) if text else None
 
     def set_enabled(self, enabled: bool) -> None:
         """False: a plain editor again, with its own cursor. True: back in Normal mode."""
@@ -189,7 +259,7 @@ class VimMode(QObject):
             return False
         if kind == QEvent.Type.ShortcutOverride:
             assert isinstance(event, QKeyEvent)
-            if self._takes(key_token(event)):
+            if self._takes(self._token(event)):
                 event.accept()
                 return True
             return False
@@ -197,11 +267,19 @@ class VimMode(QObject):
             assert isinstance(event, QKeyEvent)
             return self._key_press(event)
         if kind == QEvent.Type.InputMethod:
-            # an input method must not type text outside Insert mode
-            return self._mode is not Mode.INSERT
-        if kind == QEvent.Type.ReadOnlyChange and self._saved_flags is not None:
-            # the app's setReadOnly: its flags are the ones to put back after Visual mode
-            self._saved_flags = None
+            if self._mode is Mode.INSERT:
+                return False
+            # Outside Insert mode an input method's text never goes in: it's keys. On
+            # Linux, letters typed on a layout like Ukrainian often come this way.
+            assert isinstance(event, QInputMethodEvent)
+            self._input_keys(event.commitString())
+            return True
+        if kind == QEvent.Type.ReadOnlyChange:
+            if self._saved_flags is not None:
+                # the app's setReadOnly: its flags are the ones to put back after Visual
+                self._saved_flags = None
+            if self._mode is Mode.INSERT and self._read_only():
+                self._leave_insert()
             self._update_cursor_width()
         if kind in (QEvent.Type.FocusIn, QEvent.Type.FocusOut):
             self._caret.restart_blink()
@@ -209,6 +287,24 @@ class VimMode(QObject):
             # the editor lays out the text again first
             QTimer.singleShot(0, self._update_cursor_width)
         return False
+
+    def _token(self, event: QKeyEvent) -> str | None:
+        """The key as vim reads it now: through layout_map, outside Insert mode. In
+        Insert mode only Ctrl+х maps, to Esc, since it's the key of Ctrl+[."""
+        token = key_token(event)
+        if token is None:
+            return None
+        mapped = map_layout(token, self.layout_map)
+        if self._mode is Mode.INSERT:
+            return ESC if mapped == ESC else token
+        return mapped
+
+    def _read_only(self) -> bool:
+        """The app made the editor read-only (Visual mode's own change doesn't count)."""
+        flags = self._saved_flags
+        if flags is None:
+            flags = self._editor.textInteractionFlags()
+        return not flags & Qt.TextInteractionFlag.TextEditable
 
     def _takes(self, token: str | None) -> bool:
         """True if vim handles this key now, instead of the editor or the app."""
@@ -220,23 +316,40 @@ class VimMode(QObject):
             # Esc with nothing pending goes on to the app, to close a dialog say
             return bool(self._parser.pending) or self._mode in VISUAL_MODES
         if token.startswith("<C-"):
-            return token in VIM_CTRL_KEYS
+            return token in CTRL_KEYS
         # every other key is vim's, so Normal mode never types text
         return True
 
     def _key_press(self, event: QKeyEvent) -> bool:
-        token = key_token(event)
+        token = self._token(event)
+        if token == ESC and self.escape_hook is not None and self.escape_hook():
+            return True
         if not self._takes(token):
             return False
         assert token is not None
         if token == ESC:
             self._escape()
             return True
+        self._feed(token)
+        return True
+
+    def _feed(self, token: str) -> None:
         command = self._parser.feed(token, visual=self._mode in VISUAL_MODES)
         self._emit_pending()
         if command is not None:
             self._run(command)
-        return True
+
+    def _input_keys(self, text: str) -> None:
+        """Text from an input method outside Insert mode, as keys one by one. If one of
+        them starts Insert mode (like `i`), the rest is typed."""
+        chars = split_clusters(text)
+        for i, ch in enumerate(chars):
+            if self._mode is Mode.INSERT:
+                cursor = self._editor.textCursor()
+                cursor.insertText("".join(chars[i:]))
+                self._editor.setTextCursor(cursor)
+                return
+            self._feed(map_layout(ch, self.layout_map))
 
     def _escape(self) -> None:
         if self._mode is Mode.INSERT:
@@ -248,24 +361,15 @@ class VimMode(QObject):
             self._leave_visual()
 
     def _run(self, command: Command) -> None:
-        name = command.name
-        if self._mode in VISUAL_MODES:
-            self._run_visual(command)
-        elif name == "move":
-            self._move(command)
-        elif name in INSERT_COMMANDS:
-            self._start_insert(command)
-        elif name in OPERATORS:
-            self._operate(command)
-        elif name in ("p", "P"):
-            self._paste(command)
-        elif name == "J":
-            self._join(command)
-        elif name in ("u", "<C-r>"):
-            self._undo(command.count or 1, redo=name == "<C-r>")
-        elif name in ("v", "V"):
-            self._start_visual(Mode.VISUAL if name == "v" else Mode.VISUAL_LINE)
-        # the other commands come in later steps
+        visual = self._mode in VISUAL_MODES
+        if changes_text(command, visual) and self._read_only():
+            return
+        handlers = self._visual_handlers if visual else self._normal_handlers
+        handlers[command.name](command)
+
+    def _open_search(self, command: Command) -> None:
+        if self.search_hook is not None:
+            self.search_hook(command.name == "/")
 
     # --- the cursor ---
 
@@ -344,6 +448,100 @@ class VimMode(QObject):
         self._want = moved.want
         self._want_at = self._where()
 
+    # --- n, N and scrolling ---
+
+    def _search_next(self, command: Command) -> None:
+        if self._search is None:
+            return
+        text, forward = self._search
+        lines = self._lines()
+        pattern = [split_clusters(part) for part in text.split("\n")]
+        found = search(
+            lines, self._pos(lines), pattern, forward == (command.name == "n"), command.count
+        )
+        if found is None:
+            return
+        self._go(lines, found)
+        self._want_at = None
+
+    def _view(self) -> tuple[int, int, int]:
+        """The first line on the screen, how many lines fit on it, and the highest
+        first line the editor scrolls to (the last line at the bottom)."""
+        first, _, height = self._visible()
+        rows = self._editor.verticalScrollBar().maximum()
+        block = self._editor.document().firstBlock()
+        while block.isValid() and rows >= block.lineCount() and block.next().isValid():
+            rows -= block.lineCount()
+            block = block.next()
+        return first, height, block.blockNumber()
+
+    def _visible(self) -> tuple[int, int, int]:
+        """The first and last lines fully on the screen, and how many lines fit on it
+        (vim's window height). Lines can differ in height: emoji often make a line
+        taller. Past the end of the text, lines as high as the last one would fit."""
+        editor = self._editor
+        offset = editor.contentOffset()
+        bottom = editor.viewport().height()
+        block = editor.firstVisibleBlock()
+        first = last = block.blockNumber()
+        count = 0
+        while block.isValid():
+            geometry = editor.blockBoundingGeometry(block).translated(offset)
+            if geometry.bottom() > bottom + 0.5 and count:
+                break
+            last = block.blockNumber()
+            count += 1
+            if not block.next().isValid():
+                row = geometry.height() / max(block.lineCount(), 1)
+                if row > 0:
+                    count += max(int((bottom - geometry.bottom()) // row), 0)
+            block = block.next()
+        return first, last, max(count, 1)
+
+    def _scroll_to(self, line: int) -> None:
+        """Scroll so that a line is the first on the screen, as far as the editor goes."""
+        rows = 0
+        block = self._editor.document().firstBlock()
+        while block.isValid() and block.blockNumber() < line:
+            rows += block.lineCount()
+            block = block.next()
+        self._editor.verticalScrollBar().setValue(rows)
+
+    def _scroll(self, command: Command) -> None:
+        lines = self._lines()
+        pos = self._pos(lines)
+        top, height, max_top = self._view()
+        scrolled = scroll(
+            command.name,
+            command.count,
+            top=top,
+            line=pos.line,
+            height=height,
+            lines=len(lines),
+            max_top=max_top,
+            amount=self._scroll_amount,
+        )
+        if scrolled is None:
+            return
+        self._scroll_amount = scrolled.amount
+        want = self._wanted()
+        self._scroll_to(scrolled.top)
+        # keep the cursor on a line that's fully on the screen, like vim
+        first, last, _ = self._visible()
+        line = min(max(scrolled.line, first), last)
+        visual = self._mode in VISUAL_MODES
+        text = lines[line]
+        if not scrolled.keep_column:
+            self._go(lines, Pos(line, first_non_blank(text)))
+            self._want_at = None
+        elif line != pos.line:
+            if want is None:
+                want = screen_col(lines[pos.line], pos.col, self._tabstop())
+            col = column_for(text, want, visual, self._tabstop())
+            self._go(lines, Pos(line, col))
+            self._want = want
+            self._want_at = self._where()
+
     def _on_cursor_moved(self) -> None:
         """Outside Insert mode, keep the cursor on a character, never after the last
         one, and never inside one (an app or Qt's flag bug can put it there)."""
@@ -382,7 +580,10 @@ class VimMode(QObject):
             self._block_on = False
             self._editor.setCursorWidth(self._plain_width)
         self._hide_editor_cursor(visual)
-        self._caret.show_at(self._position() if visual else None)
+        # a read-only editor draws no cursor of its own
+        no_cursor = not self._editor.textInteractionFlags() & DRAWS_CURSOR
+        normal = self._enabled and self._mode is Mode.NORMAL and no_cursor
+        self._caret.show_at(self._position() if visual or normal else None)
 
     def _hide_editor_cursor(self, hide: bool) -> None:
         """Width 0 doesn't hide the editor's cursor everywhere: on a screen scaled by a
@@ -497,6 +698,9 @@ class VimMode(QObject):
 
     # --- Visual mode ---
 
+    def _start_visual_command(self, command: Command) -> None:
+        self._start_visual(Mode.VISUAL if command.name == "v" else Mode.VISUAL_LINE)
+
     def _start_visual(self, mode: Mode) -> None:
         document = self._editor.document()
         position = self._editor.textCursor().position()
@@ -507,26 +711,20 @@ class VimMode(QObject):
         self._set_mode(mode)
         self._show_visual()
 
-    def _run_visual(self, command: Command) -> None:
-        name = command.name
-        if name == "move":
-            self._move(command)
-        elif name in ("v", "V"):
-            mode = Mode.VISUAL if name == "v" else Mode.VISUAL_LINE
-            if mode is self._mode:
-                self._leave_visual()
-            else:
-                self._set_mode(mode)
-                self._show_visual()
-        elif name == "o":
-            self._anchor, self._end = self._end, self._anchor
-            self._want_at = None
+    def _switch_visual(self, command: Command) -> None:
+        """v or V in Visual mode: the other kind of Visual mode, or back to Normal."""
+        mode = Mode.VISUAL if command.name == "v" else Mode.VISUAL_LINE
+        if mode is self._mode:
+            self._leave_visual()
+        else:
+            self._set_mode(mode)
             self._show_visual()
-        elif name in OPERATORS:
-            self._visual_operate(name)
-        elif name == "p":
-            self._visual_paste(command.count or 1)
-        # n, N, / and ? come in a later step
+
+    def _swap_ends(self, command: Command) -> None:
+        """o in Visual mode: the cursor goes to the other end of the selection."""
+        self._anchor, self._end = self._end, self._anchor
+        self._want_at = None
+        self._show_visual()
 
     def _selection(self, lines: Lines) -> tuple[Pos, Pos]:
         """The two ends of the Visual selection: where it started, and the cursor."""
@@ -631,7 +829,8 @@ class VimMode(QObject):
         self._leave_visual()
         return lines, r, start
 
-    def _visual_operate(self, name: str) -> None:
+    def _visual_operate(self, command: Command) -> None:
+        name = command.name
         lines, r, start = self._visual_range()
         empty = not r.linewise and r.start == r.end
         if not empty or name == "y":
@@ -647,10 +846,11 @@ class VimMode(QObject):
         else:
             self._change_text(lines, r, start, empty)
 
-    def _visual_paste(self, count: int) -> None:
+    def _visual_paste(self, command: Command) -> None:
         """p in Visual mode: the register's text takes the selection's place, and the
         selection goes into the register. Whole lines put in part of a line go on lines
         of their own; part of a line put over whole lines becomes a line."""
+        count = command.count or 1
         register = self._read_register()
         lines, r, start = self._visual_range()
         empty = not r.linewise and r.start == r.end
@@ -811,6 +1011,9 @@ class VimMode(QObject):
             self._done.append(saved)
             self._undone.clear()
         self._synced = document.revision()
+
+    def _undo_command(self, command: Command) -> None:
+        self._undo(command.count or 1, redo=command.name == "<C-r>")
 
     def _undo(self, count: int, redo: bool) -> None:
         document = self._editor.document()

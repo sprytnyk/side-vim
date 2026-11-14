@@ -5,6 +5,7 @@ tests every conversion to and from Qt's UTF-16 positions. Insert commands, opera
 and paste, with emoji, flags and accents, must give the text, cursor and register a
 simple model predicts. Random runs of commands must undo and redo step by step. Visual
 mode must select what the model says after every key, and its operators must match it.
+n, N and the scrolling keys must land where search.py and scroll.py say.
 """
 
 import random
@@ -22,14 +23,18 @@ from side_vim.motions import (
     MOTIONS,
     Line,
     Pos,
+    column_for,
     first_non_blank,
     line_range,
     move,
     operator_range,
     range_text,
+    screen_col,
     visual_range,
 )
 from side_vim.parser import LINE
+from side_vim.scroll import SCROLL_KEYS, scroll
+from side_vim.search import search
 from side_vim.text import Lines, split_clusters
 from side_vim.vim import _Shared
 
@@ -575,4 +580,97 @@ def test_a_selection_made_outside_vim_is_kept(editor: QPlainTextEdit, seed: int)
         selected = plain(after.selectedText())
         send(editor, "y")
         assert _Shared.register == Register(selected, linewise=False), what
+        vim.detach()
+
+
+def random_pattern(rng: random.Random, lines: list[tuple[str, ...]]) -> str:
+    """Mostly a piece of the text, sometimes over a line break; sometimes anything."""
+    if rng.random() < 0.2:
+        return "".join(rng.choice(CHARS) for _ in range(rng.randint(1, 2)))
+    i = rng.randrange(len(lines))
+    line = lines[i]
+    start = rng.randrange(len(line) + 1)
+    piece = "".join(line[start : start + rng.randint(1, 3)])
+    if (start + 3 >= len(line) or not piece) and i + 1 < len(lines) and rng.random() < 0.5:
+        piece += "\n" + "".join(lines[i + 1][: rng.randint(0, 2)])
+    return piece or "".join(line) or "a"
+
+
+@pytest.mark.parametrize("seed", range(SEED_COUNT))
+def test_n_and_n_match_the_model(editor: QPlainTextEdit, seed: int) -> None:
+    rng = random.Random(7000 + seed)
+    for _ in range(10):
+        lines = random_lines(rng)
+        editor.setPlainText(as_text(lines))
+        vim = VimMode(editor)
+        pattern = random_pattern(rng, lines)
+        forward = rng.random() < 0.7
+        vim.set_search(pattern, forward)
+        put_cursor(editor, random_pos(rng, lines))
+        parts = [split_clusters(part) for part in pattern.split("\n")]
+        for _ in range(4):
+            pos = cursor_of(editor)
+            key = rng.choice(["n", "N", "2n", "3N"])
+            found = search(lines, pos, parts, forward == (key[-1] == "n"), int(key[:-1] or 1))
+            send(editor, key)
+            what = (lines, pattern, forward, pos, key)
+            assert cursor_of(editor) == (found or pos), what
+        assert text_of(editor) == as_text(lines)
+        vim.detach()
+
+
+def long_lines(rng: random.Random) -> list[tuple[str, ...]]:
+    return [
+        tuple(rng.choice(CHARS) for _ in range(rng.randint(0, 6)))
+        for _ in range(rng.randint(1, 80))
+    ]
+
+
+@pytest.mark.parametrize("seed", range(SEED_COUNT))
+def test_scrolling_matches_the_model(editor: QPlainTextEdit, seed: int) -> None:
+    rng = random.Random(8000 + seed)
+    keys = sorted(SCROLL_KEYS)
+    for _ in range(4):
+        lines = long_lines(rng)
+        editor.setPlainText(as_text(lines))
+        vim = VimMode(editor)
+        put_cursor(editor, random_pos(rng, lines))
+        want: int | None = None
+        amount: int | None = None
+        for _ in range(10):
+            top, height, max_top = vim._view()
+            pos = cursor_of(editor)
+            key = rng.choice(keys)
+            count = rng.choice((None, None, 2, 5))
+            scrolled = scroll(
+                key,
+                count,
+                top=top,
+                line=pos.line,
+                height=height,
+                lines=len(lines),
+                max_top=max_top,
+                amount=amount,
+            )
+            send(editor, f"{count or ''}{key}")
+            what = (len(lines), top, height, max_top, pos, key, count)
+            if scrolled is None:
+                assert cursor_of(editor) == pos, what
+                assert vim._view()[0] == top, what
+                continue
+            amount = scrolled.amount
+            assert vim._view()[0] == scrolled.top, what
+            # lines with emoji can be taller: the cursor stays on a line fully on screen
+            first, last, _ = vim._visible()
+            line = min(max(scrolled.line, first), last)
+            if not scrolled.keep_column:
+                expected = Pos(line, first_non_blank(lines[line]))
+                want = None
+            elif line != pos.line:
+                if want is None:
+                    want = screen_col(lines[pos.line], pos.col, TABSTOP)
+                expected = Pos(line, column_for(lines[line], want, False, TABSTOP))
+            else:
+                expected = pos
+            assert cursor_of(editor) == expected, what
         vim.detach()

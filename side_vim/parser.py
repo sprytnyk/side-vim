@@ -8,6 +8,7 @@ handles it.
 from dataclasses import dataclass
 
 from side_vim.motions import MOTIONS
+from side_vim.scroll import SCROLL_KEYS
 
 # Keys that are other names for a motion.
 ALIASES = {
@@ -19,18 +20,42 @@ ALIASES = {
     "<End>": "$",
 }
 
-OPERATORS = frozenset({"d", "c", "y"})
+# The commands, other than motions, each with True if it changes the text. A read-only
+# editor skips those. Every other list of keys is made from these tables.
+
+# Operators take a motion in Normal mode (`dw`) and act on the selection in Visual mode.
+OPERATORS = {"d": True, "c": True, "y": False}
 
 # Keys vim treats as an operator with a fixed motion.
 SHORTHANDS = {"x": ("d", "l"), "D": ("d", "$"), "C": ("c", "$")}
 
-# Commands that take a count but no motion, in Normal mode.
-NORMAL_ACTIONS = frozenset(
-    {"p", "P", "J", "u", "<C-r>", "i", "a", "I", "A", "o", "O", "v", "V", "n", "N", "/", "?"}
-)
+_BOTH_MODES = {"n": False, "N": False, "/": False, "?": False} | dict.fromkeys(SCROLL_KEYS, False)
 
-# Commands that act on the selection or the mode, in Visual mode.
-VISUAL_ACTIONS = frozenset({"d", "c", "y", "p", "o", "v", "V", "n", "N", "/", "?"})
+# Commands that take a count but no motion, in Normal mode.
+NORMAL_ACTIONS = {
+    "p": True,
+    "P": True,
+    "J": True,
+    "u": True,
+    "<C-r>": True,
+    "i": True,
+    "a": True,
+    "I": True,
+    "A": True,
+    "o": True,
+    "O": True,
+    "v": False,
+    "V": False,
+} | _BOTH_MODES
+
+# Commands that act on the selection or the mode, in Visual mode. `x` is `d` here.
+VISUAL_ACTIONS = OPERATORS | {"p": True, "o": False, "v": False, "V": False} | _BOTH_MODES
+
+# The Normal mode commands that start Insert mode.
+INSERT_COMMANDS = frozenset({"i", "a", "I", "A", "o", "O"})
+
+# The Ctrl keys vim takes in Normal and Visual mode. Other Ctrl keys go to the app.
+CTRL_KEYS = frozenset(key for key in NORMAL_ACTIONS | VISUAL_ACTIONS if key.startswith("<C-"))
 
 # The motion name for `dd`, `cc` and `yy`: the current line and count-1 lines below.
 LINE = "line"
@@ -51,6 +76,15 @@ class Command:
     name: str
     count: int | None = None
     motion: str | None = None
+
+
+def changes_text(command: Command, visual: bool) -> bool:
+    """True if the command changes the text, in Visual mode or in Normal mode."""
+    if command.name == "move":
+        return False
+    if command.name in OPERATORS:
+        return OPERATORS[command.name]
+    return (VISUAL_ACTIONS if visual else NORMAL_ACTIONS)[command.name]
 
 
 class _Pending:

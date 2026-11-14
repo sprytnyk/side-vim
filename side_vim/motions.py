@@ -243,6 +243,11 @@ def _coladvance(text: Line, want: int, visual: bool, tabstop: int) -> int:
     return max(col, 0)
 
 
+def column_for(text: Line, want: int, visual: bool = False, tabstop: int = 8) -> int:
+    """The column j and k land on in a line, for the screen column they aim for."""
+    return _coladvance(text, want, visual, tabstop)
+
+
 def move(
     lines: Sequence[Line],
     pos: Pos,

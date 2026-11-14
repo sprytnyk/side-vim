@@ -54,6 +54,25 @@ MODIFIER_KEYS = frozenset(
 )
 
 
+def map_layout(token: str, layout: dict[str, str] | None) -> str:
+    """A key token with its letter mapped through a layout map: "к" -> "r",
+    "<C-к>" -> "<C-r>", and "<C-х>" -> "<Esc>" like Ctrl+[. Tokens it doesn't know
+    stay as they are."""
+    if not layout:
+        return token
+    if token in layout:
+        return layout[token]
+    if token.startswith("<C-") and token.endswith(">"):
+        head, _, name = token[1:-1].rpartition("-")
+        mapped = layout.get(name)
+        if mapped is not None and len(mapped) == 1:
+            if head == "C" and mapped == "[":
+                return ESC  # Ctrl+х is the key of Ctrl+[
+            # Ctrl tokens use the lower case name, like key_token does
+            return f"<{head}-{mapped.lower() if mapped.isalpha() else mapped}>"
+    return token
+
+
 def control_modifier(mac: bool = IS_MAC) -> Qt.KeyboardModifier:
     """The modifier the physical Control key arrives as. On macOS Qt swaps Ctrl and Cmd,
     so Control arrives as Meta, unless the app turned the swap off."""
