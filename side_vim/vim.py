@@ -415,6 +415,10 @@ class VimMode(QObject):
         """c: delete the range and type in its place. Whole lines leave one empty line
         (no autoindent). The delete and the typing are one undo step."""
         document = self._editor.document()
+        if r.linewise and r.end.line > r.start.line:
+            # vim deletes the lines below the first one with the cursor a line down, so
+            # that's where its undo puts it back
+            start = Pos(start.line + 1, start.col)
         self._begin_insert(start, count=1, open_line=False)
         if r.linewise:
             begin = document.findBlockByNumber(r.start.line).position()
@@ -533,7 +537,14 @@ class VimMode(QObject):
         the cursor back."""
         document = self._editor.document()
         self._check_synced()
-        revision = document.revision()
+        steps: list[None] = []
+
+        def on_step() -> None:
+            steps.append(None)
+
+        # the revision isn't enough: an edit that changes nothing (`dd` on an empty
+        # text) counts as a revision but adds no undo step
+        document.undoCommandAdded.connect(on_step)
         edit = QTextCursor(document)
         self._busy = True
         edit.beginEditBlock()
@@ -542,7 +553,8 @@ class VimMode(QObject):
         finally:
             edit.endEditBlock()
             self._busy = False
-        if document.revision() != revision:
+            document.undoCommandAdded.disconnect(on_step)
+        if steps:
             self._done.append(saved)
             self._undone.clear()
         self._synced = document.revision()

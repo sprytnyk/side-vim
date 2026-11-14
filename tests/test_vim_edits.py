@@ -21,6 +21,7 @@ SMILE = "\U0001f600"
 FAMILY = "\U0001f468\u200d\U0001f469\u200d\U0001f467"
 UA = "\U0001f1fa\U0001f1e6"
 E_ACUTE = "e\u0301"
+UNDO_CC = "ab cd ef\n  gh ij\nkl"
 
 
 @pytest.fixture(autouse=True)
@@ -214,6 +215,19 @@ def run(editor: QPlainTextEdit, keys: str) -> None:
         ("abc", 0, 1, "ix<Esc>|u|ay<Esc>|<C-r>", "abyc", (0, 2)),
         ("abc", 0, 1, "x|u|<C-r>|<C-r>", "ac", (0, 1)),
         ("abc", 0, 1, "x|x|u|i<Esc>|<C-r>", "a", (0, 0)),
+        # vim deletes the lines below the first one with the cursor a line down
+        (UNDO_CC, 0, 4, "2ccX<Esc>|u", UNDO_CC, (1, 4)),
+        (UNDO_CC + "\n  mn", 1, 4, "2ccX<Esc>|u", UNDO_CC + "\n  mn", (2, 1)),
+        (UNDO_CC, 0, 4, "cjX<Esc>|u", UNDO_CC, (1, 4)),
+        (UNDO_CC, 1, 4, "ckX<Esc>|u", UNDO_CC, (1, 4)),
+        (UNDO_CC, 0, 4, "cGX<Esc>|u", UNDO_CC, (1, 4)),
+        (UNDO_CC, 2, 1, "cggX<Esc>|u", UNDO_CC, (1, 0)),
+        (UNDO_CC, 0, 4, "2ccX<Esc>|u|<C-r>", "X\nkl", (1, 1)),
+        # dd on an empty text changes nothing, so it's no undo step
+        ("abc", 0, 2, "x|dd|dd|u", "ab", (0, 0)),
+        ("abc", 0, 2, "x|dd|dd|u|u", "abc", (0, 2)),
+        ("abc", 0, 2, "x|dd|dd|u|u|<C-r>", "ab", (0, 1)),
+        ("abc", 0, 2, "x|dd|dd|u|u|<C-r>|<C-r>", "", (0, 0)),
         # operators on nothing: h at column 0, l on an empty line
         ("abc\n\nx", 0, 0, "yl|j|yl|k|p", "abc\n\nx", (0, 0)),
         ("abc\n\nx", 0, 0, "yl|j|clz<Esc>", "abc\nz\nx", (1, 0)),
