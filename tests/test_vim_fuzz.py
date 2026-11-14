@@ -605,7 +605,11 @@ def test_n_and_n_match_the_model(editor: QPlainTextEdit, seed: int) -> None:
         vim = VimMode(editor)
         pattern = random_pattern(rng, lines)
         forward = rng.random() < 0.7
+        pos = random_pos(rng, lines)
+        put_cursor(editor, pos)
+        found = search(lines, pos, [split_clusters(p) for p in pattern.split("\n")], forward)
         vim.set_search(pattern, forward)
+        assert cursor_of(editor) == (found or pos), (lines, pattern, forward, pos)
         put_cursor(editor, random_pos(rng, lines))
         parts = [split_clusters(part) for part in pattern.split("\n")]
         for _ in range(4):

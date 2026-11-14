@@ -210,10 +210,13 @@ class VimMode(QObject):
         return self._enabled
 
     def set_search(self, text: str, forward: bool = True) -> None:
-        """The text n and N look for, as plain text. forward: n searches down, N up;
-        False the other way round, like after `?`."""
+        """Search for plain text, like typing it after `/` (forward) or `?` in vim and
+        pressing Enter: the cursor goes to the next match, if there is one. After that n
+        looks for the text the same way, and N the other way."""
         text = text.replace("\r\n", "\n").replace(PARAGRAPH_SEPARATOR, "\n")
         self._search = (text, forward) if text else None
+        if self._enabled and self._mode is not Mode.INSERT:
+            self._search_next(Command("n"))
 
     def set_enabled(self, enabled: bool) -> None:
         """False: a plain editor again, with its own cursor. True: back in Normal mode."""

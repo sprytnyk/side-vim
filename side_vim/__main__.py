@@ -2,8 +2,8 @@
 
 import sys
 
-from PySide6.QtCore import QEvent, Qt
-from PySide6.QtGui import QFontDatabase, QKeyEvent, QKeySequence, QShortcut
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QFontDatabase, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -70,7 +70,7 @@ class Demo(QMainWindow):
 
         self.vim = vim = VimMode(editor)
 
-        # a find bar: / and ? open it; Enter hands the text to vim and jumps like n
+        # a find bar: / and ? open it; Enter hands the text to vim, which jumps to it
         self.find = QLineEdit()
         self.find.setPlaceholderText("find")
         self.find.hide()
@@ -127,10 +127,8 @@ class Demo(QMainWindow):
         return True
 
     def _run_find(self) -> None:
-        self.vim.set_search(self.find.text(), self._forward)
         self.close_find()
-        n = QKeyEvent(QEvent.Type.KeyPress, Qt.Key.Key_N, Qt.KeyboardModifier.NoModifier, "n")
-        QApplication.sendEvent(self.editor, n)
+        self.vim.set_search(self.find.text(), self._forward)
 
     def _show_mode(self, mode: Mode) -> None:
         self.mode_label.setText(f"-- {mode.value.upper()} --")

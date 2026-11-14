@@ -84,9 +84,58 @@ def test_n_and_n(
 ) -> None:
     vim = start(editor, text, line, col)
     vim.set_search(pattern, forward)
+    put_cursor(editor, Pos(line, col))
     send(editor, keys)
     assert cursor_of(editor) == Pos(*cursor)
     assert text_of(editor) == text
+
+
+@pytest.mark.parametrize(
+    ("line", "col", "pattern", "forward", "cursor"),
+    [
+        # all vim, as `/foo<CR>` or `?foo<CR>`
+        (0, 0, "foo", True, (0, 8)),
+        (0, 8, "foo", True, (1, 4)),
+        (2, 0, "foo", True, (0, 0)),
+        (0, 0, "foo", False, (2, 0)),
+        (1, 4, "foo", False, (0, 8)),
+        (0, 1, "zzz", True, (0, 1)),
+        (0, 1, "", True, (0, 1)),
+    ],
+)
+def test_set_search_jumps_to_the_next_match(
+    editor: QPlainTextEdit,
+    line: int,
+    col: int,
+    pattern: str,
+    forward: bool,
+    cursor: tuple[int, int],
+) -> None:
+    vim = start(editor, T, line, col)
+    vim.set_search(pattern, forward)
+    assert cursor_of(editor) == Pos(*cursor)
+
+
+def test_set_search_moves_the_end_in_visual_mode(editor: QPlainTextEdit) -> None:
+    vim = start(editor, T, 0, 1)
+    send(editor, "v")
+    vim.set_search("foo")
+    assert vim.mode is Mode.VISUAL
+    assert plain(editor.textCursor().selectedText()) == "oo bar f"
+
+
+def test_set_search_doesnt_jump_in_insert_mode_or_when_off(editor: QPlainTextEdit) -> None:
+    vim = start(editor, T, 0, 1)
+    send(editor, "i")
+    vim.set_search("foo")
+    assert editor.textCursor().position() == 1
+    send(editor, "<Esc>")
+    vim.set_enabled(False)
+    vim.set_search("foo")
+    assert editor.textCursor().position() == 0
+    vim.set_enabled(True)
+    send(editor, "n")
+    assert cursor_of(editor) == Pos(0, 8)
 
 
 def test_no_search_text(editor: QPlainTextEdit) -> None:
@@ -101,16 +150,16 @@ def test_no_search_text(editor: QPlainTextEdit) -> None:
 def test_line_breaks_in_the_search_text(editor: QPlainTextEdit) -> None:
     vim = start(editor, T)
     vim.set_search("o\r\nb")
-    send(editor, "n")
     assert cursor_of(editor) == Pos(0, 10)
+    send(editor, "gg0")
     vim.set_search("o b")
-    send(editor, "gg0n")
     assert cursor_of(editor) == Pos(0, 10)
 
 
 def test_n_in_visual_mode_moves_the_end(editor: QPlainTextEdit) -> None:
     vim = start(editor, T, 0, 1)
     vim.set_search("foo")
+    put_cursor(editor, Pos(0, 1))
     send(editor, "vn")
     assert vim.mode is Mode.VISUAL
     assert plain(editor.textCursor().selectedText()) == "oo bar f"
@@ -223,7 +272,6 @@ def test_a_read_only_editor_moves_selects_and_yanks(editor: QPlainTextEdit) -> N
     send(editor, "vjy")  # j goes past the end of the short last line
     assert _Shared.register == Register("def\nghi", linewise=False)
     vim.set_search("gh")
-    send(editor, "n")
     assert cursor_of(editor) == Pos(1, 0)
     send(editor, "u<C-r>")
     assert text_of(editor) == "abc def\nghi"
