@@ -462,8 +462,8 @@ def test_set_enabled_from_insert_mode_returns_to_normal(editor: QPlainTextEdit) 
     vim.set_enabled(True)
     assert vim.mode is Mode.NORMAL
     assert cursor_of(editor) == Pos(0, 2)
-    send(editor, "x")
-    assert text_of(editor) == "abc"
+    send(editor, "x")  # a Normal mode command, not typing
+    assert text_of(editor) == "ab"
 
 
 def test_set_enabled_drops_pending_keys(editor: QPlainTextEdit) -> None:

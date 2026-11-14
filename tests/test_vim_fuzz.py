@@ -1,8 +1,9 @@
 """Random keys on random texts in a real editor.
 
 Motions must land where motions.move says (checked against vim on its own), which
-tests every conversion to and from Qt's UTF-16 positions. Insert commands with typed
-emoji, flags and accents must give the text and cursor a simple model predicts.
+tests every conversion to and from Qt's UTF-16 positions. Insert commands, operators
+and paste, with emoji, flags and accents, must give the text, cursor and register a
+simple model predicts. Random runs of commands must undo and redo step by step.
 """
 
 import random
@@ -11,11 +12,23 @@ from collections.abc import Iterator
 import pytest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit
 from qtkeys import cursor_of, put_cursor, send, text_of, type_text
-from test_motions_fuzz import CHARS, random_lines
+from test_motions_fuzz import CHARS, delete, random_lines, whole
 
 from side_vim import Mode, VimMode
-from side_vim.motions import MOTIONS, Pos, move
+from side_vim.edits import Register
+from side_vim.motions import (
+    MOTIONS,
+    Line,
+    Pos,
+    first_non_blank,
+    line_range,
+    move,
+    operator_range,
+    range_text,
+)
+from side_vim.parser import LINE
 from side_vim.text import split_clusters
+from side_vim.vim import _Shared
 
 SEED_COUNT = 30
 SAMPLES = 60
@@ -130,3 +143,247 @@ def test_insert_commands_match_the_model(editor: QPlainTextEdit, seed: int) -> N
         assert cursor_of(editor) == cursor, (lines, pos, command, typed, count)
         assert vim.mode is Mode.NORMAL
         vim.detach()
+
+
+def type_chars(editor: QPlainTextEdit, chars: list[str]) -> None:
+    for ch in chars:
+        if ch == "\t":
+            send(editor, "<Tab>")
+        elif ch.isascii():
+            send(editor, ch)
+        else:
+            type_text(editor, ch)
+
+
+def split(text: str) -> list[tuple[str, ...]]:
+    return [split_clusters(line) for line in text.split("\n")]
+
+
+def on_a_char(lines: list[tuple[str, ...]], pos: Pos) -> Pos:
+    """pos kept on a character, as Normal mode keeps the cursor."""
+    line = min(pos.line, len(lines) - 1)
+    return Pos(line, min(pos.col, max(len(lines[line]) - 1, 0)))
+
+
+def operator_model(
+    lines: list[tuple[str, ...]],
+    pos: Pos,
+    op: str,
+    motion: str,
+    count: int | None,
+    typed: list[str],
+) -> tuple[str, Pos, Register | None] | None:
+    """What vim does for one d, c or y command (c types `typed`, then Esc). None if
+    the motion fails. The register is None if the command leaves it alone."""
+    if motion == LINE:
+        r = line_range(lines, pos, count)
+        if r is None:
+            return None
+        start = pos if op == "y" else min(pos, Pos(r.end.line, first_non_blank(lines[r.end.line])))
+    else:
+        moved = move(lines, pos, motion, count, op=op, tabstop=TABSTOP)
+        if moved is None:
+            return None
+        r = operator_range(lines, pos, moved, op)
+        start = min(pos, moved.pos)
+    empty = not r.linewise and r.start == r.end
+    register = None if empty and op != "y" else Register(range_text(lines, r), r.linewise)
+    rows = ["".join(line) for line in lines]
+    a, b = r.start.line, r.end.line
+    if op == "y":
+        return as_text(lines), on_a_char(lines, start), register
+    if op == "d":
+        if empty:
+            return as_text(lines), pos, register
+        text = delete(lines, r.start, r.end, r.linewise)
+        new = split(text)
+        if r.linewise:
+            line = min(a, len(new) - 1)
+            return text, Pos(line, first_non_blank(new[line])), register
+        return text, on_a_char(new, r.start), register
+    added = "".join(typed)
+    if r.linewise:
+        rows[a : b + 1] = [added]
+        return "\n".join(rows), Pos(a, max(len(typed) - 1, 0)), register
+    head = "".join(lines[a][: r.start.col])
+    tail = "".join(lines[b][r.end.col :])
+    rows[a : b + 1] = [head + added + tail]
+    return "\n".join(rows), Pos(a, max(r.start.col + len(typed) - 1, 0)), register
+
+
+@pytest.mark.parametrize("seed", range(SEED_COUNT))
+def test_operators_match_the_model(editor: QPlainTextEdit, seed: int) -> None:
+    rng = random.Random(2000 + seed)
+    motions = [*sorted(MOTIONS), LINE]
+    for _ in range(25):
+        lines = random_lines(rng)
+        editor.setPlainText(as_text(lines))
+        vim = VimMode(editor)
+        pos = random_pos(rng, lines)
+        put_cursor(editor, pos)
+        op = rng.choice("dcy")
+        motion = rng.choice(motions)
+        count = None if motion == "0" else rng.choice((None, 2, 3))
+        typed = [rng.choice(CHARS) for _ in range(rng.randint(0, 2))] if op == "c" else []
+        _Shared.register = Register("before", linewise=False)
+
+        keys = f"{count or ''}{op}{op if motion == LINE else motion}"
+        send(editor, keys)
+        expected = operator_model(lines, pos, op, motion, count, typed)
+        what = (lines, pos, keys, typed)
+        if expected is None:
+            assert vim.mode is Mode.NORMAL, what
+            assert text_of(editor) == as_text(lines), what
+            vim.detach()
+            continue
+        if op == "c":
+            assert vim.mode is Mode.INSERT, what
+            type_chars(editor, typed)
+            send(editor, "<Esc>")
+        text, cursor, register = expected
+        assert text_of(editor) == text, what
+        assert whole(text_of(editor)), what
+        assert cursor_of(editor) == cursor, what
+        assert _Shared.register == (register or Register("before", linewise=False)), what
+        assert vim.mode is Mode.NORMAL, what
+        if text != as_text(lines):
+            send(editor, "u")
+            assert text_of(editor) == as_text(lines), what
+            send(editor, "<C-r>")
+            assert text_of(editor) == text, what
+        vim.detach()
+
+
+def random_register(rng: random.Random) -> Register:
+    if rng.random() < 0.4:
+        rows = ["".join(line) for line in random_lines(rng)]
+        return Register("\n".join(rows) + "\n", linewise=True)
+    chars = [rng.choice(CHARS) for _ in range(rng.randint(1, 4))]
+    if rng.random() < 0.3:
+        chars.insert(rng.randrange(len(chars) + 1), "\n")
+    return Register("".join(chars), linewise=False)
+
+
+def paste_model(
+    lines: list[tuple[str, ...]], pos: Pos, register: Register, after: bool, count: int
+) -> tuple[str, Pos]:
+    rows = ["".join(line) for line in lines]
+    if register.linewise:
+        body = register.text.removesuffix("\n").split("\n") * count
+        at = pos.line + 1 if after else pos.line
+        rows[at:at] = body
+        return "\n".join(rows), Pos(at, first_non_blank(split_clusters(body[0])))
+    line: Line = lines[pos.line]
+    col = min(pos.col + 1, len(line)) if after else pos.col
+    chunk = register.text * count
+    rows[pos.line] = "".join(line[:col]) + chunk + "".join(line[col:])
+    text = "\n".join(rows)
+    if "\n" in chunk:
+        # the start of the paste, kept on a character (vim does that too)
+        return text, on_a_char(split(text), Pos(pos.line, col))
+    return text, Pos(pos.line, col + len(split_clusters(chunk)) - 1)
+
+
+@pytest.mark.parametrize("seed", range(SEED_COUNT))
+def test_paste_matches_the_model(editor: QPlainTextEdit, seed: int) -> None:
+    rng = random.Random(3000 + seed)
+    for _ in range(15):
+        lines = random_lines(rng)
+        editor.setPlainText(as_text(lines))
+        vim = VimMode(editor)
+        pos = random_pos(rng, lines)
+        put_cursor(editor, pos)
+        register = random_register(rng)
+        _Shared.register = register
+        after = rng.random() < 0.5
+        count = rng.choice((1, 1, 2, 3))
+        keys = f"{count if count > 1 else ''}{'p' if after else 'P'}"
+        send(editor, keys)
+        text, cursor = paste_model(lines, pos, register, after, count)
+        what = (lines, pos, register, keys)
+        assert text_of(editor) == text, what
+        assert whole(text_of(editor)), what
+        assert cursor_of(editor) == cursor, what
+        assert _Shared.register == register
+        send(editor, "u")
+        assert text_of(editor) == as_text(lines), what
+        vim.detach()
+
+
+def random_command(rng: random.Random) -> list[str]:
+    """One command as keys to send, with typed characters as their own items."""
+
+    def typed() -> list[str]:
+        return [rng.choice(CHARS) for _ in range(rng.randint(0, 3))]
+
+    simple = ["x", "3x", "dw", "d2w", "db", "dd", "2dd", "D", "J", "3J", "p", "P", "yyp", "ywP"]
+    roll = rng.random()
+    if roll < 0.5:
+        return [rng.choice(simple)]
+    start = rng.choice(["i", "a", "A", "I", "o", "O", "2i", "2o", "cw", "cc", "C", "c2w", "cb"])
+    middle = typed()
+    if rng.random() < 0.4:
+        middle += [rng.choice(["<CR>", "<BS>", "<Left>", "<Right>", "<Del>"]), *typed()]
+    return [start, *middle, "<Esc>"]
+
+
+def press_all(editor: QPlainTextEdit, keys: list[str]) -> None:
+    for key in keys:
+        if key in CHARS:
+            type_chars(editor, [key])
+        else:
+            send(editor, key)
+
+
+@pytest.mark.parametrize("seed", range(SEED_COUNT))
+def test_undo_and_redo_walk_every_step(editor: QPlainTextEdit, seed: int) -> None:
+    """After random commands, u goes back one command at a time to the start, and
+    Ctrl+R forward again; so does the document's own undo and redo."""
+    rng = random.Random(4000 + seed)
+    lines = random_lines(rng)
+    editor.setPlainText(as_text(lines))
+    vim = VimMode(editor)
+    _Shared.register = random_register(rng)
+    states = [text_of(editor)]
+    done: list[list[str]] = []
+    split_by_qt = False
+    for _ in range(12):
+        now = split(text_of(editor))
+        put_cursor(editor, random_pos(rng, now))
+        keys = random_command(rng)
+        press_all(editor, keys)
+        assert vim.mode is Mode.NORMAL
+        # In Insert mode these keys are the editor's own. Qt's Backspace and Delete
+        # take an accent off its letter, and its arrows can stop inside a flag that
+        # follows an emoji (Qt 6.12), so typing splits it. That then stays in the text.
+        split_by_qt = split_by_qt or bool({"<BS>", "<Del>", "<Left>", "<Right>"} & set(keys))
+        if not split_by_qt:
+            assert whole(text_of(editor)), (states[-1], keys)
+        if text_of(editor) != states[-1]:
+            states.append(text_of(editor))
+            done.append(keys)
+
+    def cursor_ok() -> None:
+        pos = cursor_of(editor)
+        assert pos == on_a_char(split(text_of(editor)), pos)
+
+    for state in reversed(states[:-1]):
+        send(editor, "u")
+        assert text_of(editor) == state, (states, done)
+        cursor_ok()
+    send(editor, "u")
+    assert text_of(editor) == states[0]
+    for state in states[1:]:
+        send(editor, "<C-r>")
+        assert text_of(editor) == state, (states, done)
+        cursor_ok()
+
+    document = editor.document()
+    for state in reversed(states[:-1]):
+        document.undo()
+        assert text_of(editor) == state, (states, done)
+    assert not document.isUndoAvailable()
+    for state in states[1:]:
+        document.redo()
+        assert text_of(editor) == state, (states, done)
+    vim.detach()

@@ -10,6 +10,8 @@ from side_vim import Mode, VimMode
 SAMPLE = """\
 side-vim demo. Esc goes back to Normal mode; i, a, I, A, o and O start typing.
 Try w b e, W B E, 0 ^ $, gg G, h j k l, with counts: 3w, 2j, 5G.
+Edit with x, dw, d2j, cw, cc, C, D, dd, yy, yw, p, P and J; u undoes, Ctrl+R redoes.
+Tick "clipboard" to yank to the system clipboard and paste from it.
 
 \tA tab first, then words: foo.bar(baz) and foo-bar_baz.
 Emoji count as one character: 😀 👨‍👩‍👧 🇺🇦 1️⃣ and é.
@@ -43,6 +45,9 @@ def main() -> int:
     toggle.toggled.connect(vim.set_enabled)
     toggle.toggled.connect(lambda on: mode_label.setVisible(on))
     toggle.toggled.connect(lambda _: editor.setFocus())
+    clipboard = QCheckBox("clipboard")
+    clipboard.toggled.connect(lambda on: setattr(vim, "clipboard", on))
+    clipboard.toggled.connect(lambda _: editor.setFocus())
 
     def show_mode(mode: Mode) -> None:
         mode_label.setText(f"-- {mode.value.upper()} --")
@@ -54,6 +59,7 @@ def main() -> int:
     status = window.statusBar()
     status.addWidget(mode_label)
     status.addPermanentWidget(keys_label)
+    status.addPermanentWidget(clipboard)
     status.addPermanentWidget(toggle)
 
     window.resize(1200, 640)
