@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
 from qtkeys import cursor_of, put_cursor, send, start_vim, text_of, type_text
 
 from side_vim import Mode, VimMode
-from side_vim.keys import control_modifier
+from side_vim.keys import IS_MAC, control_modifier
 from side_vim.motions import Pos
 from side_vim.vim import QT_EDIT_KEYS
 
@@ -138,12 +138,26 @@ def test_empty_document(editor: QPlainTextEdit) -> None:
 # --- Normal mode never types ---
 
 
+# QTest gives Alt+x the text "x", which on macOS is what Option typed, so vim's x.
+ALT_X = pytest.param("<A-x>", marks=pytest.mark.skipif(IS_MAC, reason="Option+x types ≈"))
+
+
 @pytest.mark.parametrize(
-    "keys", ["z", "q", " ", "<BS>", "<Del>", "<CR>", "<Tab>", "<S-Tab>", "<A-x>", "~", "к"]
+    "keys", ["z", "q", " ", "<BS>", "<Del>", "<CR>", "<Tab>", "<S-Tab>", ALT_X, "~", "к"]
 )
 def test_normal_mode_keys_never_edit(editor: QPlainTextEdit, keys: str) -> None:
     start_vim(editor, "abc\ndef", 0, 1)
     send(editor, keys)
+    assert text_of(editor) == "abc\ndef"
+    assert cursor_of(editor) == Pos(0, 1)
+
+
+def test_option_x_never_edits(editor: QPlainTextEdit) -> None:
+    """What Option+x sends on a Mac with the English layout."""
+    start_vim(editor, "abc\ndef", 0, 1)
+    for kind in (QEvent.Type.KeyPress, QEvent.Type.KeyRelease):
+        event = QKeyEvent(kind, Qt.Key.Key_X, Qt.KeyboardModifier.AltModifier, "≈")
+        QApplication.sendEvent(editor, event)
     assert text_of(editor) == "abc\ndef"
     assert cursor_of(editor) == Pos(0, 1)
 
