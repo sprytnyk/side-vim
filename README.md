@@ -1,5 +1,165 @@
 # side-vim
 
-A vim mode for PySide6's `QPlainTextEdit`.
+A Vim mode for PySide6's `QPlainTextEdit`. Attach it to an existing editor to add
+Normal, Insert, Visual and Visual Line modes.
 
-Work in progress. Usage and the list of supported keys come with 0.1.0.
+## Install
+
+Requires Python 3.12 or newer and PySide6 6.8 or newer. PySide6-Essentials is
+installed as a dependency.
+
+```sh
+uv add side-vim
+```
+
+Version 0.1.0 is not on PyPI yet. Until then, run the demo from this checkout
+with `make run`.
+
+## Usage
+
+```python
+import sys
+
+from PySide6.QtWidgets import QApplication, QLabel, QPlainTextEdit, QVBoxLayout, QWidget
+
+from side_vim import VimMode
+
+app = QApplication(sys.argv)
+window = QWidget()
+editor = QPlainTextEdit("Try w, i, Esc, v and y.")
+status = QLabel()
+layout = QVBoxLayout(window)
+layout.addWidget(editor)
+layout.addWidget(status)
+
+vim = VimMode(editor)  # Starts in Normal mode; the editor owns it.
+status.setText(vim.mode.value)
+vim.mode_changed.connect(lambda mode: status.setText(mode.value))
+
+window.resize(800, 500)
+window.show()
+editor.setFocus()
+sys.exit(app.exec())
+```
+
+Attach one `VimMode` per editor. Import `Mode` to compare `vim.mode` with
+`Mode.NORMAL`, `Mode.INSERT`, `Mode.VISUAL` or `Mode.VISUAL_LINE`.
+
+| API | Behavior |
+| --- | --- |
+| `vim.mode_changed.connect(callback)` | Calls `callback(mode)` when the mode changes. |
+| `vim.pending_changed.connect(callback)` | Calls `callback(text)` with pending keys such as `2d`, or `""` when done. |
+| `vim.escape_hook = callback` | Calls `callback()` before handling Esc. Return `True` if the app used it, for example to close a popup. |
+| `vim.search_hook = callback` | `/` calls `callback(True)`; `?` calls `callback(False)`. The app opens its search UI. |
+| `vim.set_search("rent", forward=True)` | Saves literal search text and jumps to the next match. `n` repeats in that direction; `N` reverses it. |
+| `vim.clipboard = True` | Uses the system clipboard for yank, delete, change and paste. Defaults to `False`. |
+| `vim.layout_map = UKRAINIAN` | Maps Ukrainian letters to Vim keys. This is the default; import `UKRAINIAN` from `side_vim`. Set `None` to disable it, or pass your own dictionary. |
+| `vim.set_enabled(False)` | Restores the plain editor and its cursor. `True` enables Vim in Normal mode. Read the setting through `vim.enabled`. |
+| `vim.detach()` | Removes Vim from the editor permanently. |
+
+When the app accepts a search, call `set_search` with its text and direction.
+Search is case-sensitive, wraps around the document, and uses plain text rather
+than regular expressions. Each editor keeps its own search. An empty string
+clears it. In Insert mode or while disabled, `set_search` saves the search without
+moving the cursor. The [demo](https://github.com/sprytnyk/side-vim/blob/main/side_vim/__main__.py)
+shows a find bar and an Esc hook together.
+
+The unnamed register is shared between editors in the same process. With
+`clipboard=False`, yank in one editor and paste in another. With `clipboard=True`,
+externally copied text ending in a newline pastes as whole lines.
+
+## Supported keys
+
+Counts work with motions and edits: `3w`, `5G`, `2dd`, `y3j`. A counted insert
+repeats the typed text: `3ix<Esc>` inserts `xxx`.
+
+| Action | Keys |
+| --- | --- |
+| Move | `h j k l`, `w b e`, `W B E`, `0 ^ $`, `gg G` |
+| Insert | `i a I A o O` |
+| Delete, change, yank | `d c y` followed by a motion; `dd cc yy`, `x D C` |
+| Paste, join | `p P`, `J` |
+| Undo, redo | `u`, `Ctrl+R` |
+| Select | `v` for characters, `V` for lines; motions extend the selection |
+| Edit a selection | `d c y x p`; `o` switches its ends |
+| Search | `/ ?` through the app hook, then `n N` |
+| Scroll a line | `Ctrl+E`, `Ctrl+Y` |
+| Scroll half a screen | `Ctrl+D`, `Ctrl+U` |
+| Scroll a screen | `Ctrl+F`, `Ctrl+B` |
+| Return to Normal | `Esc`, `Ctrl+[` |
+
+In Normal and Visual modes, Vim's Ctrl keys take priority over app shortcuts.
+In Insert mode, shortcuts go to the app except for Esc and `Ctrl+[`. On macOS,
+Ctrl means the physical Control key; Command shortcuts stay with the app.
+
+Dragging a selection in Normal mode enters Visual mode. Read-only editors allow
+movement, scrolling, selection, yank and search. Wrapped lines still count as one
+line for `j` and `k`.
+
+Characters with accents, joined emoji and flags stay together during edits.
+Vertical movement accounts for tabs and wide characters. The Ukrainian map works
+outside Insert mode; punctuation is unchanged, and `ґ` is left unmapped because
+its key position varies. `/` needs the English layout.
+
+This release covers the keys above. Repeat (`.`), text objects, `f t r ~`, colon
+commands, macros, marks, named registers and block selection are not implemented.
+
+## Develop
+
+```sh
+uv sync --locked
+make run       # Demo window
+make check     # Ruff and pytest
+make format    # Format Python
+make record    # Record expected results using local Vim
+make unicode   # Regenerate Vim character classes and widths
+```
+
+Tests run Qt offscreen. CI runs only for a release tag. It checks Linux, macOS
+and Windows on Python 3.12 and 3.14, plus the lowest allowed PySide6 on Python 3.12. Saved
+[Vim cases](https://github.com/sprytnyk/side-vim/tree/main/tests/cases) run without
+Vim in CI; recording them needs Vim, and scrolling needs a Unix terminal.
+
+Before 0.1.0, complete the [Mac key checklist](https://github.com/sprytnyk/side-vim/blob/main/docs/mac-keys.md)
+on a real Mac.
+
+## Release
+
+Set these up by hand before the first tag:
+
+1. In the GitHub repository, open **Settings → Environments** and create `pypi`.
+   Add yourself as a required reviewer. Allow yourself to approve runs you start
+   (leave **Prevent self-review** off). Limit deployment tags to `v*`.
+2. In your PyPI account's **Publishing** page, add a pending trusted publisher:
+
+   | Field | Value |
+   | --- | --- |
+   | PyPI project | `side-vim` |
+   | GitHub owner | `sprytnyk` |
+   | Repository | `side-vim` |
+   | Workflow | `release.yml` |
+   | Environment | `pypi` |
+
+   A pending publisher creates the project on its first upload. No PyPI token
+   goes into GitHub. See the [PyPI setup guide](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
+   and [GitHub approval guide](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/review-deployments).
+
+For each release:
+
+1. On `main`, check the README and run `make check`. Finish the Mac checklist
+   before 0.1.0.
+2. Run `uv version X.Y.Z`. Write the dated `CHANGELOG.md` section from the commits
+   since the previous release, using only sections with entries: Breaking,
+   Highlights, Fixes, Changes and Removed. Review it before committing.
+3. Build and test the wheel in a temporary environment. Make the signed
+   `chore(release): vX.Y.Z` commit and signed `vX.Y.Z` tag with key
+   `0xC00C0F0D647BD3C6`. Push `main` and that tag to `origin`.
+4. The release workflow runs CI, checks that the tag matches the package version,
+   and builds the wheel and source distribution. Review the run and approve the
+   `pypi` job. It publishes those files using
+   [uv trusted publishing](https://docs.astral.sh/uv/guides/integration/github/#publishing-to-pypi).
+5. Confirm the version is on PyPI, then create a GitHub release using just the
+   changelog section as its notes. Attach no files.
+
+The project [release skill](https://github.com/sprytnyk/side-vim/blob/main/.claude/skills/release/SKILL.md)
+has the command sequence and approval points.
