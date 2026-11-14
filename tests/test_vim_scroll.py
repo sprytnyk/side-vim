@@ -6,14 +6,14 @@ to vim's line and column."""
 from collections.abc import Iterator
 
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QKeyCombination, Qt
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
 from qtkeys import cursor_of, put_cursor, send
-from test_scroll import ROWS
 
 from side_vim import Mode, VimMode
+from side_vim.keys import IS_MAC, control_modifier
 from side_vim.motions import Pos
 
 
@@ -43,25 +43,13 @@ def start(editor: QPlainTextEdit, top: int, line: int, col: int) -> VimMode:
     put_cursor(editor, Pos(line, col))
     editor.verticalScrollBar().setValue(top)
     assert editor.firstVisibleBlock().blockNumber() == top
-    assert vim._view() == (top, 11, MAX_TOP)
+    assert editor.verticalScrollBar().pageStep() == 11
+    assert editor.verticalScrollBar().maximum() == MAX_TOP
     return vim
 
 
 def top_of(editor: QPlainTextEdit) -> int:
     return editor.firstVisibleBlock().blockNumber()
-
-
-@pytest.mark.parametrize(
-    ("top", "line", "col", "keys", "expected"), [row for row in ROWS if row[0] <= MAX_TOP]
-)
-def test_vim(
-    editor: QPlainTextEdit, top: int, line: int, col: int, keys: str, expected: tuple[int, int, int]
-) -> None:
-    vim = start(editor, top, line, col)
-    send(editor, keys.replace("|", ""))
-    vim_top, vim_line, vim_col = expected
-    assert (top_of(editor), cursor_of(editor)) == (min(vim_top, MAX_TOP), Pos(vim_line, vim_col))
-    assert vim.mode is Mode.NORMAL
 
 
 def test_the_column_j_and_k_aim_for_stays(editor: QPlainTextEdit) -> None:
@@ -96,12 +84,14 @@ class Window(QWidget):
         self.editor = QPlainTextEdit(self)
         QVBoxLayout(self).addWidget(self.editor)
         self.fired: list[str] = []
-        for key in ("Ctrl+E", "Ctrl+D", "Ctrl+B", "Ctrl+R", "Ctrl+S"):
-            shortcut = QShortcut(QKeySequence(key), self)
-            shortcut.activated.connect(lambda key=key: self.fired.append(key))
+        for key in "EYDUFBRS":
+            sequence = QKeySequence(QKeyCombination(control_modifier(), Qt.Key(ord(key))))
+            shortcut = QShortcut(sequence, self)
+            shortcut.activated.connect(lambda key=key: self.fired.append(f"Ctrl+{key}"))
 
 
-def test_vims_ctrl_keys_win_over_the_apps_shortcuts(qapp: QApplication) -> None:
+@pytest.mark.parametrize("selection", ["", "v", "V"])
+def test_vims_ctrl_keys_win_over_the_apps_shortcuts(qapp: QApplication, selection: str) -> None:
     window = Window()
     window.show()
     window.activateWindow()
@@ -109,14 +99,34 @@ def test_vims_ctrl_keys_win_over_the_apps_shortcuts(qapp: QApplication) -> None:
     window.editor.setFocus()
     window.editor.setPlainText(TEXT)
     vim = VimMode(window.editor)
-    send(window.editor, "<C-e><C-d><C-b><C-r><C-s>")
+    send(window.editor, selection + "<C-e><C-y><C-d><C-u><C-f><C-b><C-r><C-s>")
     assert window.fired == ["Ctrl+S"]
-    send(window.editor, "i<C-e><C-d><C-b><C-r>")
+    # Ctrl+Y can be Qt's own redo shortcut, which takes priority over QShortcut.
+    send(window.editor, "<Esc>i<C-e><C-d><C-u><C-f><C-b><C-r>")
     assert vim.mode is Mode.INSERT
-    assert window.fired == ["Ctrl+S", "Ctrl+E", "Ctrl+D", "Ctrl+B", "Ctrl+R"]
+    assert window.fired == ["Ctrl+S"] + [f"Ctrl+{key}" for key in "EDUFBR"]
     window.close()
     window.deleteLater()
 
 
-def test_key_names_match_qt() -> None:
-    assert QKeySequence("Ctrl+E")[0].key() == Qt.Key.Key_E
+@pytest.mark.skipif(not IS_MAC, reason="Command shortcuts need macOS")
+@pytest.mark.parametrize("selection", ["", "v", "V", "i"])
+def test_command_shortcuts_stay_with_the_app(qapp: QApplication, selection: str) -> None:
+    window = Window()
+    fired: list[str] = []
+    for key in "RF":
+        shortcut = QShortcut(QKeySequence(f"Ctrl+{key}"), window)  # Qt's Ctrl is physical Cmd
+        shortcut.activated.connect(lambda key=key: fired.append(key))
+    window.show()
+    window.activateWindow()
+    assert QTest.qWaitForWindowActive(window)
+    window.editor.setFocus()
+    window.editor.setPlainText(TEXT)
+    VimMode(window.editor)
+    send(window.editor, selection)
+    for key in "RF":
+        QTest.keyClick(window.editor, Qt.Key(ord(key)), Qt.KeyboardModifier.ControlModifier)
+    assert fired == ["R", "F"]
+    assert window.editor.toPlainText() == TEXT
+    window.close()
+    window.deleteLater()

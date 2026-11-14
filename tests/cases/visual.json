@@ -1,0 +1,3743 @@
+{
+  "vim": "vim 9.1, patches 1-16, 647, 678, 697",
+  "cases": [
+    {
+      "id": "visual-001",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vy",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-002",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vly",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-003",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "v3ly",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b cd",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-004",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "vhhy",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " cd",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-005",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "v5hy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-006",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vey",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b cd",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-007",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "vby",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-008",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vwy",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b c",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-009",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        7
+      ],
+      "keys": "vwy",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "f\n  g",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-010",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        6
+      ],
+      "keys": "vwy",
+      "expected": {
+        "cursor": [
+          1,
+          6
+        ],
+        "register": [
+          "j\nk",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-011",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vEy",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b cd",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-012",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vWy",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b c",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-013",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        5
+      ],
+      "keys": "vBy",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "gh i",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-014",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "v$y",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-015",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "v$y",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-016",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "v$y",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "kl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-017",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "v0y",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-018",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "v^y",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "gh ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-019",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "vjy",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "d ef\n  gh ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-020",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "vky",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "d ef\n  gh ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-021",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        7
+      ],
+      "keys": "vjjy",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "f\n  gh ij\nkl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-022",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        6
+      ],
+      "keys": "vjy",
+      "expected": {
+        "cursor": [
+          1,
+          6
+        ],
+        "register": [
+          "j\nkl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-023",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        6
+      ],
+      "keys": "vjky",
+      "expected": {
+        "cursor": [
+          1,
+          6
+        ],
+        "register": [
+          "j",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-024",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "vGy",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          " ij\nk",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-025",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "vggy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-026",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "v$jy",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          " ef\n  gh ij\n",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-027",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "v$jy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-028",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "v2jy",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " cd ef\n  gh ij\nkl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-029",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "v2ky",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b cd ef\n  gh ij\nkl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-030",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "v3Gy",
+      "expected": {
+        "cursor": [
+          1,
+          3
+        ],
+        "register": [
+          "h ij\nk",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-031",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "v1Gy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-032",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vllo|y",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b c",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-033",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vllohy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab c",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-034",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "v$oy",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-035",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "vjohy",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n  gh ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-036",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vwy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo b",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-037",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "v2wy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo bar\n\n",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-038",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "vjy",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar\n\n",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-039",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "vy",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-040",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "vjy",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n ",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-041",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        2,
+        4
+      ],
+      "keys": "vkky",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar\n\n  baz",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-042",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        3,
+        2
+      ],
+      "keys": "vy",
+      "expected": {
+        "cursor": [
+          3,
+          2
+        ],
+        "register": [
+          "d",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-043",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        2,
+        2
+      ],
+      "keys": "v$y",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "baz qux\n",
+          false
+        ],
+        "text": "foo bar\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-044",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vy",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-045",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vky",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-046",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "Vjy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-047",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vhy",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-048",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vly",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-049",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vkoy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-050",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vjoy",
+      "expected": {
+        "cursor": [
+          1,
+          3
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-051",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "VGy",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-052",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "Vggy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-053",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "V2jy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-054",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "vjVy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-055",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "Vjvy",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " cd ef\n  g",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-056",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        2
+      ],
+      "keys": "Vkvy",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " cd ef\n  g",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-057",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vV<Esc>|x",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "b cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-058",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "Vv<Esc>|x",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-059",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "VV<Esc>|x",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-060",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "vv|x",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-061",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vll<Esc>|x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "ab d ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-062",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "v$<Esc>|x",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "f",
+          false
+        ],
+        "text": "ab cd e\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-063",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vjl<Esc>|x",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "g",
+          false
+        ],
+        "text": "ab cd ef\n  h ij\nkl"
+      }
+    },
+    {
+      "id": "visual-064",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vk<Esc>|x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "ab d ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-065",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vl<Esc>|j|x",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "g",
+          false
+        ],
+        "text": "ab cd ef\n  h ij\nkl"
+      }
+    },
+    {
+      "id": "visual-066",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "v$<Esc>|j|x",
+      "expected": {
+        "cursor": [
+          1,
+          5
+        ],
+        "register": [
+          "j",
+          false
+        ],
+        "text": "ab cd ef\n  gh i\nkl"
+      }
+    },
+    {
+      "id": "visual-067",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vj$<Esc>|k|x",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "e",
+          false
+        ],
+        "text": "ab cd f\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-068",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vd",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "a cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-069",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vld",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b ",
+          false
+        ],
+        "text": "acd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-070",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vx",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "a cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-071",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlx",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b ",
+          false
+        ],
+        "text": "acd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-072",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "v$d",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n",
+          false
+        ],
+        "text": "ab   gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-073",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "v$d",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          " gh ij\n",
+          false
+        ],
+        "text": "ab cd ef\n kl"
+      }
+    },
+    {
+      "id": "visual-074",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "v$d",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "l",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nk"
+      }
+    },
+    {
+      "id": "visual-075",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "vjd",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " cd ef\n  g",
+          false
+        ],
+        "text": "abh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-076",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "vjx",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " cd ef\n  g",
+          false
+        ],
+        "text": "abh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-077",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "vkd",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "d ef\n  gh ",
+          false
+        ],
+        "text": "ab cij\nkl"
+      }
+    },
+    {
+      "id": "visual-078",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "vbd",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "kl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\n"
+      }
+    },
+    {
+      "id": "visual-079",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "vwd",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "d e",
+          false
+        ],
+        "text": "ab cf\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-080",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "v$jd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          false
+        ],
+        "text": "kl"
+      }
+    },
+    {
+      "id": "visual-081",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vGd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nk",
+          false
+        ],
+        "text": "l"
+      }
+    },
+    {
+      "id": "visual-082",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "vggd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "visual-083",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "vd",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          false
+        ],
+        "text": "foo bar\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-084",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        0,
+        7
+      ],
+      "keys": "vd",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "r",
+          false
+        ],
+        "text": "foo ba\n\n  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-085",
+      "group": "visual",
+      "text": "foo bar\n\n  baz qux\nend",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjd",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " bar\n\n",
+          false
+        ],
+        "text": "foo  baz qux\nend"
+      }
+    },
+    {
+      "id": "visual-086",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "Vjd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "kl"
+      }
+    },
+    {
+      "id": "visual-087",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vjd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef"
+      }
+    },
+    {
+      "id": "visual-088",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "Vd",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "kl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij"
+      }
+    },
+    {
+      "id": "visual-089",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "Vd",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\nkl"
+      }
+    },
+    {
+      "id": "visual-090",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "Vd",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "ab cd ef\n",
+          true
+        ],
+        "text": "  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-091",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "VGd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "visual-092",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "Vkd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "kl"
+      }
+    },
+    {
+      "id": "visual-093",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "Vx",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\nkl"
+      }
+    },
+    {
+      "id": "visual-094",
+      "group": "visual",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "visual-095",
+      "group": "visual",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "visual-096",
+      "group": "visual",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "visual-097",
+      "group": "visual",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "visual-098",
+      "group": "visual",
+      "text": "a\n\n",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "vd",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\n"
+      }
+    },
+    {
+      "id": "visual-099",
+      "group": "visual",
+      "text": "a\n\n",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "vy",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\n"
+      }
+    },
+    {
+      "id": "visual-100",
+      "group": "visual",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "vy",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          false
+        ],
+        "text": "a\n\nb"
+      }
+    },
+    {
+      "id": "visual-101",
+      "group": "visual",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "vd",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          false
+        ],
+        "text": "a\nb"
+      }
+    },
+    {
+      "id": "visual-102",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b ",
+          false
+        ],
+        "text": "aXcd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-103",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "v$cX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n",
+          false
+        ],
+        "text": "ab X  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-104",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "v$jcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n  gh ij\n",
+          false
+        ],
+        "text": "ab Xkl"
+      }
+    },
+    {
+      "id": "visual-105",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n  gh",
+          false
+        ],
+        "text": "ab X ij\nkl"
+      }
+    },
+    {
+      "id": "visual-106",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "vkcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "d ef\n  gh ",
+          false
+        ],
+        "text": "ab cXij\nkl"
+      }
+    },
+    {
+      "id": "visual-107",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vcXY<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "aXY cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-108",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "vbcX<Esc>",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "kl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nX"
+      }
+    },
+    {
+      "id": "visual-109",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "VcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n",
+          true
+        ],
+        "text": "X\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-110",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "VjcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "X\nkl"
+      }
+    },
+    {
+      "id": "visual-111",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "VjcX<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\nX"
+      }
+    },
+    {
+      "id": "visual-112",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "VkcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "X\nkl"
+      }
+    },
+    {
+      "id": "visual-113",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "VGcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl\n",
+          true
+        ],
+        "text": "X"
+      }
+    },
+    {
+      "id": "visual-114",
+      "group": "visual",
+      "text": "a\n\n",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "vcX<Esc>",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\nX"
+      }
+    },
+    {
+      "id": "visual-115",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|wvlp",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "cd",
+          false
+        ],
+        "text": "ab ab  ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-116",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|wvl2p",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "cd",
+          false
+        ],
+        "text": "ab ab ab  ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-117",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|wvjp",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "cd ef\n  gh",
+          false
+        ],
+        "text": "ab ab  ij\nkl"
+      }
+    },
+    {
+      "id": "visual-118",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|$vp",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "f",
+          false
+        ],
+        "text": "ab cd ea\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-119",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "yl|v$p",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n",
+          false
+        ],
+        "text": "ab c  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-120",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|wvlp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "cd",
+          false
+        ],
+        "text": "ab \nab cd ef\n ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-121",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|wv$p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "cd ef\n",
+          false
+        ],
+        "text": "ab \nab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-122",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|wvjp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "cd ef\n  gh",
+          false
+        ],
+        "text": "ab \nab cd ef\n ij\nkl"
+      }
+    },
+    {
+      "id": "visual-123",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|wvl2p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "cd",
+          false
+        ],
+        "text": "ab \nab cd ef\nab cd ef\n ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-124",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "yy|vp",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "k",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\n\nkl\nl"
+      }
+    },
+    {
+      "id": "visual-125",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "yy|v$p",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "l",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nk\nkl\n"
+      }
+    },
+    {
+      "id": "visual-126",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "yy|vlp",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "kl",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\n\nkl\n"
+      }
+    },
+    {
+      "id": "visual-127",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|jVp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\nab cd ef\nkl"
+      }
+    },
+    {
+      "id": "visual-128",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|jVjp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\nab cd ef"
+      }
+    },
+    {
+      "id": "visual-129",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|jVj2p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\nab cd ef\nab cd ef"
+      }
+    },
+    {
+      "id": "visual-130",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "jyy|ggVp",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "ab cd ef\n",
+          true
+        ],
+        "text": "  gh ij\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-131",
+      "group": "visual",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "visual-132",
+      "group": "visual",
+      "text": "ab\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|Vjp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\ncd\n",
+          true
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "visual-133",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|Vjjp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef"
+      }
+    },
+    {
+      "id": "visual-134",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|jVp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\nab \nkl"
+      }
+    },
+    {
+      "id": "visual-135",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|jVjp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\nab "
+      }
+    },
+    {
+      "id": "visual-136",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n",
+          true
+        ],
+        "text": "ab \n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-137",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|jV2p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\nab \nab \nkl"
+      }
+    },
+    {
+      "id": "visual-138",
+      "group": "visual",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "visual-139",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|Vjjp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "visual-140",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjly|Gvp",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "k",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\ncd ef\n  gh l"
+      }
+    },
+    {
+      "id": "visual-141",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjly|ggvp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "cd ef\n  gh b cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-142",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjly|ggVp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n",
+          true
+        ],
+        "text": "cd ef\n  gh \n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-143",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjly|jV2p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\ncd ef\n  gh \ncd ef\n  gh \nkl"
+      }
+    },
+    {
+      "id": "visual-144",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjly|G$vp",
+      "expected": {
+        "cursor": [
+          2,
+          1
+        ],
+        "register": [
+          "l",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkcd ef\n  gh "
+      }
+    },
+    {
+      "id": "visual-145",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vlp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab",
+          false
+        ],
+        "text": " cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-146",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vp",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "ab cd ef\n",
+          true
+        ],
+        "text": "  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-147",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vjp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "kl"
+      }
+    },
+    {
+      "id": "visual-148",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "Vjp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef"
+      }
+    },
+    {
+      "id": "visual-149",
+      "group": "visual",
+      "text": "a\n\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|Gvp",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a\n\na"
+      }
+    },
+    {
+      "id": "visual-150",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vly|wvlp|P",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "cd",
+          false
+        ],
+        "text": "ab bcd  ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-151",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|wvlp|wvlp",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "ef",
+          false
+        ],
+        "text": "ab ab  cd\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-152",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjd|u",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n  gh",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-153",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "vkd|u",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "d ef\n  gh ",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-154",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "Vjd|u",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-155",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "Vkd|u",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-156",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vhd|u",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-157",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "Vjod|u",
+      "expected": {
+        "cursor": [
+          1,
+          3
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-158",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjcX<Esc>|u",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n  gh",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-159",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "VkcX<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-160",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "VjcX<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-161",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|jVp|u",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-162",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yw|wvlp|u",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-163",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjly|Gvp|u",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "k",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-164",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "Vkd|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "kl"
+      }
+    },
+    {
+      "id": "visual-165",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vjd|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "cd ef\n  gh",
+          false
+        ],
+        "text": "ab  ij\nkl"
+      }
+    },
+    {
+      "id": "visual-166",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "vjx|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          " cd ef\n  g",
+          false
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "visual-167",
+      "group": "visual",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|wvjp|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "cd ef\n  gh",
+          false
+        ],
+        "text": "ab \nab cd ef\n ij\nkl"
+      }
+    },
+    {
+      "id": "visual-168",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vly",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "😀x",
+          false
+        ],
+        "text": "😀x 日本語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-169",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vey",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "😀x",
+          false
+        ],
+        "text": "😀x 日本語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-170",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vly",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "日本",
+          false
+        ],
+        "text": "😀x 日本語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-171",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "v$y",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "本語\n",
+          false
+        ],
+        "text": "😀x 日本語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-172",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "vly",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "éa",
+          false
+        ],
+        "text": "😀x 日本語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-173",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "vjy",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "éa b\n\t",
+          false
+        ],
+        "text": "😀x 日本語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-174",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "vly",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "\tc",
+          false
+        ],
+        "text": "😀x 日本語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-175",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vjd",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "x 日本語\néa ",
+          false
+        ],
+        "text": "😀b\n\tc"
+      }
+    },
+    {
+      "id": "visual-176",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vjd",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "😀x 日本語\néa b\n",
+          true
+        ],
+        "text": "\tc"
+      }
+    },
+    {
+      "id": "visual-177",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "vlcX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "日本",
+          false
+        ],
+        "text": "😀x X語\néa b\n\tc"
+      }
+    },
+    {
+      "id": "visual-178",
+      "group": "visual",
+      "text": "😀x 日本語\néa b\n\tc",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "yl|kvp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "😀",
+          false
+        ],
+        "text": "éx 日本語\néa b\n\tc"
+      }
+    }
+  ]
+}

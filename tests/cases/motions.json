@@ -1,0 +1,2966 @@
+{
+  "vim": "vim 9.1, patches 1-16, 647, 678, 697",
+  "cases": [
+    {
+      "id": "editor-motions-001",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-002",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2w",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-003",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        10
+      ],
+      "keys": "b",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-004",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-005",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "$",
+      "expected": {
+        "cursor": [
+          0,
+          10
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-006",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "<End>",
+      "expected": {
+        "cursor": [
+          0,
+          10
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-007",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        6
+      ],
+      "keys": "0",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-008",
+      "group": "editor-motions",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        6
+      ],
+      "keys": "<Home>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "editor-motions-009",
+      "group": "editor-motions",
+      "text": "  foo",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "^",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  foo"
+      }
+    },
+    {
+      "id": "editor-motions-010",
+      "group": "editor-motions",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "l",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "editor-motions-011",
+      "group": "editor-motions",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "<Right>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "editor-motions-012",
+      "group": "editor-motions",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "l",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "editor-motions-013",
+      "group": "editor-motions",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "h",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "editor-motions-014",
+      "group": "editor-motions",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "<Left>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "editor-motions-015",
+      "group": "editor-motions",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "9l",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "editor-motions-016",
+      "group": "editor-motions",
+      "text": "a\nb\nc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "editor-motions-017",
+      "group": "editor-motions",
+      "text": "a\nb\nc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "<Down>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "editor-motions-018",
+      "group": "editor-motions",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "editor-motions-019",
+      "group": "editor-motions",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "<Up>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "editor-motions-020",
+      "group": "editor-motions",
+      "text": "a\nb\nc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "G",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "editor-motions-021",
+      "group": "editor-motions",
+      "text": "a\n  b\nc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2G",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n  b\nc"
+      }
+    },
+    {
+      "id": "editor-motions-022",
+      "group": "editor-motions",
+      "text": "a\nb\n  c",
+      "cursor": [
+        2,
+        2
+      ],
+      "keys": "gg",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\n  c"
+      }
+    },
+    {
+      "id": "editor-motions-023",
+      "group": "editor-motions",
+      "text": "foo.bar(baz)",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3w",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo.bar(baz)"
+      }
+    },
+    {
+      "id": "editor-motions-024",
+      "group": "editor-motions",
+      "text": "foo.bar(baz)",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "W",
+      "expected": {
+        "cursor": [
+          0,
+          11
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo.bar(baz)"
+      }
+    },
+    {
+      "id": "editor-motions-031",
+      "group": "editor-motions",
+      "text": "abcdef\nab\nabcdef",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "jj",
+      "expected": {
+        "cursor": [
+          2,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef"
+      }
+    },
+    {
+      "id": "editor-motions-032",
+      "group": "editor-motions",
+      "text": "abcdef\nab\nabcdef",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "$jj",
+      "expected": {
+        "cursor": [
+          2,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef"
+      }
+    },
+    {
+      "id": "editor-motions-033",
+      "group": "editor-motions",
+      "text": "abcdef\nab\nabcdef",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "j0j",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef"
+      }
+    },
+    {
+      "id": "editor-motions-034",
+      "group": "editor-motions",
+      "text": "\tx\nabcdefghij",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\tx\nabcdefghij"
+      }
+    },
+    {
+      "id": "editor-motions-035",
+      "group": "editor-motions",
+      "text": "\tx\nabcdefghij",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\tx\nabcdefghij"
+      }
+    },
+    {
+      "id": "editor-motions-036",
+      "group": "editor-motions",
+      "text": "日本語x\nabcdefgh",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日本語x\nabcdefgh"
+      }
+    },
+    {
+      "id": "editor-motions-037",
+      "group": "editor-motions",
+      "text": "ab cd\nxy",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd\nxy"
+      }
+    },
+    {
+      "id": "editor-motions-038",
+      "group": "editor-motions",
+      "text": "ab cd\nxy",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "$",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd\nxy"
+      }
+    },
+    {
+      "id": "word-motions-001",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-002",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2w",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-003",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3w",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-004",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "4w",
+      "expected": {
+        "cursor": [
+          0,
+          13
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-005",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "5w",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-006",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "6w",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-007",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "7w",
+      "expected": {
+        "cursor": [
+          2,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-008",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-009",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2e",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-010",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "4e",
+      "expected": {
+        "cursor": [
+          0,
+          10
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-011",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "5e",
+      "expected": {
+        "cursor": [
+          0,
+          15
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-012",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "W",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-013",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2W",
+      "expected": {
+        "cursor": [
+          0,
+          13
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-014",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "E",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-015",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        2,
+        4
+      ],
+      "keys": "b",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-016",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        2,
+        4
+      ],
+      "keys": "2b",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-017",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        2,
+        4
+      ],
+      "keys": "3b",
+      "expected": {
+        "cursor": [
+          0,
+          13
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-018",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        2,
+        4
+      ],
+      "keys": "4b",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-019",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        2,
+        4
+      ],
+      "keys": "B",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-020",
+      "group": "word-motions",
+      "text": "foo bar.baz  qux\n\n  end",
+      "cursor": [
+        2,
+        4
+      ],
+      "keys": "2B",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar.baz  qux\n\n  end"
+      }
+    },
+    {
+      "id": "word-motions-021",
+      "group": "word-motions",
+      "text": "one two",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "one two"
+      }
+    },
+    {
+      "id": "word-motions-022",
+      "group": "word-motions",
+      "text": "one two",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "3w",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "one two"
+      }
+    },
+    {
+      "id": "word-motions-023",
+      "group": "word-motions",
+      "text": "one two",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "one two"
+      }
+    },
+    {
+      "id": "word-motions-024",
+      "group": "word-motions",
+      "text": "ab cd",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd"
+      }
+    },
+    {
+      "id": "word-motions-025",
+      "group": "word-motions",
+      "text": "ab cd",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "E",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd"
+      }
+    },
+    {
+      "id": "word-motions-026",
+      "group": "word-motions",
+      "text": "ab cd",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "b",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd"
+      }
+    },
+    {
+      "id": "word-motions-027",
+      "group": "word-motions",
+      "text": "a  ",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a  "
+      }
+    },
+    {
+      "id": "word-motions-028",
+      "group": "word-motions",
+      "text": "a  ",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a  "
+      }
+    },
+    {
+      "id": "word-motions-029",
+      "group": "word-motions",
+      "text": "ab\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n"
+      }
+    },
+    {
+      "id": "word-motions-030",
+      "group": "word-motions",
+      "text": "ab\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n"
+      }
+    },
+    {
+      "id": "word-motions-031",
+      "group": "word-motions",
+      "text": "  ab",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "b",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  ab"
+      }
+    },
+    {
+      "id": "word-motions-032",
+      "group": "word-motions",
+      "text": "ab\ncd",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "b",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\ncd"
+      }
+    },
+    {
+      "id": "word-motions-033",
+      "group": "word-motions",
+      "text": "foo\n\nbar",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo\n\nbar"
+      }
+    },
+    {
+      "id": "word-motions-034",
+      "group": "word-motions",
+      "text": "foo\n\nbar",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2w",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo\n\nbar"
+      }
+    },
+    {
+      "id": "word-motions-035",
+      "group": "word-motions",
+      "text": "foo\n\nbar",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo\n\nbar"
+      }
+    },
+    {
+      "id": "word-motions-036",
+      "group": "word-motions",
+      "text": "foo\n   \nbar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo\n   \nbar"
+      }
+    },
+    {
+      "id": "word-motions-037",
+      "group": "word-motions",
+      "text": "foo\n   \nbar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo\n   \nbar"
+      }
+    },
+    {
+      "id": "word-motions-038",
+      "group": "word-motions",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\nb"
+      }
+    },
+    {
+      "id": "word-motions-039",
+      "group": "word-motions",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\nb"
+      }
+    },
+    {
+      "id": "word-motions-040",
+      "group": "word-motions",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "b",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\nb"
+      }
+    },
+    {
+      "id": "word-motions-041",
+      "group": "word-motions",
+      "text": "a\n  \n  \nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n  \n  \nb"
+      }
+    },
+    {
+      "id": "word-motions-042",
+      "group": "word-motions",
+      "text": "a\n  \n  \nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2w",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n  \n  \nb"
+      }
+    },
+    {
+      "id": "word-motions-043",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-044",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2w",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-045",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3w",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-046",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "4w",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-047",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "5w",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-048",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-049",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2e",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-050",
+      "group": "word-motions",
+      "text": "a.b,,c--d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "W",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b,,c--d"
+      }
+    },
+    {
+      "id": "word-motions-051",
+      "group": "word-motions",
+      "text": "привіт світ_2 ok",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "привіт світ_2 ok"
+      }
+    },
+    {
+      "id": "word-motions-052",
+      "group": "word-motions",
+      "text": "привіт світ_2 ok",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2w",
+      "expected": {
+        "cursor": [
+          0,
+          14
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "привіт світ_2 ok"
+      }
+    },
+    {
+      "id": "word-motions-053",
+      "group": "word-motions",
+      "text": "привіт світ_2 ok",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "привіт світ_2 ok"
+      }
+    },
+    {
+      "id": "word-motions-054",
+      "group": "word-motions",
+      "text": "привіт світ_2 ok",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2e",
+      "expected": {
+        "cursor": [
+          0,
+          12
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "привіт світ_2 ok"
+      }
+    },
+    {
+      "id": "line-motions-001",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-002",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "2j",
+      "expected": {
+        "cursor": [
+          2,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-003",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "3j",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-004",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "4j",
+      "expected": {
+        "cursor": [
+          4,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-005",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "10j",
+      "expected": {
+        "cursor": [
+          4,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-006",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "jk",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-007",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "jj",
+      "expected": {
+        "cursor": [
+          2,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-008",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "$j",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-009",
+      "group": "line-motions",
+      "text": "abcdef\nab\nabcdef\n\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "$jj",
+      "expected": {
+        "cursor": [
+          2,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\nab\nabcdef\n\nxyz"
+      }
+    },
+    {
+      "id": "line-motions-010",
+      "group": "line-motions",
+      "text": "ab\n  cd",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n  cd"
+      }
+    },
+    {
+      "id": "line-motions-011",
+      "group": "line-motions",
+      "text": "ab\n  cd",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "kj",
+      "expected": {
+        "cursor": [
+          1,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n  cd"
+      }
+    },
+    {
+      "id": "line-motions-012",
+      "group": "line-motions",
+      "text": "  a\n    b\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "gg",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  a\n    b\nc"
+      }
+    },
+    {
+      "id": "line-motions-013",
+      "group": "line-motions",
+      "text": "  a\n    b\nc",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "G",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  a\n    b\nc"
+      }
+    },
+    {
+      "id": "line-motions-014",
+      "group": "line-motions",
+      "text": "  a\n    b\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "2G",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  a\n    b\nc"
+      }
+    },
+    {
+      "id": "line-motions-015",
+      "group": "line-motions",
+      "text": "  a\n    b\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "9G",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  a\n    b\nc"
+      }
+    },
+    {
+      "id": "line-motions-016",
+      "group": "line-motions",
+      "text": "  a\n    b\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "2gg",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  a\n    b\nc"
+      }
+    },
+    {
+      "id": "line-motions-017",
+      "group": "line-motions",
+      "text": "   \nx",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "gg",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "   \nx"
+      }
+    },
+    {
+      "id": "line-motions-018",
+      "group": "line-motions",
+      "text": "ab\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "G",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n"
+      }
+    },
+    {
+      "id": "line-motions-019",
+      "group": "line-motions",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "5l",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "line-motions-020",
+      "group": "line-motions",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "5h",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "line-motions-021",
+      "group": "line-motions",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "l",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "line-motions-022",
+      "group": "line-motions",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "h",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "line-motions-023",
+      "group": "line-motions",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3$",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "line-motions-024",
+      "group": "line-motions",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "$",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "line-motions-025",
+      "group": "line-motions",
+      "text": "   abc",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "^",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "   abc"
+      }
+    },
+    {
+      "id": "line-motions-026",
+      "group": "line-motions",
+      "text": "   abc",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "3^",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "   abc"
+      }
+    },
+    {
+      "id": "line-motions-027",
+      "group": "line-motions",
+      "text": "   abc",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "0",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "   abc"
+      }
+    },
+    {
+      "id": "line-motions-028",
+      "group": "line-motions",
+      "text": "   \nx",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "^",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "   \nx"
+      }
+    },
+    {
+      "id": "screen-columns-001",
+      "group": "screen-columns",
+      "text": "\tab\nabcdefghijkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\tab\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-002",
+      "group": "screen-columns",
+      "text": "\tab\nabcdefghijkl",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "jk",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\tab\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-003",
+      "group": "screen-columns",
+      "text": "\tab\nabcdefghijkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\tab\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-004",
+      "group": "screen-columns",
+      "text": "\tab\nabcdefghijkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "kj",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\tab\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-005",
+      "group": "screen-columns",
+      "text": "\tab\nabcdefghijkl",
+      "cursor": [
+        1,
+        9
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\tab\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-006",
+      "group": "screen-columns",
+      "text": "ab\tc\nabcdefghijkl",
+      "cursor": [
+        1,
+        5
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\tc\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-007",
+      "group": "screen-columns",
+      "text": "ab\tc\nabcdefghijkl",
+      "cursor": [
+        1,
+        5
+      ],
+      "keys": "kj",
+      "expected": {
+        "cursor": [
+          1,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\tc\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-008",
+      "group": "screen-columns",
+      "text": "ab\tc\nabcdefghijkl",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\tc\nabcdefghijkl"
+      }
+    },
+    {
+      "id": "screen-columns-009",
+      "group": "screen-columns",
+      "text": "日本語\nabcdef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日本語\nabcdef"
+      }
+    },
+    {
+      "id": "screen-columns-010",
+      "group": "screen-columns",
+      "text": "日本語\nabcdef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "jk",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日本語\nabcdef"
+      }
+    },
+    {
+      "id": "screen-columns-011",
+      "group": "screen-columns",
+      "text": "日本語\nabcdef",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日本語\nabcdef"
+      }
+    },
+    {
+      "id": "screen-columns-012",
+      "group": "screen-columns",
+      "text": "日本語\nabcdef",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "kj",
+      "expected": {
+        "cursor": [
+          1,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日本語\nabcdef"
+      }
+    },
+    {
+      "id": "screen-columns-013",
+      "group": "screen-columns",
+      "text": "日本語\nabcdef",
+      "cursor": [
+        1,
+        2
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日本語\nabcdef"
+      }
+    },
+    {
+      "id": "screen-columns-014",
+      "group": "screen-columns",
+      "text": "ab日本\nabcdefg",
+      "cursor": [
+        1,
+        5
+      ],
+      "keys": "k",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab日本\nabcdefg"
+      }
+    },
+    {
+      "id": "screen-columns-015",
+      "group": "screen-columns",
+      "text": "ab日本\nabcdefg",
+      "cursor": [
+        1,
+        5
+      ],
+      "keys": "$k",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab日本\nabcdefg"
+      }
+    },
+    {
+      "id": "screen-columns-016",
+      "group": "screen-columns",
+      "text": "😀😀x\nabcdef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "😀😀x\nabcdef"
+      }
+    },
+    {
+      "id": "screen-columns-017",
+      "group": "screen-columns",
+      "text": "abcdef\n😀😀x",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\n😀😀x"
+      }
+    },
+    {
+      "id": "screen-columns-018",
+      "group": "screen-columns",
+      "text": "abcdef\n😀😀x",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "jl",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef\n😀😀x"
+      }
+    },
+    {
+      "id": "screen-columns-019",
+      "group": "screen-columns",
+      "text": "a😀b c",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a😀b c"
+      }
+    },
+    {
+      "id": "screen-columns-020",
+      "group": "screen-columns",
+      "text": "a😀b c",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2w",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a😀b c"
+      }
+    },
+    {
+      "id": "screen-columns-021",
+      "group": "screen-columns",
+      "text": "a😀b c",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "e",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a😀b c"
+      }
+    },
+    {
+      "id": "screen-columns-022",
+      "group": "screen-columns",
+      "text": "éé x\nabcdef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "w",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "éé x\nabcdef"
+      }
+    },
+    {
+      "id": "screen-columns-023",
+      "group": "screen-columns",
+      "text": "éé x\nabcdef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "j",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "éé x\nabcdef"
+      }
+    },
+    {
+      "id": "unicode-cursor-001",
+      "group": "unicode-cursor",
+      "text": "é日本 x",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "h",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "é日本 x"
+      }
+    },
+    {
+      "id": "unicode-cursor-002",
+      "group": "unicode-cursor",
+      "text": "é日本 x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3l",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "é日本 x"
+      }
+    },
+    {
+      "id": "unicode-cursor-003",
+      "group": "unicode-cursor",
+      "text": "é日本 x",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "h",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "é日本 x"
+      }
+    },
+    {
+      "id": "unicode-cursor-004",
+      "group": "unicode-cursor",
+      "text": "é日本 x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3l",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "é日本 x"
+      }
+    }
+  ]
+}

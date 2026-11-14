@@ -5,28 +5,24 @@ editors, and the keyboard layout map. Cases marked "vim" were checked against vi
 from collections.abc import Iterator
 
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QKeyCombination, Qt
 from PySide6.QtGui import QKeyEvent, QKeySequence, QShortcut
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
-from qtkeys import cursor_of, plain, put_cursor, send, text_of, type_text
+from qtkeys import cursor_of, plain, put_cursor, send, start_vim, text_of, type_text
 
 import side_vim.vim as vim_module
 from side_vim import UKRAINIAN, Mode, VimMode
 from side_vim.edits import Register
+from side_vim.keys import control_modifier
 from side_vim.motions import Pos
 from side_vim.parser import NORMAL_ACTIONS, OPERATORS, VISUAL_ACTIONS
+
+pytestmark = pytest.mark.usefixtures("empty_register")
 
 T = "foo bar foo\nbaz foo\nfoo"
 FAMILY = "\U0001f468‍\U0001f469‍\U0001f467"
 UA = "\U0001f1fa\U0001f1e6"
-
-
-@pytest.fixture(autouse=True)
-def empty_register() -> Iterator[None]:
-    vim_module._register = Register()
-    yield
-    vim_module._register = Register()
 
 
 @pytest.fixture
@@ -39,37 +35,16 @@ def editor(qapp: QApplication) -> Iterator[QPlainTextEdit]:
     e.deleteLater()
 
 
-def start(editor: QPlainTextEdit, text: str, line: int = 0, col: int = 0) -> VimMode:
-    editor.setPlainText(text)
-    vim = VimMode(editor)
-    put_cursor(editor, Pos(line, col))
-    return vim
-
-
 # --- search ---
 
 
 @pytest.mark.parametrize(
     ("text", "line", "col", "keys", "pattern", "forward", "cursor"),
     [
-        # all vim
-        (T, 0, 0, "n", "foo", True, (0, 8)),
-        (T, 0, 0, "3n", "foo", True, (2, 0)),
-        (T, 0, 0, "4n", "foo", True, (0, 0)),
-        (T, 0, 0, "N", "foo", True, (2, 0)),
-        (T, 0, 0, "n", "foo", False, (2, 0)),
-        (T, 1, 4, "N", "foo", True, (0, 8)),
-        ("aaaa", 0, 0, "n", "aa", True, (0, 2)),
-        ("xée", 0, 0, "n", "e", True, (0, 2)),
-        ("\U0001f600a\U0001f600a", 0, 1, "n", "\U0001f600", True, (0, 2)),
-        (T, 0, 0, "n", "o\nb", True, (0, 10)),
-        ("ab\ncd", 0, 0, "n", "\nc", True, (0, 1)),
-        (T, 0, 0, "n", "zzz", True, (0, 0)),
-        # vim splits these into code points; here each is one character
-        (FAMILY + "a" + FAMILY, 0, 0, "n", FAMILY, True, (0, 2)),
-        (UA + UA + "x" + UA, 0, 0, "n", UA, True, (0, 1)),
-        (UA + UA + "x" + UA, 0, 1, "n", UA + "x", True, (0, 1)),
-        (UA + "x", 0, 0, "n", "\U0001f1e6", True, (0, 0)),  # half a flag never matches
+        ("👨\u200d👩\u200d👧a👨\u200d👩\u200d👧", 0, 0, "n", "👨\u200d👩\u200d👧", True, [0, 2]),
+        ("🇺🇦🇺🇦x🇺🇦", 0, 0, "n", "🇺🇦", True, [0, 1]),
+        ("🇺🇦🇺🇦x🇺🇦", 0, 1, "n", "🇺🇦x", True, [0, 1]),
+        ("🇺🇦x", 0, 0, "n", "🇦", True, [0, 0]),
     ],
 )
 def test_n_and_n(
@@ -82,7 +57,7 @@ def test_n_and_n(
     forward: bool,
     cursor: tuple[int, int],
 ) -> None:
-    vim = start(editor, text, line, col)
+    vim = start_vim(editor, text, line, col)
     vim.set_search(pattern, forward)
     put_cursor(editor, Pos(line, col))
     send(editor, keys)
@@ -90,34 +65,8 @@ def test_n_and_n(
     assert text_of(editor) == text
 
 
-@pytest.mark.parametrize(
-    ("line", "col", "pattern", "forward", "cursor"),
-    [
-        # all vim, as `/foo<CR>` or `?foo<CR>`
-        (0, 0, "foo", True, (0, 8)),
-        (0, 8, "foo", True, (1, 4)),
-        (2, 0, "foo", True, (0, 0)),
-        (0, 0, "foo", False, (2, 0)),
-        (1, 4, "foo", False, (0, 8)),
-        (0, 1, "zzz", True, (0, 1)),
-        (0, 1, "", True, (0, 1)),
-    ],
-)
-def test_set_search_jumps_to_the_next_match(
-    editor: QPlainTextEdit,
-    line: int,
-    col: int,
-    pattern: str,
-    forward: bool,
-    cursor: tuple[int, int],
-) -> None:
-    vim = start(editor, T, line, col)
-    vim.set_search(pattern, forward)
-    assert cursor_of(editor) == Pos(*cursor)
-
-
 def test_set_search_moves_the_end_in_visual_mode(editor: QPlainTextEdit) -> None:
-    vim = start(editor, T, 0, 1)
+    vim = start_vim(editor, T, 0, 1)
     send(editor, "v")
     vim.set_search("foo")
     assert vim.mode is Mode.VISUAL
@@ -125,7 +74,7 @@ def test_set_search_moves_the_end_in_visual_mode(editor: QPlainTextEdit) -> None
 
 
 def test_set_search_doesnt_jump_in_insert_mode_or_when_off(editor: QPlainTextEdit) -> None:
-    vim = start(editor, T, 0, 1)
+    vim = start_vim(editor, T, 0, 1)
     send(editor, "i")
     vim.set_search("foo")
     assert editor.textCursor().position() == 1
@@ -139,7 +88,7 @@ def test_set_search_doesnt_jump_in_insert_mode_or_when_off(editor: QPlainTextEdi
 
 
 def test_no_search_text(editor: QPlainTextEdit) -> None:
-    vim = start(editor, T, 0, 1)
+    vim = start_vim(editor, T, 0, 1)
     send(editor, "nN")
     assert cursor_of(editor) == Pos(0, 1)
     vim.set_search("")
@@ -148,7 +97,7 @@ def test_no_search_text(editor: QPlainTextEdit) -> None:
 
 
 def test_line_breaks_in_the_search_text(editor: QPlainTextEdit) -> None:
-    vim = start(editor, T)
+    vim = start_vim(editor, T)
     vim.set_search("o\r\nb")
     assert cursor_of(editor) == Pos(0, 10)
     send(editor, "gg0")
@@ -157,7 +106,7 @@ def test_line_breaks_in_the_search_text(editor: QPlainTextEdit) -> None:
 
 
 def test_n_in_visual_mode_moves_the_end(editor: QPlainTextEdit) -> None:
-    vim = start(editor, T, 0, 1)
+    vim = start_vim(editor, T, 0, 1)
     vim.set_search("foo")
     put_cursor(editor, Pos(0, 1))
     send(editor, "vn")
@@ -168,7 +117,7 @@ def test_n_in_visual_mode_moves_the_end(editor: QPlainTextEdit) -> None:
 
 
 def test_search_keys_call_the_hook(editor: QPlainTextEdit) -> None:
-    vim = start(editor, T)
+    vim = start_vim(editor, T)
     send(editor, "/")  # no hook: nothing happens
     calls: list[bool] = []
     vim.search_hook = calls.append
@@ -204,7 +153,7 @@ def window(qapp: QApplication) -> Iterator[Window]:
 
 
 def test_the_esc_hook_comes_first(window: Window) -> None:
-    vim = start(window.editor, "abc")
+    vim = start_vim(window.editor, "abc")
     used = [True]
     calls: list[Mode] = []
 
@@ -255,7 +204,7 @@ def test_every_command_has_a_handler(editor: QPlainTextEdit) -> None:
 )
 def test_a_read_only_editor_doesnt_edit(editor: QPlainTextEdit, keys: str) -> None:
     editor.setReadOnly(True)
-    vim = start(editor, "abc def\nghi", 0, 1)
+    vim = start_vim(editor, "abc def\nghi", 0, 1)
     vim_module._register = Register("reg", linewise=False)
     send(editor, keys)
     assert text_of(editor) == "abc def\nghi"
@@ -264,7 +213,7 @@ def test_a_read_only_editor_doesnt_edit(editor: QPlainTextEdit, keys: str) -> No
 
 def test_a_read_only_editor_moves_selects_and_yanks(editor: QPlainTextEdit) -> None:
     editor.setReadOnly(True)
-    vim = start(editor, "abc def\nghi", 0, 1)
+    vim = start_vim(editor, "abc def\nghi", 0, 1)
     send(editor, "w")
     assert cursor_of(editor) == Pos(0, 4)
     send(editor, "yw")
@@ -280,16 +229,16 @@ def test_a_read_only_editor_moves_selects_and_yanks(editor: QPlainTextEdit) -> N
 def test_a_read_only_editor_swaps_the_ends_of_the_selection(editor: QPlainTextEdit) -> None:
     # Visual mode's o isn't Normal mode's o, which opens a line
     editor.setReadOnly(True)
-    vim = start(editor, "abc def", 0, 1)
+    start_vim(editor, "abc def", 0, 1)
     send(editor, "vllo")
-    assert vim._pos(vim._lines()) == Pos(0, 1)
+    assert cursor_of(editor) == Pos(0, 1)
     send(editor, "y")
     assert vim_module._register == Register("bc ", linewise=False)
 
 
 def test_a_read_only_editor_shows_vims_cursor(editor: QPlainTextEdit) -> None:
     editor.setReadOnly(True)
-    vim = start(editor, "abc", 0, 1)
+    vim = start_vim(editor, "abc", 0, 1)
     assert vim._caret.isVisible()
     assert vim._caret.position == 1
     send(editor, "l")
@@ -299,7 +248,7 @@ def test_a_read_only_editor_shows_vims_cursor(editor: QPlainTextEdit) -> None:
 
 
 def test_turning_read_only_on_in_insert_mode(editor: QPlainTextEdit) -> None:
-    vim = start(editor, "abc", 0, 1)
+    vim = start_vim(editor, "abc", 0, 1)
     send(editor, "ix")
     editor.setReadOnly(True)
     assert vim.mode is Mode.NORMAL
@@ -315,7 +264,7 @@ def test_turning_read_only_on_in_insert_mode(editor: QPlainTextEdit) -> None:
 
 
 def test_the_ukrainian_layout_types_vim_keys(editor: QPlainTextEdit) -> None:
-    vim = start(editor, "abc def ghi")
+    vim = start_vim(editor, "abc def ghi")
     assert vim.layout_map is UKRAINIAN
     send(editor, "ц")  # w
     assert cursor_of(editor) == Pos(0, 4)
@@ -333,7 +282,7 @@ def test_the_ukrainian_layout_types_vim_keys(editor: QPlainTextEdit) -> None:
 
 
 def test_the_layout_map_can_be_changed(editor: QPlainTextEdit) -> None:
-    vim = start(editor, "abc def")
+    vim = start_vim(editor, "abc def")
     vim.layout_map = None
     send(editor, "ц")
     assert cursor_of(editor) == Pos(0, 0)
@@ -346,13 +295,13 @@ def test_the_layout_map_can_be_changed(editor: QPlainTextEdit) -> None:
 def test_ctrl_and_the_ukrainian_layout_win_over_app_shortcuts(qapp: QApplication) -> None:
     window = Window()
     fired: list[str] = []
-    shortcut = QShortcut(QKeySequence("Ctrl+R"), window)
+    shortcut = QShortcut(QKeySequence(QKeyCombination(control_modifier(), Qt.Key.Key_R)), window)
     shortcut.activated.connect(lambda: fired.append("Ctrl+R"))
     window.show()
     window.activateWindow()
     assert QTest.qWaitForWindowActive(window)
     window.editor.setFocus()
-    vim = start(window.editor, "abc")
+    vim = start_vim(window.editor, "abc")
     send(window.editor, "x<C-к>")
     assert fired == []
     assert vim.mode is Mode.NORMAL
@@ -361,7 +310,7 @@ def test_ctrl_and_the_ukrainian_layout_win_over_app_shortcuts(qapp: QApplication
 
 
 def test_insert_mode_types_cyrillic(editor: QPlainTextEdit) -> None:
-    start(editor, "")
+    start_vim(editor, "")
     send(editor, "i")
     type_text(editor, "ц")
     send(editor, "<Esc>")
@@ -369,14 +318,14 @@ def test_insert_mode_types_cyrillic(editor: QPlainTextEdit) -> None:
 
 
 def test_ctrl_and_the_key_of_the_bracket_is_esc(editor: QPlainTextEdit) -> None:
-    vim = start(editor, "abc")
+    vim = start_vim(editor, "abc")
     send(editor, "i")
-    QTest.keyClick(editor, Qt.Key(0x445), Qt.KeyboardModifier.ControlModifier)  # Ctrl+х
+    QTest.keyClick(editor, Qt.Key(0x445), control_modifier())  # Ctrl+х
     assert vim.mode is Mode.NORMAL
     send(editor, "v")
-    QTest.keyClick(editor, Qt.Key(0x445), Qt.KeyboardModifier.ControlModifier)
+    QTest.keyClick(editor, Qt.Key(0x445), control_modifier())
     assert vim.mode is Mode.NORMAL
     vim.layout_map = None
     send(editor, "i")
-    QTest.keyClick(editor, Qt.Key(0x445), Qt.KeyboardModifier.ControlModifier)
+    QTest.keyClick(editor, Qt.Key(0x445), control_modifier())
     assert vim.mode is Mode.INSERT

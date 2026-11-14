@@ -1,0 +1,1825 @@
+{
+  "vim": "vim 9.1, patches 1-16, 647, 678, 697",
+  "cases": [
+    {
+      "id": "search-001",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-002",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-003",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-004",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "4n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-005",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "N",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-006",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "N",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-007",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-008",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": false,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-009",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "N",
+      "search": {
+        "text": "foo",
+        "forward": false,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-010",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        1,
+        5
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-011",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-012",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "N",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-013",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "9n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-014",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        2,
+        2
+      ],
+      "keys": "3N",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-015",
+      "group": "search",
+      "text": "aaaa",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "aa",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aaaa"
+      }
+    },
+    {
+      "id": "search-016",
+      "group": "search",
+      "text": "aaaa",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2n",
+      "search": {
+        "text": "aa",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aaaa"
+      }
+    },
+    {
+      "id": "search-017",
+      "group": "search",
+      "text": "aaaa",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "N",
+      "search": {
+        "text": "aa",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aaaa"
+      }
+    },
+    {
+      "id": "search-018",
+      "group": "search",
+      "text": "aaa",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "N",
+      "search": {
+        "text": "aa",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aaa"
+      }
+    },
+    {
+      "id": "search-019",
+      "group": "search",
+      "text": "aaa",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "N",
+      "search": {
+        "text": "aa",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aaa"
+      }
+    },
+    {
+      "id": "search-020",
+      "group": "search",
+      "text": "aaaa",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "n",
+      "search": {
+        "text": "aa",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aaaa"
+      }
+    },
+    {
+      "id": "search-021",
+      "group": "search",
+      "text": "xée",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "e",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xée"
+      }
+    },
+    {
+      "id": "search-022",
+      "group": "search",
+      "text": "xée",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2n",
+      "search": {
+        "text": "e",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xée"
+      }
+    },
+    {
+      "id": "search-023",
+      "group": "search",
+      "text": "xée",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "é",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xée"
+      }
+    },
+    {
+      "id": "search-024",
+      "group": "search",
+      "text": "😀a😀a",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "n",
+      "search": {
+        "text": "😀",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "😀a😀a"
+      }
+    },
+    {
+      "id": "search-025",
+      "group": "search",
+      "text": "日本 日",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "日",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日本 日"
+      }
+    },
+    {
+      "id": "search-026",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-027",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo\nbaz",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-028",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "o\nb",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          10
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-029",
+      "group": "search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "N",
+      "search": {
+        "text": "o\nb",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          10
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "search-030",
+      "group": "search",
+      "text": "ab\nab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "b\na",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\nab"
+      }
+    },
+    {
+      "id": "search-031",
+      "group": "search",
+      "text": "ab\nab",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "n",
+      "search": {
+        "text": "b\na",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\nab"
+      }
+    },
+    {
+      "id": "search-032",
+      "group": "search",
+      "text": "ab\nab",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "N",
+      "search": {
+        "text": "b\na",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\nab"
+      }
+    },
+    {
+      "id": "search-033",
+      "group": "search",
+      "text": "ab\nab",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "N",
+      "search": {
+        "text": "b\na",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\nab"
+      }
+    },
+    {
+      "id": "search-034",
+      "group": "search",
+      "text": "xab\nab\nab",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "n",
+      "search": {
+        "text": "b\na",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xab\nab\nab"
+      }
+    },
+    {
+      "id": "search-035",
+      "group": "search",
+      "text": "aXa",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "a",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXa"
+      }
+    },
+    {
+      "id": "search-036",
+      "group": "search",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "b\n",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "search-037",
+      "group": "search",
+      "text": "ab\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "b\n",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\ncd"
+      }
+    },
+    {
+      "id": "search-038",
+      "group": "search",
+      "text": "ab\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "\nc",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\ncd"
+      }
+    },
+    {
+      "id": "search-039",
+      "group": "search",
+      "text": "abc\n\nabc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "\n\n",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\n\nabc"
+      }
+    },
+    {
+      "id": "search-040",
+      "group": "search",
+      "text": "x\n\ny",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "N",
+      "search": {
+        "text": "\n",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "x\n\ny"
+      }
+    },
+    {
+      "id": "search-041",
+      "group": "search",
+      "text": "ab ab",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "n",
+      "search": {
+        "text": "ab",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab ab"
+      }
+    },
+    {
+      "id": "search-042",
+      "group": "search",
+      "text": "ab ab",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "N",
+      "search": {
+        "text": "ab",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab ab"
+      }
+    },
+    {
+      "id": "search-043",
+      "group": "search",
+      "text": "Foo foo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "Foo foo"
+      }
+    },
+    {
+      "id": "search-044",
+      "group": "search",
+      "text": "foo Foo",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "n",
+      "search": {
+        "text": "Foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo Foo"
+      }
+    },
+    {
+      "id": "search-045",
+      "group": "search",
+      "text": "a.b a*b",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "a*b",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a.b a*b"
+      }
+    },
+    {
+      "id": "search-046",
+      "group": "search",
+      "text": "a\\b",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "n",
+      "search": {
+        "text": "a\\b",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\\b"
+      }
+    },
+    {
+      "id": "search-047",
+      "group": "search",
+      "text": "one\n\ntwo\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "\n",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "one\n\ntwo\n"
+      }
+    },
+    {
+      "id": "search-048",
+      "group": "search",
+      "text": "one\n\ntwo\n",
+      "cursor": [
+        3,
+        0
+      ],
+      "keys": "N",
+      "search": {
+        "text": "o",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "one\n\ntwo\n"
+      }
+    },
+    {
+      "id": "search-049",
+      "group": "search",
+      "text": "  x\n  x",
+      "cursor": [
+        1,
+        2
+      ],
+      "keys": "n",
+      "search": {
+        "text": "  x",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  x\n  x"
+      }
+    },
+    {
+      "id": "search-050",
+      "group": "search",
+      "text": "ab\tc\tab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "\t",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\tc\tab"
+      }
+    },
+    {
+      "id": "search-051",
+      "group": "search",
+      "text": "ab\tc\tab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2n",
+      "search": {
+        "text": "\t",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\tc\tab"
+      }
+    },
+    {
+      "id": "editor-search-001",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "editor-search-002",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "editor-search-003",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "4n",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "editor-search-004",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "N",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "editor-search-005",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "foo",
+        "forward": false,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "editor-search-006",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "N",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "editor-search-007",
+      "group": "editor-search",
+      "text": "aaaa",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "aa",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aaaa"
+      }
+    },
+    {
+      "id": "editor-search-008",
+      "group": "editor-search",
+      "text": "xée",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "e",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xée"
+      }
+    },
+    {
+      "id": "editor-search-009",
+      "group": "editor-search",
+      "text": "😀a😀a",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "n",
+      "search": {
+        "text": "😀",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "😀a😀a"
+      }
+    },
+    {
+      "id": "editor-search-010",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "o\nb",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          10
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "editor-search-011",
+      "group": "editor-search",
+      "text": "ab\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "\nc",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\ncd"
+      }
+    },
+    {
+      "id": "editor-search-012",
+      "group": "editor-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "n",
+      "search": {
+        "text": "zzz",
+        "forward": true,
+        "jump": false
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "set-search-001",
+      "group": "set-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": true
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "set-search-002",
+      "group": "set-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        8
+      ],
+      "keys": "",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": true
+      },
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "set-search-003",
+      "group": "set-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "",
+      "search": {
+        "text": "foo",
+        "forward": true,
+        "jump": true
+      },
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "set-search-004",
+      "group": "set-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "",
+      "search": {
+        "text": "foo",
+        "forward": false,
+        "jump": true
+      },
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "set-search-005",
+      "group": "set-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "",
+      "search": {
+        "text": "foo",
+        "forward": false,
+        "jump": true
+      },
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "set-search-006",
+      "group": "set-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "",
+      "search": {
+        "text": "zzz",
+        "forward": true,
+        "jump": true
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    },
+    {
+      "id": "set-search-007",
+      "group": "set-search",
+      "text": "foo bar foo\nbaz foo\nfoo",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "",
+      "search": {
+        "text": "",
+        "forward": true,
+        "jump": true
+      },
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar foo\nbaz foo\nfoo"
+      }
+    }
+  ]
+}

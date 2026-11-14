@@ -1,0 +1,1527 @@
+{
+  "vim": "vim 9.1, patches 1-16, 647, 678, 697",
+  "defaults": {
+    "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+    "height": 11
+  },
+  "cases": [
+    {
+      "id": "scroll-001",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 10,
+      "keys": "3<C-b>",
+      "expected": {
+        "cursor": [
+          10,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-002",
+      "group": "scroll",
+      "cursor": [
+        25,
+        6
+      ],
+      "top": 20,
+      "keys": "5<C-b>",
+      "expected": {
+        "cursor": [
+          3,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-003",
+      "group": "scroll",
+      "cursor": [
+        45,
+        7
+      ],
+      "top": 40,
+      "keys": "3<C-f>",
+      "expected": {
+        "cursor": [
+          59,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 59
+      }
+    },
+    {
+      "id": "scroll-004",
+      "group": "scroll",
+      "cursor": [
+        45,
+        7
+      ],
+      "top": 40,
+      "keys": "2<C-f>",
+      "expected": {
+        "cursor": [
+          59,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 59
+      }
+    },
+    {
+      "id": "scroll-005",
+      "group": "scroll",
+      "cursor": [
+        46,
+        6
+      ],
+      "top": 45,
+      "keys": "5<C-f>",
+      "expected": {
+        "cursor": [
+          59,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 59
+      }
+    },
+    {
+      "id": "scroll-006",
+      "group": "scroll",
+      "cursor": [
+        7,
+        7
+      ],
+      "top": 0,
+      "keys": "2<C-b>",
+      "expected": {
+        "cursor": [
+          7,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-007",
+      "group": "scroll",
+      "cursor": [
+        15,
+        3
+      ],
+      "top": 10,
+      "keys": "2<C-b>",
+      "expected": {
+        "cursor": [
+          10,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-008",
+      "group": "scroll",
+      "cursor": [
+        10,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-e>",
+      "expected": {
+        "cursor": [
+          11,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 11
+      }
+    },
+    {
+      "id": "scroll-009",
+      "group": "scroll",
+      "cursor": [
+        10,
+        5
+      ],
+      "top": 10,
+      "keys": "3<C-e>",
+      "expected": {
+        "cursor": [
+          13,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 13
+      }
+    },
+    {
+      "id": "scroll-010",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "3<C-e>",
+      "expected": {
+        "cursor": [
+          13,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 13
+      }
+    },
+    {
+      "id": "scroll-011",
+      "group": "scroll",
+      "cursor": [
+        12,
+        15
+      ],
+      "top": 10,
+      "keys": "3<C-e>",
+      "expected": {
+        "cursor": [
+          13,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 13
+      }
+    },
+    {
+      "id": "scroll-012",
+      "group": "scroll",
+      "cursor": [
+        20,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-y>",
+      "expected": {
+        "cursor": [
+          19,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 9
+      }
+    },
+    {
+      "id": "scroll-013",
+      "group": "scroll",
+      "cursor": [
+        18,
+        5
+      ],
+      "top": 10,
+      "keys": "3<C-y>",
+      "expected": {
+        "cursor": [
+          17,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 7
+      }
+    },
+    {
+      "id": "scroll-014",
+      "group": "scroll",
+      "cursor": [
+        19,
+        15
+      ],
+      "top": 10,
+      "keys": "3<C-y>",
+      "expected": {
+        "cursor": [
+          17,
+          10
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 7
+      }
+    },
+    {
+      "id": "scroll-015",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-e>",
+      "expected": {
+        "cursor": [
+          15,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 11
+      }
+    },
+    {
+      "id": "scroll-016",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-d>",
+      "expected": {
+        "cursor": [
+          17,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 15
+      }
+    },
+    {
+      "id": "scroll-017",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "3<C-d>",
+      "expected": {
+        "cursor": [
+          15,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 13
+      }
+    },
+    {
+      "id": "scroll-018",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "3<C-d>|<C-d>",
+      "expected": {
+        "cursor": [
+          18,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 16
+      }
+    },
+    {
+      "id": "scroll-019",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "3<C-d>|<C-u>",
+      "expected": {
+        "cursor": [
+          12,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 10
+      }
+    },
+    {
+      "id": "scroll-020",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-u>",
+      "expected": {
+        "cursor": [
+          10,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 5
+      }
+    },
+    {
+      "id": "scroll-021",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 10,
+      "keys": "2<C-u>",
+      "expected": {
+        "cursor": [
+          13,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 8
+      }
+    },
+    {
+      "id": "scroll-022",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "20<C-d>",
+      "expected": {
+        "cursor": [
+          23,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 21
+      }
+    },
+    {
+      "id": "scroll-023",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          19,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 19
+      }
+    },
+    {
+      "id": "scroll-024",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          10,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-025",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "2<C-f>",
+      "expected": {
+        "cursor": [
+          28,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 28
+      }
+    },
+    {
+      "id": "scroll-026",
+      "group": "scroll",
+      "cursor": [
+        25,
+        5
+      ],
+      "top": 20,
+      "keys": "2<C-b>",
+      "expected": {
+        "cursor": [
+          12,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 2
+      }
+    },
+    {
+      "id": "scroll-027",
+      "group": "scroll",
+      "cursor": [
+        8,
+        5
+      ],
+      "top": 5,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          6,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-028",
+      "group": "scroll",
+      "cursor": [
+        8,
+        5
+      ],
+      "top": 1,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          2,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-029",
+      "group": "scroll",
+      "cursor": [
+        20,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          19,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 19
+      }
+    },
+    {
+      "id": "scroll-030",
+      "group": "scroll",
+      "cursor": [
+        3,
+        2
+      ],
+      "top": 0,
+      "keys": "<C-u>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-031",
+      "group": "scroll",
+      "cursor": [
+        3,
+        2
+      ],
+      "top": 0,
+      "keys": "<C-y>",
+      "expected": {
+        "cursor": [
+          3,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-032",
+      "group": "scroll",
+      "cursor": [
+        3,
+        2
+      ],
+      "top": 0,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          3,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-033",
+      "group": "scroll",
+      "cursor": [
+        0,
+        2
+      ],
+      "top": 0,
+      "keys": "<C-u>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-034",
+      "group": "scroll",
+      "cursor": [
+        3,
+        2
+      ],
+      "top": 2,
+      "keys": "<C-u>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-035",
+      "group": "scroll",
+      "cursor": [
+        5,
+        2
+      ],
+      "top": 1,
+      "keys": "3<C-y>",
+      "expected": {
+        "cursor": [
+          5,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-036",
+      "group": "scroll",
+      "cursor": [
+        55,
+        2
+      ],
+      "top": 49,
+      "keys": "<C-d>",
+      "expected": {
+        "cursor": [
+          59,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 49
+      }
+    },
+    {
+      "id": "scroll-037",
+      "group": "scroll",
+      "cursor": [
+        50,
+        2
+      ],
+      "top": 45,
+      "keys": "<C-d>",
+      "expected": {
+        "cursor": [
+          55,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 49
+      }
+    },
+    {
+      "id": "scroll-038",
+      "group": "scroll",
+      "cursor": [
+        59,
+        2
+      ],
+      "top": 49,
+      "keys": "<C-d>",
+      "expected": {
+        "cursor": [
+          59,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 49
+      }
+    },
+    {
+      "id": "scroll-039",
+      "group": "scroll",
+      "cursor": [
+        55,
+        2
+      ],
+      "top": 49,
+      "keys": "<C-e>",
+      "expected": {
+        "cursor": [
+          55,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 50
+      }
+    },
+    {
+      "id": "scroll-040",
+      "group": "scroll",
+      "cursor": [
+        55,
+        2
+      ],
+      "top": 45,
+      "keys": "9<C-e>",
+      "expected": {
+        "cursor": [
+          55,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 54
+      }
+    },
+    {
+      "id": "scroll-041",
+      "group": "scroll",
+      "cursor": [
+        50,
+        2
+      ],
+      "top": 45,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          54,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 54
+      }
+    },
+    {
+      "id": "scroll-042",
+      "group": "scroll",
+      "cursor": [
+        45,
+        2
+      ],
+      "top": 40,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          49,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 49
+      }
+    },
+    {
+      "id": "scroll-043",
+      "group": "scroll",
+      "cursor": [
+        52,
+        2
+      ],
+      "top": 49,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          59,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 59
+      }
+    },
+    {
+      "id": "scroll-044",
+      "group": "scroll",
+      "cursor": [
+        52,
+        2
+      ],
+      "top": 49,
+      "keys": "<C-y>",
+      "expected": {
+        "cursor": [
+          52,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 48
+      }
+    },
+    {
+      "id": "scroll-045",
+      "group": "scroll",
+      "cursor": [
+        10,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          10,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-046",
+      "group": "scroll",
+      "cursor": [
+        11,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          10,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-047",
+      "group": "scroll",
+      "cursor": [
+        20,
+        5
+      ],
+      "top": 20,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          21,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 11
+      }
+    },
+    {
+      "id": "scroll-048",
+      "group": "scroll",
+      "cursor": [
+        25,
+        5
+      ],
+      "top": 20,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          21,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 11
+      }
+    },
+    {
+      "id": "scroll-049",
+      "group": "scroll",
+      "cursor": [
+        35,
+        5
+      ],
+      "top": 30,
+      "keys": "3<C-b>",
+      "expected": {
+        "cursor": [
+          13,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 3
+      }
+    },
+    {
+      "id": "scroll-050",
+      "group": "scroll",
+      "cursor": [
+        30,
+        5
+      ],
+      "top": 30,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          31,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 21
+      }
+    },
+    {
+      "id": "scroll-051",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 11,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          12,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 2
+      }
+    },
+    {
+      "id": "scroll-052",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 12,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          13,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 3
+      }
+    },
+    {
+      "id": "scroll-053",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 13,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          14,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 4
+      }
+    },
+    {
+      "id": "scroll-054",
+      "group": "scroll",
+      "cursor": [
+        45,
+        5
+      ],
+      "top": 40,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          41,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 31
+      }
+    },
+    {
+      "id": "scroll-055",
+      "group": "scroll",
+      "cursor": [
+        8,
+        5
+      ],
+      "top": 2,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          3,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-056",
+      "group": "scroll",
+      "cursor": [
+        8,
+        5
+      ],
+      "top": 3,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          4,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-057",
+      "group": "scroll",
+      "cursor": [
+        4,
+        5
+      ],
+      "top": 3,
+      "keys": "<C-b>",
+      "expected": {
+        "cursor": [
+          4,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 0
+      }
+    },
+    {
+      "id": "scroll-058",
+      "group": "scroll",
+      "cursor": [
+        15,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          19,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 19
+      }
+    },
+    {
+      "id": "scroll-059",
+      "group": "scroll",
+      "cursor": [
+        20,
+        5
+      ],
+      "top": 10,
+      "keys": "2<C-f>",
+      "expected": {
+        "cursor": [
+          28,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 28
+      }
+    },
+    {
+      "id": "scroll-060",
+      "group": "scroll",
+      "cursor": [
+        20,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-f>|<C-b>",
+      "expected": {
+        "cursor": [
+          20,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 10
+      }
+    },
+    {
+      "id": "scroll-061",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-b>|<C-f>",
+      "expected": {
+        "cursor": [
+          9,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 9
+      }
+    },
+    {
+      "id": "scroll-062",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "<C-d>|<C-d>|<C-u>",
+      "expected": {
+        "cursor": [
+          17,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 15
+      }
+    },
+    {
+      "id": "scroll-063",
+      "group": "scroll",
+      "cursor": [
+        12,
+        5
+      ],
+      "top": 10,
+      "keys": "4<C-u>|<C-d>",
+      "expected": {
+        "cursor": [
+          12,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 10
+      }
+    },
+    {
+      "id": "scroll-064",
+      "group": "scroll",
+      "cursor": [
+        25,
+        5
+      ],
+      "top": 20,
+      "keys": "<C-f>|<C-f>|<C-b>|<C-b>",
+      "expected": {
+        "cursor": [
+          30,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 20
+      }
+    },
+    {
+      "id": "scroll-065",
+      "group": "scroll",
+      "cursor": [
+        35,
+        5
+      ],
+      "top": 30,
+      "keys": "0<C-d>",
+      "expected": {
+        "cursor": [
+          40,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 35
+      }
+    },
+    {
+      "id": "scroll-066",
+      "group": "scroll",
+      "cursor": [
+        59,
+        2
+      ],
+      "top": 50,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          59,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 59
+      }
+    },
+    {
+      "id": "scroll-067",
+      "group": "scroll",
+      "cursor": [
+        59,
+        2
+      ],
+      "top": 59,
+      "keys": "<C-f>",
+      "expected": {
+        "cursor": [
+          59,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 59
+      }
+    },
+    {
+      "id": "scroll-068",
+      "group": "scroll",
+      "cursor": [
+        45,
+        5
+      ],
+      "top": 40,
+      "keys": "3<C-f>",
+      "expected": {
+        "cursor": [
+          59,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 59
+      }
+    },
+    {
+      "id": "scroll-069",
+      "group": "scroll",
+      "cursor": [
+        30,
+        5
+      ],
+      "top": 25,
+      "keys": "<C-e>|<C-y>|<C-y>",
+      "expected": {
+        "cursor": [
+          30,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  line 1\nline 2\n    line 3\n  line 4 with more text here\nline 5\n    line 6\n  line 7\nline 8 with more text here\n    line 9\n  line 10\nline 11\n    line 12 with more text here\n  line 13\nline 14\n    line 15\n  line 16 with more text here\nline 17\n    line 18\n  line 19\nline 20 with more text here\n    line 21\n  line 22\nline 23\n    line 24 with more text here\n  line 25\nline 26\n    line 27\n  line 28 with more text here\nline 29\n    line 30\n  line 31\nline 32 with more text here\n    line 33\n  line 34\nline 35\n    line 36 with more text here\n  line 37\nline 38\n    line 39\n  line 40 with more text here\nline 41\n    line 42\n  line 43\nline 44 with more text here\n    line 45\n  line 46\nline 47\n    line 48 with more text here\n  line 49\nline 50\n    line 51\n  line 52 with more text here\nline 53\n    line 54\n  line 55\nline 56 with more text here\n    line 57\n  line 58\nline 59\n    line 60 with more text here",
+        "top": 24
+      }
+    }
+  ]
+}

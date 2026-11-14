@@ -1,13 +1,14 @@
 """Send keys to a widget the way a user types them, written in vim notation."""
 
-import re
-
 from PySide6.QtCore import QEvent, Qt
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QWidget
 
+from side_vim import VimMode
+from side_vim.keys import control_modifier
 from side_vim.motions import Pos
+from side_vim.notation import tokens
 from side_vim.text import PARAGRAPH_SEPARATOR, Lines
 
 NAMES = {
@@ -26,16 +27,10 @@ NAMES = {
     "PageDown": Qt.Key.Key_PageDown,
 }
 MODIFIERS = {
-    "C": Qt.KeyboardModifier.ControlModifier,
     "S": Qt.KeyboardModifier.ShiftModifier,
     "A": Qt.KeyboardModifier.AltModifier,
     "M": Qt.KeyboardModifier.MetaModifier,
 }
-
-
-def tokens(keys: str) -> list[str]:
-    """Split "3w<Esc>ix" into "3", "w", "<Esc>", "i", "x"."""
-    return re.findall(r"<[^<>]+>|.", keys, re.S)
 
 
 def press(widget: QWidget, token: str) -> None:
@@ -44,7 +39,7 @@ def press(widget: QWidget, token: str) -> None:
         *mods, name = token[1:-1].split("-")
         modifiers = Qt.KeyboardModifier.NoModifier
         for m in mods:
-            modifiers |= MODIFIERS[m]
+            modifiers |= control_modifier() if m == "C" else MODIFIERS[m]
         if name in NAMES:
             QTest.keyClick(widget, NAMES[name], modifiers)
         else:
@@ -86,3 +81,10 @@ def put_cursor(editor: QPlainTextEdit, pos: Pos) -> None:
     cursor = editor.textCursor()
     cursor.setPosition(lines.to_qt(pos))
     editor.setTextCursor(cursor)
+
+
+def start_vim(editor: QPlainTextEdit, text: str, line: int = 0, col: int = 0) -> VimMode:
+    editor.setPlainText(text)
+    vim = VimMode(editor)
+    put_cursor(editor, Pos(line, col))
+    return vim

@@ -4,10 +4,14 @@ Setting HOME alone isn't enough: Qt still reads the real XDG folders.
 """
 
 import os
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QPlainTextEdit
+
+import side_vim.vim as vim_module
+from side_vim.edits import Register
 
 
 @pytest.fixture(scope="session")
@@ -31,3 +35,21 @@ def qapp(home: Path) -> QApplication:
     app = QApplication.instance() or QApplication([])
     assert isinstance(app, QApplication)
     return app
+
+
+@pytest.fixture
+def empty_register() -> Iterator[None]:
+    vim_module._register = Register()
+    yield
+    vim_module._register = Register()
+
+
+@pytest.fixture
+def editor(qapp: QApplication) -> Iterator[QPlainTextEdit]:
+    editor = QPlainTextEdit()
+    editor.setTabStopDistance(editor.fontMetrics().horizontalAdvance(" ") * 8)
+    editor.resize(600, 300)
+    editor.show()
+    yield editor
+    editor.close()
+    editor.deleteLater()

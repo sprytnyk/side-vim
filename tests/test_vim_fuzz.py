@@ -661,10 +661,10 @@ def test_scrolling_matches_the_model(editor: QPlainTextEdit, seed: int) -> None:
             what = (len(lines), top, height, max_top, pos, key, count)
             if scrolled is None:
                 assert cursor_of(editor) == pos, what
-                assert vim._view()[0] == top, what
+                assert editor.firstVisibleBlock().blockNumber() == top, what
                 continue
             amount = scrolled.amount
-            assert vim._view()[0] == scrolled.top, what
+            assert editor.firstVisibleBlock().blockNumber() == scrolled.top, what
             # lines with emoji can be taller: the cursor stays on a line fully on screen
             first, last, _ = vim._visible()
             line = min(max(scrolled.line, first), last)

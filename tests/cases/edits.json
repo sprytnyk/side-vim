@@ -1,0 +1,5885 @@
+{
+  "vim": "vim 9.1, patches 1-16, 647, 678, 697",
+  "cases": [
+    {
+      "id": "insert-001",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ix<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "axbc\ndef"
+      }
+    },
+    {
+      "id": "insert-002",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ix<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "axxxbc\ndef"
+      }
+    },
+    {
+      "id": "insert-003",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ax<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abxxxc\ndef"
+      }
+    },
+    {
+      "id": "insert-004",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3Ix<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xxxabc\ndef"
+      }
+    },
+    {
+      "id": "insert-005",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3Ax<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcxxx\ndef"
+      }
+    },
+    {
+      "id": "insert-006",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "Ax<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcx\ndef"
+      }
+    },
+    {
+      "id": "insert-007",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ofoo<Esc>",
+      "expected": {
+        "cursor": [
+          3,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nfoo\nfoo\nfoo\ndef"
+      }
+    },
+    {
+      "id": "insert-008",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2Ofoo<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo\nfoo\nabc\ndef"
+      }
+    },
+    {
+      "id": "insert-009",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3o<Esc>",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\n\n\n\ndef"
+      }
+    },
+    {
+      "id": "insert-010",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2O<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\n\nabc\ndef"
+      }
+    },
+    {
+      "id": "insert-011",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3a<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "insert-012",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3i<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "insert-013",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "i<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "insert-014",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "a<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "insert-015",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "A<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "insert-016",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "o<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\n\ndef"
+      }
+    },
+    {
+      "id": "insert-017",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "O<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\nabc\ndef"
+      }
+    },
+    {
+      "id": "insert-018",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2ifoo<CR><Esc>",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "afoo\nfoo\nbc\ndef"
+      }
+    },
+    {
+      "id": "insert-019",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2ofoo<CR>bar<Esc>",
+      "expected": {
+        "cursor": [
+          4,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nfoo\nbar\nfoo\nbar\ndef"
+      }
+    },
+    {
+      "id": "insert-020",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ix<Left>y<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ayxbc\ndef"
+      }
+    },
+    {
+      "id": "insert-021",
+      "group": "insert",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ix<Left>y<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ayxbc\ndef"
+      }
+    },
+    {
+      "id": "insert-023",
+      "group": "insert",
+      "text": "   \nx",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Ix<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "   x\nx"
+      }
+    },
+    {
+      "id": "insert-024",
+      "group": "insert",
+      "text": "   \nx",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ax<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": " x  \nx"
+      }
+    },
+    {
+      "id": "insert-025",
+      "group": "insert",
+      "text": "  ab",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "Ix<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  xab"
+      }
+    },
+    {
+      "id": "insert-026",
+      "group": "insert",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ax<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "x"
+      }
+    },
+    {
+      "id": "insert-027",
+      "group": "insert",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Ax<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "x"
+      }
+    },
+    {
+      "id": "insert-028",
+      "group": "insert",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2ax<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xx"
+      }
+    },
+    {
+      "id": "insert-029",
+      "group": "insert",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ox<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\nx"
+      }
+    },
+    {
+      "id": "insert-030",
+      "group": "insert",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Ox<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "x\n"
+      }
+    },
+    {
+      "id": "insert-031",
+      "group": "insert",
+      "text": "😀b",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2a日<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "😀日日b"
+      }
+    },
+    {
+      "id": "insert-032",
+      "group": "insert",
+      "text": "😀b",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3a😀<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "😀😀😀😀b"
+      }
+    },
+    {
+      "id": "insert-033",
+      "group": "insert",
+      "text": "😀b",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2Iéx<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "éxéx😀b"
+      }
+    },
+    {
+      "id": "insert-036",
+      "group": "insert",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ix<C-[>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "axbc"
+      }
+    },
+    {
+      "id": "edits-001",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar ",
+          false
+        ],
+        "text": "foo baz"
+      }
+    },
+    {
+      "id": "edits-002",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar baz",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "edits-003",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "2dw",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar baz",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "edits-004",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "de",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo  baz"
+      }
+    },
+    {
+      "id": "edits-005",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "db",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo ",
+          false
+        ],
+        "text": "bar baz"
+      }
+    },
+    {
+      "id": "edits-006",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "d$",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar baz",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "edits-007",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "D",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar baz",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "edits-008",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "d0",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo ",
+          false
+        ],
+        "text": "bar baz"
+      }
+    },
+    {
+      "id": "edits-009",
+      "group": "edits",
+      "text": "  foo bar",
+      "cursor": [
+        0,
+        6
+      ],
+      "keys": "d^",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "foo ",
+          false
+        ],
+        "text": "  bar"
+      }
+    },
+    {
+      "id": "edits-010",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dh",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "foobar"
+      }
+    },
+    {
+      "id": "edits-011",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dl",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "foo ar"
+      }
+    },
+    {
+      "id": "edits-012",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "foo ar"
+      }
+    },
+    {
+      "id": "edits-013",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "3x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "edits-014",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        6
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "r",
+          false
+        ],
+        "text": "foo ba"
+      }
+    },
+    {
+      "id": "edits-015",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "9x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "edits-016",
+      "group": "edits",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "edits-017",
+      "group": "edits",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\nb"
+      }
+    },
+    {
+      "id": "edits-018",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "dj",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  d"
+      }
+    },
+    {
+      "id": "edits-019",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "dk",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  a\n  b\n",
+          true
+        ],
+        "text": "  c\n  d"
+      }
+    },
+    {
+      "id": "edits-020",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "dG",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  b\n  c\n  d\n",
+          true
+        ],
+        "text": "  a"
+      }
+    },
+    {
+      "id": "edits-021",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        2,
+        3
+      ],
+      "keys": "dgg",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  a\n  b\n  c\n",
+          true
+        ],
+        "text": "  d"
+      }
+    },
+    {
+      "id": "edits-022",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "dd",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  c\n  d"
+      }
+    },
+    {
+      "id": "edits-023",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "2dd",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  d"
+      }
+    },
+    {
+      "id": "edits-024",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        3,
+        3
+      ],
+      "keys": "dd",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "  d\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-025",
+      "group": "edits",
+      "text": "  a\n  b\n  c\n  d",
+      "cursor": [
+        2,
+        3
+      ],
+      "keys": "5dd",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  c\n  d\n",
+          true
+        ],
+        "text": "  a\n  b"
+      }
+    },
+    {
+      "id": "edits-026",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "abc\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "edits-027",
+      "group": "edits",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "edits-028",
+      "group": "edits",
+      "text": "foo bar\nbaz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "2D",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar\nbaz",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "edits-029",
+      "group": "edits",
+      "text": "foo bar\nbaz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "d3l",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo \nbaz"
+      }
+    },
+    {
+      "id": "edits-030",
+      "group": "edits",
+      "text": "😀😀 ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "😀",
+          false
+        ],
+        "text": "😀 ab"
+      }
+    },
+    {
+      "id": "edits-031",
+      "group": "edits",
+      "text": "😀😀 ab",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "😀 ",
+          false
+        ],
+        "text": "😀ab"
+      }
+    },
+    {
+      "id": "edits-032",
+      "group": "edits",
+      "text": "日本語 x",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "本",
+          false
+        ],
+        "text": "日語 x"
+      }
+    },
+    {
+      "id": "edits-033",
+      "group": "edits",
+      "text": "日本語 x",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "D",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "本語 x",
+          false
+        ],
+        "text": "日"
+      }
+    },
+    {
+      "id": "edits-034",
+      "group": "edits",
+      "text": "a😀b",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dl",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "😀b"
+      }
+    },
+    {
+      "id": "edits-035",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "cwxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo xy baz"
+      }
+    },
+    {
+      "id": "edits-036",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "cexy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo xy baz"
+      }
+    },
+    {
+      "id": "edits-037",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "c$xy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "bar baz",
+          false
+        ],
+        "text": "foo xy"
+      }
+    },
+    {
+      "id": "edits-038",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "Cxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "bar baz",
+          false
+        ],
+        "text": "foo xy"
+      }
+    },
+    {
+      "id": "edits-039",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "cbxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "foo ",
+          false
+        ],
+        "text": "xybar baz"
+      }
+    },
+    {
+      "id": "edits-040",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "c0xy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "foo ",
+          false
+        ],
+        "text": "xybar baz"
+      }
+    },
+    {
+      "id": "edits-041",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "chxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xyfoo bar baz"
+      }
+    },
+    {
+      "id": "edits-042",
+      "group": "edits",
+      "text": "foo   bar",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "cwxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "   ",
+          false
+        ],
+        "text": "fooxybar"
+      }
+    },
+    {
+      "id": "edits-043",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3cwxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "foo bar baz",
+          false
+        ],
+        "text": "xy"
+      }
+    },
+    {
+      "id": "edits-044",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "c2exy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "foo bar",
+          false
+        ],
+        "text": "xy baz"
+      }
+    },
+    {
+      "id": "edits-045",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "ccxy<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\nxy\n  c"
+      }
+    },
+    {
+      "id": "edits-046",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "2ccxy<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "  b\n  c\n",
+          true
+        ],
+        "text": "  a\nxy"
+      }
+    },
+    {
+      "id": "edits-047",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "cjxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "  a\n  b\n",
+          true
+        ],
+        "text": "xy\n  c"
+      }
+    },
+    {
+      "id": "edits-048",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        2,
+        3
+      ],
+      "keys": "ccxy<Esc>",
+      "expected": {
+        "cursor": [
+          2,
+          1
+        ],
+        "register": [
+          "  c\n",
+          true
+        ],
+        "text": "  a\n  b\nxy"
+      }
+    },
+    {
+      "id": "edits-049",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        2,
+        3
+      ],
+      "keys": "ckxy<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "  b\n  c\n",
+          true
+        ],
+        "text": "  a\nxy"
+      }
+    },
+    {
+      "id": "edits-050",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "cc<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "abc\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "edits-051",
+      "group": "edits",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ccxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xy"
+      }
+    },
+    {
+      "id": "edits-052",
+      "group": "edits",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "cwxy<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "a\nxy\nb"
+      }
+    },
+    {
+      "id": "edits-053",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "cwxy<CR>z<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo xy\nz"
+      }
+    },
+    {
+      "id": "edits-054",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "yw|P",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "bar ",
+          false
+        ],
+        "text": "foo bar bar baz"
+      }
+    },
+    {
+      "id": "edits-055",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "yw|p",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "bar ",
+          false
+        ],
+        "text": "foo bbar ar baz"
+      }
+    },
+    {
+      "id": "edits-056",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "yb",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo ",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "edits-057",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "ye",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "edits-058",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "y0",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo ",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "edits-059",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "y$|$|p",
+      "expected": {
+        "cursor": [
+          0,
+          17
+        ],
+        "register": [
+          "bar baz",
+          false
+        ],
+        "text": "foo bar bazbar baz"
+      }
+    },
+    {
+      "id": "edits-060",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "yy|p",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-061",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "yy|P",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-062",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "yy|2p",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  b\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-063",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "yy|G|p",
+      "expected": {
+        "cursor": [
+          3,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  c\n  b"
+      }
+    },
+    {
+      "id": "edits-064",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "yy|gg|P",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  b\n  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-065",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "2yy|G|p",
+      "expected": {
+        "cursor": [
+          3,
+          2
+        ],
+        "register": [
+          "  a\n  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  c\n  a\n  b"
+      }
+    },
+    {
+      "id": "edits-066",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "yk",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  a\n  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-067",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "yj|p",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  b\n  b\n  c\n  c"
+      }
+    },
+    {
+      "id": "edits-068",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        2,
+        3
+      ],
+      "keys": "ygg",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  a\n  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-069",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "yG|P",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  a\n  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  b\n  c\n  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-070",
+      "group": "edits",
+      "text": "abc\n\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "yl|j|3p",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "abc\nbbb\nxyz"
+      }
+    },
+    {
+      "id": "edits-071",
+      "group": "edits",
+      "text": "abc\n\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "yl|j|P",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "abc\nb\nxyz"
+      }
+    },
+    {
+      "id": "edits-072",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "yl|3p",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "abbbbc"
+      }
+    },
+    {
+      "id": "edits-073",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "yl|3P",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "abbbbc"
+      }
+    },
+    {
+      "id": "edits-074",
+      "group": "edits",
+      "text": "abc\ndef\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "y2w|j|p",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "bc\ndef",
+          false
+        ],
+        "text": "abc\ndebc\ndeff\nxyz"
+      }
+    },
+    {
+      "id": "edits-075",
+      "group": "edits",
+      "text": "abc\ndef\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "y2w|j|2p",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "bc\ndef",
+          false
+        ],
+        "text": "abc\ndebc\ndefbc\ndeff\nxyz"
+      }
+    },
+    {
+      "id": "edits-076",
+      "group": "edits",
+      "text": "abc\ndef\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "y2w|j|P",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "bc\ndef",
+          false
+        ],
+        "text": "abc\ndbc\ndefef\nxyz"
+      }
+    },
+    {
+      "id": "edits-077",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "abc\n",
+          true
+        ],
+        "text": "def\nabc"
+      }
+    },
+    {
+      "id": "edits-078",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "dd|p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "def\n",
+          true
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "edits-079",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "dd|P",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "def\n",
+          true
+        ],
+        "text": "def\nabc"
+      }
+    },
+    {
+      "id": "edits-080",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "abc\n",
+          true
+        ],
+        "text": "\nabc"
+      }
+    },
+    {
+      "id": "edits-081",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|P",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "abc\n",
+          true
+        ],
+        "text": "abc\n"
+      }
+    },
+    {
+      "id": "edits-082",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|p",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "bac"
+      }
+    },
+    {
+      "id": "edits-083",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x|p",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "acb"
+      }
+    },
+    {
+      "id": "edits-084",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dw|0|P",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "barfoo "
+      }
+    },
+    {
+      "id": "edits-085",
+      "group": "edits",
+      "text": "foo bar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "cwxy<Esc>|$|p",
+      "expected": {
+        "cursor": [
+          0,
+          8
+        ],
+        "register": [
+          "foo",
+          false
+        ],
+        "text": "xy barfoo"
+      }
+    },
+    {
+      "id": "edits-086",
+      "group": "edits",
+      "text": "  a\n  b",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "cc<Esc>|p",
+      "expected": {
+        "cursor": [
+          2,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n\n  b"
+      }
+    },
+    {
+      "id": "edits-087",
+      "group": "edits",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "yy|x|p",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "acb def"
+      }
+    },
+    {
+      "id": "edits-088",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|d0|p",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "aabc"
+      }
+    },
+    {
+      "id": "edits-089",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "p",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "edits-090",
+      "group": "edits",
+      "text": "😀 日本",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|$|p",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "😀",
+          false
+        ],
+        "text": "😀 日本😀"
+      }
+    },
+    {
+      "id": "edits-091",
+      "group": "edits",
+      "text": "😀 日本",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "x|0|P",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "日",
+          false
+        ],
+        "text": "日😀 本"
+      }
+    },
+    {
+      "id": "edits-092",
+      "group": "edits",
+      "text": "😀 日本",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "yl|2P",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "日",
+          false
+        ],
+        "text": "😀 日日日本"
+      }
+    },
+    {
+      "id": "edits-093",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd\nef"
+      }
+    },
+    {
+      "id": "edits-094",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3J",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd ef"
+      }
+    },
+    {
+      "id": "edits-095",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "9J",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd ef"
+      }
+    },
+    {
+      "id": "edits-096",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n  cd ef"
+      }
+    },
+    {
+      "id": "edits-097",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          2,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n  cd\nef"
+      }
+    },
+    {
+      "id": "edits-098",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "3J",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n  cd\nef"
+      }
+    },
+    {
+      "id": "edits-099",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "3J",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n  cd ef"
+      }
+    },
+    {
+      "id": "edits-100",
+      "group": "edits",
+      "text": "ab \n  cd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd"
+      }
+    },
+    {
+      "id": "edits-101",
+      "group": "edits",
+      "text": "ab\t\n  cd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\tcd"
+      }
+    },
+    {
+      "id": "edits-102",
+      "group": "edits",
+      "text": "ab\n\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\ncd"
+      }
+    },
+    {
+      "id": "edits-103",
+      "group": "edits",
+      "text": "ab\n\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3J",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd"
+      }
+    },
+    {
+      "id": "edits-104",
+      "group": "edits",
+      "text": "\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "cd"
+      }
+    },
+    {
+      "id": "edits-105",
+      "group": "edits",
+      "text": "ab.\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab. cd"
+      }
+    },
+    {
+      "id": "edits-106",
+      "group": "edits",
+      "text": "ab?\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab? cd"
+      }
+    },
+    {
+      "id": "edits-107",
+      "group": "edits",
+      "text": "ab\n)cd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab)cd"
+      }
+    },
+    {
+      "id": "edits-108",
+      "group": "edits",
+      "text": "ab\n   ",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "edits-109",
+      "group": "edits",
+      "text": "ab\n\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3J",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "edits-110",
+      "group": "edits",
+      "text": "  ab\n  cd",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  ab cd"
+      }
+    },
+    {
+      "id": "edits-111",
+      "group": "edits",
+      "text": "\n\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3J",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "edits-112",
+      "group": "edits",
+      "text": "ab\n\t cd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd"
+      }
+    },
+    {
+      "id": "edits-113",
+      "group": "edits",
+      "text": "😀\n日本",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "J",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "😀 日本"
+      }
+    },
+    {
+      "id": "edits-114",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dw|u",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar ",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "edits-115",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dw|0|u",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar ",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "edits-116",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dw|0|u|0|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar ",
+          false
+        ],
+        "text": "foo baz"
+      }
+    },
+    {
+      "id": "edits-117",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "u",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "edits-118",
+      "group": "edits",
+      "text": "foo bar baz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "foo bar baz"
+      }
+    },
+    {
+      "id": "edits-119",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "dd|u",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-120",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "dd|u",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-121",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "dd|j|u|G|<C-r>",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  c"
+      }
+    },
+    {
+      "id": "edits-122",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        2,
+        3
+      ],
+      "keys": "dk|u",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-123",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "dgg|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  a\n  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-124",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "dG|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "  a\n  b\n  c\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-125",
+      "group": "edits",
+      "text": "a b c d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|w|x|w|x|u|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": " b c d"
+      }
+    },
+    {
+      "id": "edits-126",
+      "group": "edits",
+      "text": "a b c d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|w|x|w|x|u|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "  c d"
+      }
+    },
+    {
+      "id": "edits-127",
+      "group": "edits",
+      "text": "a b c d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|w|x|w|x|3u|2<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "  c d"
+      }
+    },
+    {
+      "id": "edits-128",
+      "group": "edits",
+      "text": "a b c d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|w|x|w|x|9u",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "a b c d"
+      }
+    },
+    {
+      "id": "edits-129",
+      "group": "edits",
+      "text": "a b c d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|w|x|w|x|9u|9<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "   d"
+      }
+    },
+    {
+      "id": "edits-130",
+      "group": "edits",
+      "text": "a b c d",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|w|x|w|x|2u|x|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "  c d"
+      }
+    },
+    {
+      "id": "edits-131",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ix<Esc>|ay<Esc>|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "axbc\ndef"
+      }
+    },
+    {
+      "id": "edits-132",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ix<Esc>|ay<Esc>|u|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "edits-134",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ix<Esc>|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "edits-135",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ix<Esc>|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "axxxbc\ndef"
+      }
+    },
+    {
+      "id": "edits-136",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ofoo<Esc>|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "edits-137",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ofoo<CR>bar<Esc>|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "edits-138",
+      "group": "edits",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ofoo<CR>bar<Esc>|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nfoo\nbar\ndef"
+      }
+    },
+    {
+      "id": "edits-139",
+      "group": "edits",
+      "text": "  abc\ndef",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "ofoo<Esc>|u",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  abc\ndef"
+      }
+    },
+    {
+      "id": "edits-140",
+      "group": "edits",
+      "text": "  abc\ndef",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "Ofoo<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  abc\ndef"
+      }
+    },
+    {
+      "id": "edits-141",
+      "group": "edits",
+      "text": "abc def",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "Axyz<Esc>|0|u",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "edits-142",
+      "group": "edits",
+      "text": "abc def",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "Axyz<Esc>|0|u|0|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          7
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc defxyz"
+      }
+    },
+    {
+      "id": "edits-143",
+      "group": "edits",
+      "text": "abc def",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "ixyz<Esc>|0|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "edits-144",
+      "group": "edits",
+      "text": "  abc def\nghi",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "cwxy<Esc>|j|u",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "  abc def\nghi"
+      }
+    },
+    {
+      "id": "edits-145",
+      "group": "edits",
+      "text": "  abc def\nghi",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "cwxy<Esc>|j|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "  axy def\nghi"
+      }
+    },
+    {
+      "id": "edits-146",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "ccxy<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  b\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-147",
+      "group": "edits",
+      "text": "  a\n  b\n  c",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "yy|j|p|u",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "  a\n",
+          true
+        ],
+        "text": "  a\n  b\n  c"
+      }
+    },
+    {
+      "id": "edits-148",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3J|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n  cd\nef"
+      }
+    },
+    {
+      "id": "edits-149",
+      "group": "edits",
+      "text": "ab\n  cd\nef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3J|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab cd ef"
+      }
+    },
+    {
+      "id": "edits-150",
+      "group": "edits",
+      "text": "ab\ncd\nef\ngh",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "yy|G|p|gg|u",
+      "expected": {
+        "cursor": [
+          3,
+          0
+        ],
+        "register": [
+          "cd\n",
+          true
+        ],
+        "text": "ab\ncd\nef\ngh"
+      }
+    },
+    {
+      "id": "edits-151",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ix<Esc>|u|ay<Esc>|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abyc"
+      }
+    },
+    {
+      "id": "edits-152",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x|u|<C-r>|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "ac"
+      }
+    },
+    {
+      "id": "edits-153",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x|x|u|i<Esc>|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "edits-154",
+      "group": "edits",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "2ccX<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "edits-155",
+      "group": "edits",
+      "text": "ab cd ef\n  gh ij\nkl\n  mn",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "2ccX<Esc>|u",
+      "expected": {
+        "cursor": [
+          2,
+          1
+        ],
+        "register": [
+          "  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl\n  mn"
+      }
+    },
+    {
+      "id": "edits-156",
+      "group": "edits",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "cjX<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "edits-157",
+      "group": "edits",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "ckX<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "edits-158",
+      "group": "edits",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "cGX<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "edits-159",
+      "group": "edits",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "cggX<Esc>|u",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\nkl\n",
+          true
+        ],
+        "text": "ab cd ef\n  gh ij\nkl"
+      }
+    },
+    {
+      "id": "edits-160",
+      "group": "edits",
+      "text": "ab cd ef\n  gh ij\nkl",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "2ccX<Esc>|u|<C-r>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "ab cd ef\n  gh ij\n",
+          true
+        ],
+        "text": "X\nkl"
+      }
+    },
+    {
+      "id": "edits-161",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "x|dd|dd|u",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "edits-162",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "x|dd|dd|u|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "edits-163",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "x|dd|dd|u|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "edits-164",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "x|dd|dd|u|u|<C-r>|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "edits-165",
+      "group": "edits",
+      "text": "abc\n\nx",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|j|yl|k|p",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\n\nx"
+      }
+    },
+    {
+      "id": "edits-166",
+      "group": "edits",
+      "text": "abc\n\nx",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|j|clz<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "abc\nz\nx"
+      }
+    },
+    {
+      "id": "edits-167",
+      "group": "edits",
+      "text": "abc\n\nx",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|j|cl<Esc>|k|p",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "aabc\n\nx"
+      }
+    },
+    {
+      "id": "edits-168",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|yh|p",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "edits-169",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|ch<Esc>|p",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "aabc"
+      }
+    },
+    {
+      "id": "edits-170",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl|y0|p",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "edits-171",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2ch<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "edits-172",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3dh",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "bc"
+      }
+    },
+    {
+      "id": "edits-173",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3ch<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "bc"
+      }
+    },
+    {
+      "id": "edits-174",
+      "group": "edits",
+      "text": "abcdef\nab\nabcdef",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "$|yy|j",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "abcdef\n",
+          true
+        ],
+        "text": "abcdef\nab\nabcdef"
+      }
+    },
+    {
+      "id": "edits-175",
+      "group": "edits",
+      "text": "abcdef\nab\nabcdef",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "$|j|yy|j",
+      "expected": {
+        "cursor": [
+          2,
+          1
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "abcdef\nab\nabcdef"
+      }
+    },
+    {
+      "id": "edits-176",
+      "group": "edits",
+      "text": "abcdef\nab\nabcdef",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "$|j|x|j",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "abcdef\na\nabcdef"
+      }
+    },
+    {
+      "id": "edits-177",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "chxy<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xyabc"
+      }
+    },
+    {
+      "id": "edits-178",
+      "group": "edits",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dh|p",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "edits-179",
+      "group": "edits",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "clx<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "x"
+      }
+    },
+    {
+      "id": "operator-ranges-001",
+      "group": "operator-ranges",
+      "text": "foo bar\nbaz qux",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo \nbaz qux"
+      }
+    },
+    {
+      "id": "operator-ranges-002",
+      "group": "operator-ranges",
+      "text": "foo bar\nbaz qux",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "cwX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar",
+          false
+        ],
+        "text": "foo X\nbaz qux"
+      }
+    },
+    {
+      "id": "operator-ranges-003",
+      "group": "operator-ranges",
+      "text": "foo bar\nbaz qux",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "2dw",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar\nbaz ",
+          false
+        ],
+        "text": "foo qux"
+      }
+    },
+    {
+      "id": "operator-ranges-004",
+      "group": "operator-ranges",
+      "text": "foo bar\nbaz qux",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar\nbaz ",
+          false
+        ],
+        "text": "foo qux"
+      }
+    },
+    {
+      "id": "operator-ranges-005",
+      "group": "operator-ranges",
+      "text": "foo bar\nbaz qux",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "c2wX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "bar\nbaz",
+          false
+        ],
+        "text": "foo X qux"
+      }
+    },
+    {
+      "id": "operator-ranges-006",
+      "group": "operator-ranges",
+      "text": "foo bar\nbaz qux",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "3dw",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "bar\nbaz qux",
+          false
+        ],
+        "text": "foo "
+      }
+    },
+    {
+      "id": "operator-ranges-007",
+      "group": "operator-ranges",
+      "text": "one two",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "two",
+          false
+        ],
+        "text": "one "
+      }
+    },
+    {
+      "id": "operator-ranges-008",
+      "group": "operator-ranges",
+      "text": "one two",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "d3w",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "two",
+          false
+        ],
+        "text": "one "
+      }
+    },
+    {
+      "id": "operator-ranges-009",
+      "group": "operator-ranges",
+      "text": "one two",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "de",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "two",
+          false
+        ],
+        "text": "one "
+      }
+    },
+    {
+      "id": "operator-ranges-010",
+      "group": "operator-ranges",
+      "text": "ab cd",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "de",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "d",
+          false
+        ],
+        "text": "ab c"
+      }
+    },
+    {
+      "id": "operator-ranges-011",
+      "group": "operator-ranges",
+      "text": "a  ",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a  ",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "operator-ranges-012",
+      "group": "operator-ranges",
+      "text": "ab c",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "cwX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "aX c"
+      }
+    },
+    {
+      "id": "operator-ranges-013",
+      "group": "operator-ranges",
+      "text": "a b",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "cwX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "X b"
+      }
+    },
+    {
+      "id": "operator-ranges-014",
+      "group": "operator-ranges",
+      "text": "a b",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "c3wX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a b",
+          false
+        ],
+        "text": "X"
+      }
+    },
+    {
+      "id": "operator-ranges-015",
+      "group": "operator-ranges",
+      "text": "ab\ncd ef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "c2wX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\ncd",
+          false
+        ],
+        "text": "X ef"
+      }
+    },
+    {
+      "id": "operator-ranges-016",
+      "group": "operator-ranges",
+      "text": "ab\ncd ef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "c3wX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\ncd ef",
+          false
+        ],
+        "text": "X"
+      }
+    },
+    {
+      "id": "operator-ranges-017",
+      "group": "operator-ranges",
+      "text": "foo   bar",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "cwX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "   ",
+          false
+        ],
+        "text": "fooXbar"
+      }
+    },
+    {
+      "id": "operator-ranges-018",
+      "group": "operator-ranges",
+      "text": "foo   bar",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "   ",
+          false
+        ],
+        "text": "foobar"
+      }
+    },
+    {
+      "id": "operator-ranges-019",
+      "group": "operator-ranges",
+      "text": "foo\nbar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo",
+          false
+        ],
+        "text": "\nbar"
+      }
+    },
+    {
+      "id": "operator-ranges-020",
+      "group": "operator-ranges",
+      "text": "foo\nbar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo\nbar\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "operator-ranges-021",
+      "group": "operator-ranges",
+      "text": "foo\nbar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "c2wX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo\nbar",
+          false
+        ],
+        "text": "X"
+      }
+    },
+    {
+      "id": "operator-ranges-022",
+      "group": "operator-ranges",
+      "text": "foo\n\nbar",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "oo",
+          false
+        ],
+        "text": "f\n\nbar"
+      }
+    },
+    {
+      "id": "operator-ranges-023",
+      "group": "operator-ranges",
+      "text": "foo\n\nbar",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "oo\n",
+          false
+        ],
+        "text": "f\nbar"
+      }
+    },
+    {
+      "id": "operator-ranges-024",
+      "group": "operator-ranges",
+      "text": "foo\n\nbar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "foo\n\n",
+          true
+        ],
+        "text": "bar"
+      }
+    },
+    {
+      "id": "operator-ranges-025",
+      "group": "operator-ranges",
+      "text": "  foo\n\nbar",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  foo",
+          false
+        ],
+        "text": "\n\nbar"
+      }
+    },
+    {
+      "id": "operator-ranges-026",
+      "group": "operator-ranges",
+      "text": "  foo\n\nbar",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  foo\n\n",
+          true
+        ],
+        "text": "bar"
+      }
+    },
+    {
+      "id": "operator-ranges-027",
+      "group": "operator-ranges",
+      "text": "  foo\n\nbar",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "oo\n",
+          false
+        ],
+        "text": "  f\nbar"
+      }
+    },
+    {
+      "id": "operator-ranges-028",
+      "group": "operator-ranges",
+      "text": "x foo\nbar",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "d2w",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "foo\nbar",
+          false
+        ],
+        "text": "x "
+      }
+    },
+    {
+      "id": "operator-ranges-029",
+      "group": "operator-ranges",
+      "text": "ab\ncd",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "db",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "cd"
+      }
+    },
+    {
+      "id": "operator-ranges-030",
+      "group": "operator-ranges",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "a\nb"
+      }
+    },
+    {
+      "id": "operator-ranges-031",
+      "group": "operator-ranges",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "cwX<Esc>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "a\nX\nb"
+      }
+    },
+    {
+      "id": "operator-ranges-032",
+      "group": "operator-ranges",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "de",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\nb\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "operator-ranges-033",
+      "group": "operator-ranges",
+      "text": "a\n\nb",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\n\nb"
+      }
+    },
+    {
+      "id": "operator-ranges-034",
+      "group": "operator-ranges",
+      "text": "\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "d$",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\nb"
+      }
+    },
+    {
+      "id": "operator-ranges-035",
+      "group": "operator-ranges",
+      "text": "\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "\nb"
+      }
+    },
+    {
+      "id": "operator-ranges-036",
+      "group": "operator-ranges",
+      "text": "\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "c0X<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "X\nb"
+      }
+    },
+    {
+      "id": "operator-ranges-037",
+      "group": "operator-ranges",
+      "text": "\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "d2$",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\nb\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "operator-ranges-038",
+      "group": "operator-ranges",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "ac\ndef"
+      }
+    },
+    {
+      "id": "operator-ranges-039",
+      "group": "operator-ranges",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "5x",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "a\ndef"
+      }
+    },
+    {
+      "id": "operator-ranges-040",
+      "group": "operator-ranges",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "d5l",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "a\ndef"
+      }
+    },
+    {
+      "id": "operator-ranges-041",
+      "group": "operator-ranges",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "d2$",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "bc\ndef",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "operator-ranges-042",
+      "group": "operator-ranges",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "D",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "a\ndef"
+      }
+    },
+    {
+      "id": "operator-ranges-043",
+      "group": "operator-ranges",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "CX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "aX\ndef"
+      }
+    },
+    {
+      "id": "operator-ranges-044",
+      "group": "operator-ranges",
+      "text": "ab\ncd",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "dh",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\ncd"
+      }
+    },
+    {
+      "id": "operator-ranges-045",
+      "group": "operator-ranges",
+      "text": "   abc",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "d^",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "ab",
+          false
+        ],
+        "text": "   c"
+      }
+    },
+    {
+      "id": "operator-ranges-046",
+      "group": "operator-ranges",
+      "text": "   abc",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "d0",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "   ab",
+          false
+        ],
+        "text": "c"
+      }
+    },
+    {
+      "id": "operator-ranges-047",
+      "group": "operator-ranges",
+      "text": "  ab",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "db",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  ",
+          false
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "operator-ranges-048",
+      "group": "operator-ranges",
+      "text": "  ab",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "d0",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  ",
+          false
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "operator-ranges-049",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "dj",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "operator-ranges-050",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "dk",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "b\nc\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "operator-ranges-051",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "d5j",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "b\nc\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "operator-ranges-052",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "5dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "b\nc\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "operator-ranges-053",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "2dd",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "operator-ranges-054",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "c2jX<Esc>",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "operator-ranges-055",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "3x",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "a\nb\n"
+      }
+    },
+    {
+      "id": "operator-ranges-056",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "2D",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nb\nc"
+      }
+    },
+    {
+      "id": "operator-ranges-057",
+      "group": "operator-ranges",
+      "text": "a\nb\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "d$",
+      "expected": {
+        "cursor": [
+          2,
+          0
+        ],
+        "register": [
+          "c",
+          false
+        ],
+        "text": "a\nb\n"
+      }
+    },
+    {
+      "id": "operator-ranges-058",
+      "group": "operator-ranges",
+      "text": "ab\n  cd",
+      "cursor": [
+        1,
+        3
+      ],
+      "keys": "dk",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n  cd\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "operator-ranges-059",
+      "group": "operator-ranges",
+      "text": "  a\n    b\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "dG",
+      "expected": {
+        "cursor": [
+          1,
+          4
+        ],
+        "register": [
+          "c\n",
+          true
+        ],
+        "text": "  a\n    b"
+      }
+    },
+    {
+      "id": "operator-ranges-060",
+      "group": "operator-ranges",
+      "text": "  a\n    b\nc",
+      "cursor": [
+        2,
+        0
+      ],
+      "keys": "dgg",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  a\n    b\nc\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "operator-ranges-061",
+      "group": "operator-ranges",
+      "text": "ab\n",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dG",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "operator-ranges-062",
+      "group": "operator-ranges",
+      "text": "  a\n  b",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "ccX<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "  a\n",
+          true
+        ],
+        "text": "X\n  b"
+      }
+    },
+    {
+      "id": "operator-clusters-001",
+      "group": "operator-clusters",
+      "text": "a😀b c",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "😀b c"
+      }
+    },
+    {
+      "id": "operator-clusters-002",
+      "group": "operator-clusters",
+      "text": "a😀b c",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "😀b c"
+      }
+    },
+    {
+      "id": "operator-clusters-003",
+      "group": "operator-clusters",
+      "text": "a😀b c",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "😀",
+          false
+        ],
+        "text": "ab c"
+      }
+    },
+    {
+      "id": "operator-clusters-008",
+      "group": "operator-clusters",
+      "text": "éé x\nabcdef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "é",
+          false
+        ],
+        "text": "é x\nabcdef"
+      }
+    },
+    {
+      "id": "operator-clusters-009",
+      "group": "operator-clusters",
+      "text": "éé x\nabcdef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dw",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "éé ",
+          false
+        ],
+        "text": "x\nabcdef"
+      }
+    },
+    {
+      "id": "operator-clusters-010",
+      "group": "operator-clusters",
+      "text": "aéb",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "é",
+          false
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "operator-clusters-011",
+      "group": "operator-clusters",
+      "text": "日本語",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "本",
+          false
+        ],
+        "text": "日語"
+      }
+    }
+  ]
+}
