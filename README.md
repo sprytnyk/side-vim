@@ -32,7 +32,7 @@ layout = QVBoxLayout(window)
 layout.addWidget(editor)
 layout.addWidget(status)
 
-vim = VimMode(editor)  # Starts in Normal mode; the editor owns it.
+vim = VimMode(editor)  # Starts in Normal mode. Qt deletes it with the editor.
 status.setText(vim.mode.value)
 vim.mode_changed.connect(lambda mode: status.setText(mode.value))
 
@@ -55,7 +55,7 @@ Attach one `VimMode` per editor. Import `Mode` to compare `vim.mode` with
 | `vim.clipboard = True` | Uses the system clipboard for yank, delete, change and paste. Defaults to `False`. |
 | `vim.layout_map = UKRAINIAN` | Maps Ukrainian letters to Vim keys. This is the default; import `UKRAINIAN` from `side_vim`. Set `None` to disable it, or pass your own dictionary. |
 | `vim.set_enabled(False)` | Restores the plain editor and its cursor. `True` enables Vim in Normal mode. Read the setting through `vim.enabled`. |
-| `vim.detach()` | Removes Vim from the editor permanently. |
+| `vim.detach()` | Removes Vim from the editor. To turn it off for a while, use `set_enabled(False)`. |
 
 When the app accepts a search, call `set_search` with its text and direction.
 Search is case-sensitive, wraps around the document, and uses plain text rather
@@ -114,9 +114,9 @@ side-vim follows Vim 9.1 with its default settings, except for these:
   such as `Ctrl+W`, `Ctrl+U` and `Ctrl+O`, are not there.
 - In Normal and Visual modes, Ctrl keys that side-vim doesn't use go to the
   editor or the app, and so do PageUp, PageDown and the function keys. `Ctrl+A`
-  selects all, for example. Qt's keys that change the text do nothing there:
-  paste, cut, `Ctrl+Backspace` and `Ctrl+Delete`. In Vim, `Ctrl+V` starts a
-  block selection, which side-vim doesn't have.
+  selects all, for example. Qt's keys that change the text do nothing in these
+  modes: paste, cut, `Ctrl+Backspace` and `Ctrl+Delete`. In Vim, `Ctrl+V` starts
+  a block selection, which side-vim doesn't have.
 - Other keys without a command do nothing in Normal mode. They never type text.
 - Esc in Normal mode with nothing pending goes to the app, for example to close a
   dialog. Vim beeps.
