@@ -5,8 +5,8 @@ Normal, Insert, Visual and Visual Line modes.
 
 ## Install
 
-Requires Python 3.12 or newer and PySide6 6.8 or newer. PySide6-Essentials is
-installed as a dependency.
+Requires Python 3.12 or newer and PySide6 6.8 or newer. Installing side-vim also
+installs PySide6-Essentials.
 
 ```sh
 uv add side-vim
@@ -51,7 +51,7 @@ Attach one `VimMode` per editor. Import `Mode` to compare `vim.mode` with
 | `vim.pending_changed.connect(callback)` | Calls `callback(text)` with pending keys such as `2d`, or `""` when done. |
 | `vim.escape_hook = callback` | Calls `callback()` before handling Esc. Return `True` if the app used it, for example to close a popup. |
 | `vim.search_hook = callback` | `/` calls `callback(True)`; `?` calls `callback(False)`. The app opens its search UI. |
-| `vim.set_search("rent", forward=True)` | Saves literal search text and jumps to the next match. `n` repeats in that direction; `N` reverses it. |
+| `vim.set_search("rent", forward=True)` | Saves the search text and jumps to the next match. `n` repeats in that direction; `N` reverses it. |
 | `vim.clipboard = True` | Uses the system clipboard for yank, delete, change and paste. Defaults to `False`. |
 | `vim.layout_map = UKRAINIAN` | Maps Ukrainian letters to Vim keys. This is the default; import `UKRAINIAN` from `side_vim`. Set `None` to disable it, or pass your own dictionary. |
 | `vim.set_enabled(False)` | Restores the plain editor and its cursor. `True` enables Vim in Normal mode. Read the setting through `vim.enabled`. |
@@ -66,7 +66,7 @@ shows a find bar and an Esc hook together.
 
 The unnamed register is shared between editors in the same process. With
 `clipboard=False`, yank in one editor and paste in another. With `clipboard=True`,
-externally copied text ending in a newline pastes as whole lines.
+text copied in another app pastes as whole lines if it ends in a newline.
 
 ## Supported keys
 
@@ -88,21 +88,48 @@ repeats the typed text: `3ix<Esc>` inserts `xxx`.
 | Scroll a screen | `Ctrl+F`, `Ctrl+B` |
 | Return to Normal | `Esc`, `Ctrl+[` |
 
-In Normal and Visual modes, Vim's Ctrl keys take priority over app shortcuts.
-In Insert mode, shortcuts go to the app except for Esc and `Ctrl+[`. On macOS,
-Ctrl means the physical Control key; Command shortcuts stay with the app.
+In Normal and Visual modes, the Ctrl keys above take priority over app shortcuts.
+`j` and `k` keep the screen column across tabs and wide characters, and a wrapped
+line counts as one line, as in Vim.
 
-Dragging a selection in Normal mode enters Visual mode. Read-only editors allow
-movement, scrolling, selection, yank and search. Wrapped lines still count as one
-line for `j` and `k`.
+This release has only the keys above. It has no repeat (`.`), text objects,
+`f t r ~`, colon commands, macros, marks, named registers or block selection.
 
-Characters with accents, joined emoji and flags stay together during edits.
-Vertical movement accounts for tabs and wide characters. The Ukrainian map works
-outside Insert mode; punctuation is unchanged, and `ґ` is left unmapped because
-its key position varies. `/` needs the English layout.
+## Differences from Vim
 
-This release covers the keys above. Repeat (`.`), text objects, `f t r ~`, colon
-commands, macros, marks, named registers and block selection are not implemented.
+side-vim follows Vim 9.1 with its default settings, except for these:
+
+- Joined emoji and flags, such as 👨‍👩‍👧 and 🇺🇦, are one character. Vim splits
+  them into their parts. Accents, CJK and single emoji work as in Vim.
+- Search uses plain text, not regular expressions. There is no command line.
+  `/` and `?` call `search_hook`, then the app shows its own search box and
+  passes the text to `set_search`.
+- `J` puts one space after a period, like Vim with `nojoinspaces`. Vim's default
+  puts two.
+- Qt stops scrolling when the last line reaches the bottom of the editor. Vim
+  scrolls on until the last line is at the top, so `Ctrl+F` and `Ctrl+E` stop
+  sooner near the end. The cursor still goes to the line Vim picks.
+- In Insert mode the editor handles every key except Esc and `Ctrl+[`. Arrows,
+  Backspace and app shortcuts work as in any Qt editor. Vim's Insert mode keys,
+  such as `Ctrl+W`, `Ctrl+U` and `Ctrl+O`, are not there.
+- In Normal and Visual modes, Ctrl keys that side-vim doesn't use go to the
+  editor or the app, and so do PageUp, PageDown and the function keys. On Linux
+  and Windows, `Ctrl+A` selects all and `Ctrl+V` pastes the clipboard.
+- Other keys without a command do nothing in Normal mode. They never type text.
+- Esc in Normal mode with nothing pending goes to the app, for example to close a
+  dialog. Vim beeps.
+- A read-only editor allows movement, scrolling, selection, yank and search, and
+  ignores edits. Vim only warns when you change a read-only file.
+- Dragging with the mouse in Normal mode starts Visual mode.
+- Outside Insert mode, Ukrainian letters work as the Latin keys in the same
+  place, so `ц` is `w`. Vim needs `langmap` for that. Punctuation stays as typed,
+  `ґ` isn't mapped because its key moves between layout variants, and `/` needs
+  the English layout.
+- On macOS, Ctrl means the physical Control key. Command shortcuts stay with the
+  app.
+- The tab width comes from the editor's tab stop, not from a `tabstop` setting.
+- `u` and the app's undo share the editor's undo stack, so they undo the same
+  steps.
 
 ## Develop
 
@@ -115,10 +142,11 @@ make record    # Record expected results using local Vim
 make unicode   # Regenerate Vim character classes and widths
 ```
 
-Tests run Qt offscreen. CI runs only for a release tag. It checks Linux, macOS
-and Windows on Python 3.12 and 3.14, plus the lowest allowed PySide6 on Python 3.12. Saved
-[Vim cases](https://github.com/sprytnyk/side-vim/tree/main/tests/cases) run without
-Vim in CI; recording them needs Vim, and scrolling needs a Unix terminal.
+Tests run Qt offscreen. CI runs only for a release tag. It tests Linux, macOS and
+Windows on Python 3.12 and 3.14, and the lowest allowed PySide6 on Python 3.12.
+The tests replay saved [Vim cases](https://github.com/sprytnyk/side-vim/tree/main/tests/cases),
+so CI doesn't need Vim. Recording them needs Vim, and the scrolling cases need a
+Unix terminal.
 
 Before 0.1.0, complete the [Mac key checklist](https://github.com/sprytnyk/side-vim/blob/main/docs/mac-keys.md)
 on a real Mac.
@@ -127,9 +155,9 @@ on a real Mac.
 
 Set these up by hand before the first tag:
 
-1. In the GitHub repository, open **Settings → Environments** and create `pypi`.
-   Add yourself as a required reviewer. Allow yourself to approve runs you start
-   (leave **Prevent self-review** off). Limit deployment tags to `v*`.
+1. In the GitHub repository, open **Settings**, then **Environments**, and create
+   `pypi`. Add yourself as a required reviewer. Leave **Prevent self-review** off,
+   so you can approve runs you start. Limit deployment tags to `v*`.
 2. In your PyPI account's **Publishing** page, add a pending trusted publisher:
 
    | Field | Value |
