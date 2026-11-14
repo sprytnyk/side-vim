@@ -1,4 +1,4 @@
-.PHONY: all run check lint test format record clean
+.PHONY: all run check lint test format record unicode clean
 
 all: check
 
@@ -20,6 +20,10 @@ format:
 # runs real vim on tests/cases and writes the expected results back
 record:
 	uv run python scripts/record_vim.py
+
+# dumps vim's character classes and widths into side_vim/_unicode_data.py
+unicode:
+	uv run python scripts/unicode_tables.py
 
 clean:
 	rm -rf build dist
