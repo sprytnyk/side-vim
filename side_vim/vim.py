@@ -619,17 +619,22 @@ class VimMode(QObject):
             if not self._block_on:
                 self._plain_width = self._editor.cursorWidth()
                 self._block_on = True
-            width = 0 if visual else char_width(self._editor, self._position())
-            if self._editor.cursorWidth() != width:
-                self._editor.setCursorWidth(width)
+            self._set_cursor_width(0 if visual else char_width(self._editor, self._position()))
         elif self._block_on:
             self._block_on = False
-            self._editor.setCursorWidth(self._plain_width)
+            self._set_cursor_width(self._plain_width)
         self._hide_editor_cursor(visual)
         # a read-only editor draws no cursor of its own
         no_cursor = not self._editor.textInteractionFlags() & DRAWS_CURSOR
         normal = self._enabled and self._mode is Mode.NORMAL and no_cursor
         self._caret.show_at(self._position() if visual or normal else None)
+
+    def _set_cursor_width(self, width: int) -> None:
+        """Qt repaints only the cursor's new area when its width changes, so the block
+        turning into Insert mode's line left the rest of the block on screen."""
+        if self._editor.cursorWidth() != width:
+            self._editor.viewport().update(self._editor.cursorRect())
+            self._editor.setCursorWidth(width)
 
     def _hide_editor_cursor(self, hide: bool) -> None:
         """Width 0 doesn't hide the editor's cursor everywhere: on a screen scaled by a

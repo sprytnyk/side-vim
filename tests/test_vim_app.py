@@ -6,10 +6,13 @@ from collections.abc import Iterator
 
 import pytest
 import shiboken6
-from PySide6.QtCore import QKeyCombination, Qt
+from PySide6.QtCore import QEvent, QKeyCombination, QObject, Qt
 from PySide6.QtGui import (
+    QFont,
     QKeyEvent,
     QKeySequence,
+    QPaintEvent,
+    QRegion,
     QShortcut,
     QSyntaxHighlighter,
     QTextDocument,
@@ -356,3 +359,36 @@ def test_an_editor_can_go_away_in_insert_mode(
     assert errors == []
     if shared:
         assert document.toPlainText() == "abc\ndef"
+
+
+class Paints(QObject):
+    """The parts of a widget it paints."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.region = QRegion()
+
+    def eventFilter(self, watched: QObject, event: QEvent) -> bool:  # noqa: N802
+        if isinstance(event, QPaintEvent):
+            self.region += event.region()
+        return False
+
+
+@pytest.mark.parametrize("key", ["i", "a"])
+def test_the_whole_block_cursor_goes_in_insert_mode(
+    qapp: QApplication, editor: QPlainTextEdit, key: str
+) -> None:
+    """Qt repaints only the new cursor's area when the cursor's width changes, which left
+    the rest of the block on screen next to Insert mode's line, as in |]."""
+    font = QFont(editor.font())
+    font.setPointSize(28)  # a W wider than the margin Qt repaints around the cursor
+    editor.setFont(font)
+    start_vim(editor, "Wi")
+    qapp.processEvents()
+    block = editor.cursorRect()
+    paints = Paints()
+    editor.viewport().installEventFilter(paints)
+    send(editor, key)
+    qapp.processEvents()
+    editor.viewport().removeEventFilter(paints)
+    assert (QRegion(block) - paints.region).isEmpty()
