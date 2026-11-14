@@ -54,12 +54,14 @@ Attach one `VimMode` per editor. Import `Mode` to compare `vim.mode` with
 | `vim.escape_hook = callback` | Calls `callback()` before handling Esc. Return `True` if the app used it, for example to close a popup. |
 | `vim.search_hook = callback` | `/` calls `callback(True)`; `?` calls `callback(False)`. The app opens its search UI. |
 | `vim.set_search("rent", forward=True)` | Saves the search text and jumps to the next match. `n` repeats in that direction; `N` reverses it. |
+| `vim.normal()` | Goes to Normal mode as Esc does, from Insert or Visual mode. |
 | `vim.clipboard = True` | Uses the system clipboard for yank, delete, change and paste. Defaults to `False`. |
 | `vim.layout_map = UKRAINIAN` | Maps Ukrainian letters to Vim keys. This is the default; import `UKRAINIAN` from `side_vim`. Set `None` to disable it, or pass your own dictionary. |
 | `vim.set_enabled(False)` | Restores the plain editor and its cursor. `True` enables Vim in Normal mode. Read the setting through `vim.enabled`. |
 | `vim.detach()` | Removes Vim from the editor. To turn it off for a while, use `set_enabled(False)`. |
 
-When the app accepts a search, call `set_search` with its text and direction.
+When the app accepts a search, call `set_search` with its text and direction,
+after `normal()` if the search was opened from Insert mode.
 Search is case-sensitive, wraps around the document, and uses plain text rather
 than regular expressions. Each editor keeps its own search. An empty string
 clears it. In Insert mode or while disabled, `set_search` saves the search without

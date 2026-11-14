@@ -254,6 +254,13 @@ class VimMode(QObject):
         if self._enabled and self._mode is not Mode.INSERT:
             self._search_next(Command("n"))
 
+    def normal(self) -> None:
+        """Go to Normal mode as Esc does: what was typed since `i` is one undo step,
+        and Visual mode drops its selection. For an app that takes the user back to
+        the text, from its search bar say."""
+        if self._enabled:
+            self._escape()
+
     def set_enabled(self, enabled: bool) -> None:
         """False: a plain editor again, with its own cursor. True: back in Normal mode."""
         if not self._attached:

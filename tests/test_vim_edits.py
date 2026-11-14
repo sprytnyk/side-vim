@@ -368,3 +368,17 @@ def test_j_forgets_the_column_from_another_document(editor: QPlainTextEdit) -> N
     editor.setTextCursor(cursor)
     send(editor, "j")
     assert cursor_of(editor) == Pos(2, 0)
+
+
+def test_the_app_can_go_back_to_normal_mode(editor: QPlainTextEdit) -> None:
+    vim = start_vim(editor, "abc")
+    send(editor, "Afoo<CR>bar")
+    vim.normal()  # as Esc: one undo step, the cursor back on the last character
+    assert vim.mode is Mode.NORMAL
+    assert cursor_of(editor) == Pos(1, 2)
+    send(editor, "u")
+    assert text_of(editor) == "abc"
+    send(editor, "v")
+    vim.normal()
+    assert vim.mode is Mode.NORMAL
+    assert not editor.textCursor().hasSelection()
