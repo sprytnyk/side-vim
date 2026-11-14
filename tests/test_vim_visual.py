@@ -164,7 +164,7 @@ def run(editor: QPlainTextEdit, keys: str) -> None:
         (T, 1, 4, "Vx", "ab cd ef\nkl", (1, 0), ("  gh ij\n", True)),
         ("", 0, 0, "vy", "", (0, 0), ("", False)),
         ("", 0, 0, "vd", "", (0, 0), ("", False)),
-        ("", 0, 0, "Vd", "", (0, 0), ("\n", True)),
+        ("", 0, 0, "Vd", "", (0, 0), ("", False)),
         ("", 0, 0, "Vy", "", (0, 0), ("\n", True)),
         ("a\n\n", 2, 0, "vd", "a\n\n", (2, 0), ("", False)),
         ("a\n\n", 2, 0, "vy", "a\n\n", (2, 0), ("", False)),

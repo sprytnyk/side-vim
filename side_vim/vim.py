@@ -80,6 +80,12 @@ DRAWS_CURSOR = Qt.TextInteractionFlag.TextEditable | Qt.TextInteractionFlag.Text
 _register = Register()
 
 
+def takes_nothing(lines: Lines, r: Range) -> bool:
+    """True if a delete or change over r has nothing to take. An empty document
+    has no line break to delete, even for dd or cc."""
+    return (len(lines) == 1 and not lines[0]) or (not r.linewise and r.start == r.end)
+
+
 @dataclass
 class _Insert:
     """An insert session, from `i` (or `o`, `cw`, ...) to Esc."""
@@ -630,7 +636,7 @@ class VimMode(QObject):
                 return
             r = operator_range(lines, pos, moved, name)
             start = min(pos, moved.pos)
-        empty = not r.linewise and r.start == r.end
+        empty = takes_nothing(lines, r)
         # vim's empty yank empties the register, an empty delete leaves it alone
         if not empty or name == "y":
             self._store(range_text(lines, r), r.linewise)
@@ -832,7 +838,7 @@ class VimMode(QObject):
     def _visual_operate(self, command: Command) -> None:
         name = command.name
         lines, r, start = self._visual_range()
-        empty = not r.linewise and r.start == r.end
+        empty = takes_nothing(lines, r)
         if not empty or name == "y":
             self._store(range_text(lines, r), r.linewise)
         if name == "y":
@@ -853,7 +859,7 @@ class VimMode(QObject):
         count = command.count or 1
         register = self._read_register()
         lines, r, start = self._visual_range()
-        empty = not r.linewise and r.start == r.end
+        empty = takes_nothing(lines, r)
         deleted = range_text(lines, r)
         if not register.text:
             if not empty:

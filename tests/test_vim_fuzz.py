@@ -194,7 +194,8 @@ def operator_model(
             return None
         r = operator_range(lines, pos, moved, op)
         start = min(pos, moved.pos)
-    empty = not r.linewise and r.start == r.end
+    # Recorded empty-buffer cases keep the old register for deletes and changes.
+    empty = not as_text(lines) or (not r.linewise and r.start == r.end)
     register = None if empty and op != "y" else Register(range_text(lines, r), r.linewise)
     rows = ["".join(line) for line in lines]
     a, b = r.start.line, r.end.line
@@ -418,7 +419,7 @@ def visual_model(
     """What vim does for d, y, c (typing `typed`, then Esc) and p on a selection."""
     r = visual_range(lines, anchor, end, linewise)
     start = visual_start(anchor, end, linewise)
-    empty = not r.linewise and r.start == r.end
+    empty = not as_text(lines) or (not r.linewise and r.start == r.end)
     taken = register if empty else Register(range_text(lines, r), r.linewise)
     rows = ["".join(line) for line in lines]
     a, b = r.start.line, r.end.line
