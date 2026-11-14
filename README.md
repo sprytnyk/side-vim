@@ -3,6 +3,8 @@
 A Vim mode for PySide6's `QPlainTextEdit`. Attach it to an existing editor to add
 Normal, Insert, Visual and Visual Line modes.
 
+![The demo in Visual mode, with text selected and the mode in the status bar](https://raw.githubusercontent.com/sprytnyk/side-vim/main/docs/demo.png)
+
 ## Install
 
 Requires Python 3.12 or newer and PySide6 6.8 or newer. Installing side-vim also
