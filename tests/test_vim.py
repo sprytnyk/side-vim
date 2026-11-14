@@ -8,7 +8,7 @@ from math import ceil
 
 import pytest
 from PySide6.QtCore import QEvent, QPoint, Qt
-from PySide6.QtGui import QInputMethodEvent, QKeyEvent, QKeySequence
+from PySide6.QtGui import QGuiApplication, QInputMethodEvent, QKeyEvent, QKeySequence
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
 from qtkeys import cursor_of, put_cursor, send, start_vim, text_of, type_text
@@ -16,6 +16,7 @@ from qtkeys import cursor_of, put_cursor, send, start_vim, text_of, type_text
 from side_vim import Mode, VimMode
 from side_vim.keys import control_modifier
 from side_vim.motions import Pos
+from side_vim.vim import QT_EDIT_KEYS
 
 SMILE = "\U0001f600"
 FAMILY = "\U0001f468‍\U0001f469‍\U0001f467"
@@ -213,6 +214,30 @@ def test_other_ctrl_keys_go_to_the_editor(editor: QPlainTextEdit) -> None:
     start_vim(editor, "abc def")
     QTest.keySequence(editor, QKeySequence.StandardKey.SelectAll)
     assert editor.textCursor().selectedText() == "abc def"
+
+
+@pytest.mark.parametrize("selection", ["", "v", "V"])
+@pytest.mark.parametrize("key", QT_EDIT_KEYS, ids=[key.name for key in QT_EDIT_KEYS])
+def test_qts_edit_keys_do_nothing_outside_insert_mode(
+    editor: QPlainTextEdit, selection: str, key: QKeySequence.StandardKey
+) -> None:
+    if not QKeySequence.keyBindings(key):
+        pytest.skip(f"{key.name} has no key on this platform")
+    QGuiApplication.clipboard().setText("CLIP")
+    vim = start_vim(editor, "abc def\nghi", 0, 4)
+    send(editor, f"{selection}l")
+    mode = vim.mode
+    QTest.keySequence(editor, key)
+    assert text_of(editor) == "abc def\nghi"
+    assert vim.mode is mode
+
+
+def test_paste_works_in_insert_mode(editor: QPlainTextEdit) -> None:
+    QGuiApplication.clipboard().setText("CLIP")
+    start_vim(editor, "abc", 0, 1)
+    send(editor, "i")
+    QTest.keySequence(editor, QKeySequence.StandardKey.Paste)
+    assert text_of(editor) == "aCLIPbc"
 
 
 def test_page_down_goes_to_the_editor(editor: QPlainTextEdit) -> None:

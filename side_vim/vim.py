@@ -32,6 +32,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QInputMethodEvent,
     QKeyEvent,
+    QKeySequence,
     QTextCursor,
     QTextDocument,
 )
@@ -71,6 +72,17 @@ from side_vim.text import PARAGRAPH_SEPARATOR, Lines, split_clusters, utf16_len
 VISUAL_MODES = frozenset({Mode.VISUAL, Mode.VISUAL_LINE})
 
 KEEP_ANCHOR = QTextCursor.MoveMode.KeepAnchor
+
+# Qt's own keys that change the text, like Ctrl+V. Outside Insert mode they do nothing,
+# so only vim's commands edit there.
+QT_EDIT_KEYS = (
+    QKeySequence.StandardKey.Paste,
+    QKeySequence.StandardKey.Cut,
+    QKeySequence.StandardKey.DeleteStartOfWord,
+    QKeySequence.StandardKey.DeleteEndOfWord,
+    QKeySequence.StandardKey.DeleteEndOfLine,
+    QKeySequence.StandardKey.DeleteCompleteLine,
+)
 
 # The editor draws its cursor only if one of these is on.
 DRAWS_CURSOR = Qt.TextInteractionFlag.TextEditable | Qt.TextInteractionFlag.TextSelectableByKeyboard
@@ -265,7 +277,7 @@ class VimMode(QObject):
             return False
         if kind == QEvent.Type.ShortcutOverride:
             assert isinstance(event, QKeyEvent)
-            if self._takes(self._token(event)):
+            if self._takes(self._token(event)) or self._blocks(event):
                 event.accept()
                 return True
             return False
@@ -326,12 +338,17 @@ class VimMode(QObject):
         # every other key is vim's, so Normal mode never types text
         return True
 
+    def _blocks(self, event: QKeyEvent) -> bool:
+        """True for a key of Qt's that would change the text outside Insert mode. Vim's
+        keys come first: on Linux, Ctrl+U deletes a line in Qt but scrolls in vim."""
+        return self._mode is not Mode.INSERT and any(event.matches(key) for key in QT_EDIT_KEYS)
+
     def _key_press(self, event: QKeyEvent) -> bool:
         token = self._token(event)
         if token == ESC and self.escape_hook is not None and self.escape_hook():
             return True
         if not self._takes(token):
-            return False
+            return self._blocks(event)
         assert token is not None
         if token == ESC:
             self._escape()

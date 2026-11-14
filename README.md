@@ -113,8 +113,10 @@ side-vim follows Vim 9.1 with its default settings, except for these:
   Backspace and app shortcuts work as in any Qt editor. Vim's Insert mode keys,
   such as `Ctrl+W`, `Ctrl+U` and `Ctrl+O`, are not there.
 - In Normal and Visual modes, Ctrl keys that side-vim doesn't use go to the
-  editor or the app, and so do PageUp, PageDown and the function keys. On Linux
-  and Windows, `Ctrl+A` selects all and `Ctrl+V` pastes the clipboard.
+  editor or the app, and so do PageUp, PageDown and the function keys. `Ctrl+A`
+  selects all, for example. Qt's keys that change the text do nothing there:
+  paste, cut, `Ctrl+Backspace` and `Ctrl+Delete`. In Vim, `Ctrl+V` starts a
+  block selection, which side-vim doesn't have.
 - Other keys without a command do nothing in Normal mode. They never type text.
 - Esc in Normal mode with nothing pending goes to the app, for example to close a
   dialog. Vim beeps.

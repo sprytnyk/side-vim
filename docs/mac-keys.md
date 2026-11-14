@@ -10,7 +10,7 @@ key for Ctrl below, and Command for Cmd. Start with the English keyboard layout.
 | Press `v`, then try those scrolling keys and Ctrl+[. Repeat with `V`. | Scrolling extends the selection. Ctrl+[ returns to Normal. |
 | Press `i`, type text, then Ctrl+[. Repeat with Esc. | Both leave Insert mode. |
 | In Insert mode, try Cmd+A, Cmd+C, Cmd+V and Cmd+Z. | Qt selects, copies, pastes and undoes as usual. |
-| In Normal and Visual modes, try Cmd+C and Cmd+V. | Command keys reach the editor; Vim does not treat them as Ctrl keys. |
+| In Normal and Visual modes, select text and try Cmd+C, then Cmd+V and Cmd+X. | Cmd+C copies. Cmd+V and Cmd+X leave the text as it is. |
 | After `x` then `u`, press Cmd+R. | It does not run Vim's redo. Ctrl+R still does. |
 | Press `/`, type `rent`, then Enter, `n` and `N`. Try `?` too. | Enter jumps to a match; `n` repeats in the chosen direction and `N` reverses it. |
 | Open the find bar with `/`, then press Esc. | The find bar closes and focus returns to the editor. |
