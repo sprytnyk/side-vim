@@ -1,8 +1,7 @@
 name: CI
 
+# Runs only when release.yml calls it for a v* tag.
 on:
-  push:
-  pull_request:
   workflow_call:
 
 permissions:
