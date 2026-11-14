@@ -5880,6 +5880,1623 @@
         ],
         "text": "日語"
       }
+    },
+    {
+      "id": "empty-text-001",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xddp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "\n"
+      }
+    },
+    {
+      "id": "empty-text-002",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xdd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-003",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Dddp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "\n"
+      }
+    },
+    {
+      "id": "empty-text-004",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "d$dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-005",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xyyp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "\n"
+      }
+    },
+    {
+      "id": "empty-text-006",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xJdd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-007",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xccb<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "b"
+      }
+    },
+    {
+      "id": "empty-text-008",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xcc<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-009",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|dd|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-010",
+      "group": "empty-text",
+      "text": "a\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "jdd|xdd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-011",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ix<BS><Esc>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-012",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-013",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": "\na"
+      }
+    },
+    {
+      "id": "empty-text-014",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|dd|p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": "\na"
+      }
+    },
+    {
+      "id": "empty-text-015",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|P",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": "a\n"
+      }
+    },
+    {
+      "id": "empty-text-016",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2dd|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-017",
+      "group": "empty-text",
+      "text": "a\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3dd|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\nb\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-018",
+      "group": "empty-text",
+      "text": "a\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dj|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\nb\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-019",
+      "group": "empty-text",
+      "text": "a\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dgg|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "b\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-020",
+      "group": "empty-text",
+      "text": "ab\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dG|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\ncd\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-021",
+      "group": "empty-text",
+      "text": "ab\ncd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dG|p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "ab\ncd\n",
+          true
+        ],
+        "text": "\nab\ncd"
+      }
+    },
+    {
+      "id": "empty-text-022",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "cc<Esc>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-023",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "i<Esc>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-024",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Jdd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-025",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-026",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ix<Esc>|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-027",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ox<Esc>|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-028",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|ix<Esc>|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-029",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|o<Esc>|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-030",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|u|<C-r>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-031",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|<C-r>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-032",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ccx<Esc>|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-033",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|dd|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-034",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xvd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-035",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xVd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-036",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xvy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-037",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xVy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-038",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xvp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-039",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xVp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-040",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yyxVp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-041",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yyxvp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-042",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vx|vd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-043",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vd|Vd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-044",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vd|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-045",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vc<Esc>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-046",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vcx<Esc>|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-047",
+      "group": "empty-text",
+      "text": "a\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "Vjd|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\nb\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-048",
+      "group": "empty-text",
+      "text": "a\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "jVkd|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\nb\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-049",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-050",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|vp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "\n"
+      }
+    },
+    {
+      "id": "empty-text-051",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|Vd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-052",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|yy|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-053",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "ix<BS><Esc>|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-054",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|dd|u",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-055",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|dd|u|u",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-056",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|dd|u|<C-r>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-057",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|Vd|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-058",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "xyy|vp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": "\n\n"
+      }
+    },
+    {
+      "id": "empty-text-059",
+      "group": "empty-text",
+      "text": "x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|vp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "x\n",
+          true
+        ],
+        "text": "\nx"
+      }
+    },
+    {
+      "id": "empty-text-060",
+      "group": "empty-text",
+      "text": "x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "x\n",
+          true
+        ],
+        "text": "x"
+      }
+    },
+    {
+      "id": "empty-text-061",
+      "group": "empty-text",
+      "text": "x\ny",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2dd|vp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "x\ny\n",
+          true
+        ],
+        "text": "\nx\ny"
+      }
+    },
+    {
+      "id": "empty-text-062",
+      "group": "empty-text",
+      "text": "x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yyx|vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "x",
+          false
+        ],
+        "text": "x"
+      }
+    },
+    {
+      "id": "empty-text-063",
+      "group": "empty-text",
+      "text": "x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|v<Esc>p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "x\n",
+          true
+        ],
+        "text": "\nx"
+      }
+    },
+    {
+      "id": "empty-text-064",
+      "group": "empty-text",
+      "text": "x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|3p",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "x\n",
+          true
+        ],
+        "text": "\nx\nx\nx"
+      }
+    },
+    {
+      "id": "empty-text-065",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|yl|<C-r>|vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-066",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|yl|<C-r>|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-067",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|yl|<C-r>|p",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-068",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|yl|<C-r>|P",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a"
+      }
+    },
+    {
+      "id": "empty-text-069",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|yl|<C-r>|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-070",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|yy|<C-r>|vp",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "\nab"
+      }
+    },
+    {
+      "id": "empty-text-071",
+      "group": "empty-text",
+      "text": "ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|yy|<C-r>|Vp",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "ab\n",
+          true
+        ],
+        "text": "ab"
+      }
+    },
+    {
+      "id": "empty-text-072",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|<C-r>|vd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-073",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|<C-r>|vy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-074",
+      "group": "empty-text",
+      "text": "a",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|u|<C-r>|Vy",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-075",
+      "group": "empty-text",
+      "text": "x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|vp|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "x\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-076",
+      "group": "empty-text",
+      "text": "x",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "dd|Vp|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "x\n",
+          true
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "empty-text-077",
+      "group": "empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yy|vp|u|dd",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "\n",
+          true
+        ],
+        "text": ""
+      }
     }
   ]
 }

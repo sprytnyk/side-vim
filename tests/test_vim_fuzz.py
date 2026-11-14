@@ -435,7 +435,8 @@ def visual_model(
             return "\n".join(rows), Pos(a, first_non_blank(split_clusters(new[0]))), taken
         middle = body * count
         if register.linewise:
-            middle = "\n" + "\n".join([body] * count) + "\n"
+            # a new empty text has no lines to split: vim puts them below an empty one
+            middle = "\n" + "\n".join([body] * count) + ("\n" if as_text(lines) else "")
         rows[a : b + 1] = (head + middle + tail).split("\n")
         text = "\n".join(rows)
         if register.linewise:

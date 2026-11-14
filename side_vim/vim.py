@@ -92,10 +92,24 @@ DRAWS_CURSOR = Qt.TextInteractionFlag.TextEditable | Qt.TextInteractionFlag.Text
 _register = Register()
 
 
-def takes_nothing(lines: Lines, r: Range) -> bool:
-    """True if a delete or change over r has nothing to take. An empty document
-    has no line break to delete, even for dd or cc."""
-    return (len(lines) == 1 and not lines[0]) or (not r.linewise and r.start == r.end)
+def takes_nothing(r: Range, no_lines: bool) -> bool:
+    """True if a delete or change over r has nothing to take: an empty part of a line,
+    or a text with no lines at all (see VimMode._no_lines). A line that x emptied is
+    still a line, and dd takes its line break."""
+    return no_lines or (not r.linewise and r.start == r.end)
+
+
+@dataclass
+class UndoStep:
+    """An undo step vim knows. cursor: where `u` puts the cursor (None: unknown).
+    no_lines: whether the text on the other side of the step has no lines. vim keeps
+    that with each step too, so `u` and Ctrl+R bring it back. in_qt: False for a step
+    Qt doesn't have, since the text stayed the same: dd on the only line, once x
+    emptied it, goes from one empty line to no lines."""
+
+    cursor: Pos | None
+    no_lines: bool
+    in_qt: bool = True
 
 
 @dataclass
@@ -113,6 +127,8 @@ class _Insert:
     seen: int = 0  # levels at the last change
     merged_outside: bool = False  # Qt added the first change to the step before
     messy: bool = False  # the app undid or redid something during the session
+    no_lines: bool = False  # VimMode._no_lines when the session started
+    edited: bool = False  # the text changed during the session, even if back as it was
 
 
 class VimMode(QObject):
@@ -158,11 +174,15 @@ class VimMode(QObject):
         self._want_at: tuple[int, int] | None = None
         self._block_on = False
         self._plain_width = editor.cursorWidth()
-        # For each undo step from the top of the document's stack, where `u` puts the
-        # cursor (None: unknown). Valid while the document's revision is _synced.
-        self._done: list[Pos | None] = []
-        self._undone: list[Pos | None] = []
+        # The undo steps vim knows, newest last: Qt's steps from the top of the
+        # document's stack, and the few only vim has. Valid while the document's
+        # revision is _synced.
+        self._done: list[UndoStep] = []
+        self._undone: list[UndoStep] = []
         self._synced = editor.document().revision()
+        # vim's empty buffer: no lines at all, as in a new text or after dd deleted every
+        # line. Any edit gives it a line again, even one that leaves it empty.
+        self._no_lines = not editor.document().toRawText()
         # set while vim edits, so the signals that fires don't count as the user's
         self._busy = False
         # Visual mode: the two ends of the selection, as positions Qt moves along when
@@ -653,7 +673,7 @@ class VimMode(QObject):
                 return
             r = operator_range(lines, pos, moved, name)
             start = min(pos, moved.pos)
-        empty = takes_nothing(lines, r)
+        empty = takes_nothing(r, self._has_no_lines(lines))
         # vim's empty yank empties the register, an empty delete leaves it alone
         if not empty or name == "y":
             self._store(range_text(lines, r), r.linewise)
@@ -682,10 +702,18 @@ class VimMode(QObject):
 
     def _delete(self, lines: Lines, r: Range, start: Pos) -> None:
         begin, end = self._span(lines, r)
+        every_line = r.linewise and r.start.line == 0 and r.end.line == len(lines) - 1
+        document = self._editor.document()
+        steps = document.availableUndoSteps()
         with self._change(start) as edit:
             edit.setPosition(begin)
             edit.setPosition(end, KEEP_ANCHOR)
             edit.removeSelectedText()
+        if every_line:
+            if document.availableUndoSteps() == steps:
+                self._done.append(UndoStep(start, self._no_lines, in_qt=False))
+                self._undone.clear()
+            self._no_lines = True
         lines = self._lines()
         if r.linewise:
             line = min(r.start.line, len(lines) - 1)
@@ -855,7 +883,7 @@ class VimMode(QObject):
     def _visual_operate(self, command: Command) -> None:
         name = command.name
         lines, r, start = self._visual_range()
-        empty = takes_nothing(lines, r)
+        empty = takes_nothing(r, self._has_no_lines(lines))
         if not empty or name == "y":
             self._store(range_text(lines, r), r.linewise)
         if name == "y":
@@ -876,7 +904,8 @@ class VimMode(QObject):
         count = command.count or 1
         register = self._read_register()
         lines, r, start = self._visual_range()
-        empty = takes_nothing(lines, r)
+        no_lines = self._has_no_lines(lines)
+        empty = takes_nothing(r, no_lines)
         deleted = range_text(lines, r)
         if not register.text:
             if not empty:
@@ -898,7 +927,8 @@ class VimMode(QObject):
                 edit.setPosition(begin)
                 edit.setPosition(end, KEEP_ANCHOR)
                 if register.linewise:
-                    chunk = "\n" + "\n".join([body] * count) + "\n"
+                    # with no lines there's no line to split: they go below one, like p
+                    chunk = "\n" + "\n".join([body] * count) + ("" if no_lines else "\n")
                 else:
                     chunk = body * count
             edit.insertText(chunk)
@@ -1007,6 +1037,12 @@ class VimMode(QObject):
             self._done.clear()
             self._undone.clear()
             self._synced = revision
+            # like vim reading a file: an empty one has no lines
+            self._no_lines = not self._editor.document().toRawText()
+
+    def _has_no_lines(self, lines: Lines) -> bool:
+        self._check_synced()
+        return self._no_lines and len(lines) == 1 and not lines[0]
 
     @contextmanager
     def _change(self, saved: Pos) -> Iterator[QTextCursor]:
@@ -1014,6 +1050,7 @@ class VimMode(QObject):
         the cursor back."""
         document = self._editor.document()
         self._check_synced()
+        no_lines = self._no_lines
         steps: list[None] = []
 
         def on_step() -> None:
@@ -1032,8 +1069,9 @@ class VimMode(QObject):
             self._busy = False
             document.undoCommandAdded.disconnect(on_step)
         if steps:
-            self._done.append(saved)
+            self._done.append(UndoStep(saved, no_lines))
             self._undone.clear()
+            self._no_lines = False
         self._synced = document.revision()
 
     def _undo_command(self, command: Command) -> None:
@@ -1050,10 +1088,17 @@ class VimMode(QObject):
             changed.append((position, position + added))
 
         for _ in range(count):
+            if source and not source[-1].in_qt:
+                step = source.pop()
+                saved = step.cursor
+                target.append(UndoStep(saved, self._no_lines, in_qt=False))
+                self._no_lines = step.no_lines
+                continue
             if not (document.isRedoAvailable() if redo else document.isUndoAvailable()):
                 break
-            saved = source.pop() if source else None
-            target.append(saved)
+            step = source.pop() if source else None
+            saved = step.cursor if step else None
+            target.append(UndoStep(saved, self._no_lines))
             changed.clear()
             document.contentsChange.connect(on_change)
             self._busy = True
@@ -1065,6 +1110,7 @@ class VimMode(QObject):
             finally:
                 self._busy = False
                 document.contentsChange.disconnect(on_change)
+            self._no_lines = step.no_lines if step else not document.toRawText()
         self._synced = document.revision()
         lines = self._lines()
         if changed:
@@ -1118,6 +1164,7 @@ class VimMode(QObject):
             document=document,
             origin=document.toRawText(),
             saved=saved,
+            no_lines=self._no_lines,
         )
         document.undoCommandAdded.connect(self._on_undo_step)
         document.contentsChange.connect(self._on_insert_change)
@@ -1141,6 +1188,7 @@ class VimMode(QObject):
             # no new undo step for this change: Qt added it to the one before
             insert.merged_outside = True
         insert.seen = insert.levels
+        insert.edited = True
         if insert.saved is None:
             insert.saved = self._from_qt(self._lines(), position)
 
@@ -1170,11 +1218,14 @@ class VimMode(QObject):
 
     def _drop_insert(self) -> None:
         """End a session without making it one undo step (vim turned off mid-way)."""
-        if self._insert is not None:
-            self._disconnect(self._insert)
+        insert = self._insert
+        if insert is not None:
+            self._disconnect(insert)
             self._done.clear()
             self._undone.clear()
             self._synced = self._editor.document().revision()
+            if insert.edited:
+                self._no_lines = False
 
     def _end_insert(self, insert: _Insert) -> None:
         self._disconnect(insert)
@@ -1190,11 +1241,17 @@ class VimMode(QObject):
                 self._done.clear()
                 self._undone.clear()
             elif changed:
-                self._done.append(insert.saved)
+                self._done.append(UndoStep(insert.saved, insert.no_lines))
                 self._undone.clear()
         elif changed:
-            self._done.append(insert.saved)
+            self._done.append(UndoStep(insert.saved, insert.no_lines))
             self._undone.clear()
+        if insert.edited and insert.no_lines and not changed:
+            # typed and deleted again: Qt has no step, but vim's goes back to no lines
+            self._done.append(UndoStep(insert.saved, True, in_qt=False))
+            self._undone.clear()
+        if insert.edited:
+            self._no_lines = False
         self._synced = self._editor.document().revision()
 
     def _regroup(self, insert: _Insert, final: str) -> bool:
