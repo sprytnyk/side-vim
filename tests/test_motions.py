@@ -11,6 +11,7 @@ from side_vim.motions import (
     MAXCOL,
     Kind,
     Line,
+    Move,
     Pos,
     Range,
     line_range,
@@ -322,6 +323,19 @@ def test_refused_motions() -> None:
     assert move(lines, Pos(1, 0), "j") is None
     assert move(lines, Pos(0, 0), "b") is None
     assert move(lines, Pos(1, 0), "$", 2) is None
+
+
+def test_h_and_l_keep_an_operator_going() -> None:
+    """Vim beeps on `ch` at column 0 but still starts Insert mode: the operator runs
+    on nothing. Other refused motions cancel it."""
+    lines = ["ab", ""]
+    at_start = move(lines, Pos(0, 0), "h", op="c")
+    assert at_start == Move(Pos(0, 0), Kind.EXCLUSIVE, 0)
+    on_empty = move(lines, Pos(1, 0), "l", op="d")
+    assert on_empty == Move(Pos(1, 0), Kind.EXCLUSIVE, 0)
+    assert move(lines, Pos(0, 0), "h", op="c", visual=True) is None
+    assert move(lines, Pos(0, 0), "b", op="c") is None
+    assert move(lines, Pos(1, 0), "j", op="d") is None
 
 
 TAB = "\tab\nabcdefghijkl"

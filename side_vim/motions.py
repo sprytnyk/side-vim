@@ -271,15 +271,17 @@ def move(
 
     if motion == "h":
         if pos.col == 0:
-            return None
+            # vim beeps, but a pending operator still runs, on nothing (`ch` inserts)
+            return moved(pos, Kind.EXCLUSIVE) if op and not visual else None
         return moved(Pos(pos.line, max(pos.col - n, 0)), Kind.EXCLUSIVE)
 
     if motion == "l":
         last = len(text) if visual else len(text) - 1
         if pos.col >= last:
-            # at the end already: an operator still takes the last character
-            if op and not visual and text:
-                return moved(pos, Kind.INCLUSIVE)
+            # at the end already: an operator still takes the last character, or
+            # runs on nothing on an empty line
+            if op and not visual:
+                return moved(pos, Kind.INCLUSIVE if text else Kind.EXCLUSIVE)
             return None
         # running out of line with an operator pending takes the last character too
         kind = Kind.INCLUSIVE if op and not visual and pos.col + n > last else Kind.EXCLUSIVE
