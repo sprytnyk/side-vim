@@ -99,6 +99,9 @@ def takes_nothing(r: Range, no_lines: bool) -> bool:
     return no_lines or (not r.linewise and r.start == r.end)
 
 
+type Version = tuple[QTextDocument, int]  # a document and its revision
+
+
 @dataclass
 class UndoStep:
     """An undo step vim knows. cursor: where `u` puts the cursor (None: unknown).
@@ -171,15 +174,15 @@ class VimMode(QObject):
         self._insert = None
         # the screen column j and k aim for, valid while the cursor stays where we put it
         self._want: int | None = None
-        self._want_at: tuple[int, int] | None = None
+        self._want_at: tuple[int, Version] | None = None
         self._block_on = False
         self._plain_width = editor.cursorWidth()
         # The undo steps vim knows, newest last: Qt's steps from the top of the
-        # document's stack, and the few only vim has. Valid while the document's
-        # revision is _synced.
+        # document's stack, and the few only vim has. Valid while _version() is still
+        # _synced.
         self._done: list[UndoStep] = []
         self._undone: list[UndoStep] = []
-        self._synced = editor.document().revision()
+        self._synced = self._version()
         # vim's empty buffer: no lines at all, as in a new text or after dd deleted every
         # line. Any edit gives it a line again, even one that leaves it empty.
         self._no_lines = not editor.document().toRawText()
@@ -453,8 +456,14 @@ class VimMode(QObject):
         line = min(max(pos.line, 0), len(lines) - 1)
         self._go(lines, Pos(line, min(max(pos.col, 0), max(len(lines[line]) - 1, 0))))
 
-    def _where(self) -> tuple[int, int]:
-        return self._position(), self._editor.document().revision()
+    def _version(self) -> Version:
+        """Which text the editor shows now. The revision alone can't tell: an app with
+        tabs swaps in another document, and its revision can be the same."""
+        document = self._editor.document()
+        return document, document.revision()
+
+    def _where(self) -> tuple[int, Version]:
+        return self._position(), self._version()
 
     def _tabstop(self) -> int:
         """The editor's tab width in spaces."""
@@ -1014,11 +1023,11 @@ class VimMode(QObject):
     def _check_synced(self) -> None:
         """Forget where `u` goes if the document changed without vim, since its undo
         steps no longer match the ones vim knows."""
-        revision = self._editor.document().revision()
-        if revision != self._synced:
+        version = self._version()
+        if version != self._synced:
             self._done.clear()
             self._undone.clear()
-            self._synced = revision
+            self._synced = version
             # like vim reading a file: an empty one has no lines
             self._no_lines = not self._editor.document().toRawText()
 
@@ -1054,7 +1063,7 @@ class VimMode(QObject):
             self._done.append(UndoStep(saved, no_lines))
             self._undone.clear()
             self._no_lines = False
-        self._synced = document.revision()
+        self._synced = self._version()
 
     def _undo_command(self, command: Command) -> None:
         self._undo(command.count or 1, redo=command.name == "<C-r>")
@@ -1093,7 +1102,7 @@ class VimMode(QObject):
                 self._busy = False
                 document.contentsChange.disconnect(on_change)
             self._no_lines = step.no_lines if step else not document.toRawText()
-        self._synced = document.revision()
+        self._synced = self._version()
         lines = self._lines()
         if changed:
             first = self._from_qt(lines, min(start for start, _ in changed)).line
@@ -1203,7 +1212,7 @@ class VimMode(QObject):
             self._disconnect(insert)
             self._done.clear()
             self._undone.clear()
-            self._synced = self._editor.document().revision()
+            self._synced = self._version()
             if insert.edited:
                 self._no_lines = False
 
@@ -1232,7 +1241,7 @@ class VimMode(QObject):
             self._undone.clear()
         if insert.edited:
             self._no_lines = False
-        self._synced = self._editor.document().revision()
+        self._synced = self._version()
 
     def _regroup(self, insert: _Insert, final: str) -> bool:
         """Make the session one undo step: undo its steps, then make its whole change

@@ -6,9 +6,9 @@ everything it runs, so the vim check ran each part on its own.
 """
 
 import pytest
-from PySide6.QtGui import QGuiApplication, QKeySequence, QTextCursor
+from PySide6.QtGui import QGuiApplication, QKeySequence, QTextCursor, QTextDocument
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication, QPlainTextEdit
+from PySide6.QtWidgets import QApplication, QPlainTextDocumentLayout, QPlainTextEdit
 from qtkeys import cursor_of, send, start_vim, text_of
 
 import side_vim.vim as vim_module
@@ -331,3 +331,40 @@ def test_counts_multiply(editor: QPlainTextEdit) -> None:
     start_vim(editor, "a b c d e f g")
     send(editor, "2d2w")
     assert text_of(editor) == "e f g"
+
+
+def swap_in(editor: QPlainTextEdit, text: str, revision: int) -> None:
+    """Give the editor a new document, as an app with tabs does, and edit it until its
+    revision is the one given. Then the revision alone can't tell the two apart."""
+    document = QTextDocument(editor)
+    document.setDocumentLayout(QPlainTextDocumentLayout(document))
+    document.setPlainText(text)
+    edit = QTextCursor(document)
+    while document.revision() < revision:  # each edit adds one
+        if document.toPlainText() == text:
+            edit.insertText(text[0])
+        else:
+            edit.deletePreviousChar()
+    assert document.revision() == revision
+    editor.setDocument(document)
+
+
+def test_undo_steps_stay_with_their_document(editor: QPlainTextEdit) -> None:
+    start_vim(editor, "ab")
+    send(editor, "xxdd")  # the last step is one only vim has: an empty line to none
+    swap_in(editor, "alpha\nb\nc", editor.document().revision())
+    before = text_of(editor)
+    send(editor, "u")
+    assert text_of(editor) != before  # undoes the new document's own last step
+
+
+def test_j_forgets_the_column_from_another_document(editor: QPlainTextEdit) -> None:
+    start_vim(editor, "abcdefghij\nx\nabcdefghij", 0, 9)
+    send(editor, "j")  # aims for column 9 on the next j
+    position = editor.textCursor().position()
+    swap_in(editor, "abcdefghij\nabcdefghij\nabcdefghij", editor.document().revision())
+    cursor = editor.textCursor()
+    cursor.setPosition(position)  # line 1, column 0
+    editor.setTextCursor(cursor)
+    send(editor, "j")
+    assert cursor_of(editor) == Pos(2, 0)
