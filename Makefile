@@ -1,4 +1,4 @@
-.PHONY: all run check lint test format record unicode clean
+.PHONY: all run check lint test format record unicode mac-keys clean
 
 all: check
 
@@ -24,6 +24,10 @@ record:
 # dumps vim's character classes and widths into side_vim/_unicode_data.py
 unicode:
 	uv run python scripts/unicode_tables.py
+
+# on a Mac: presses keys in the demo through macOS and checks what they do
+mac-keys:
+	uv run python scripts/mac_keys.py
 
 clean:
 	rm -rf build dist

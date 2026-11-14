@@ -142,6 +142,7 @@ make check     # Ruff and pytest
 make format    # Format Python
 make record    # Record expected results using local Vim
 make unicode   # Regenerate Vim character classes and widths
+make mac-keys  # Key checks on a Mac
 ```
 
 Tests run Qt offscreen. CI runs only for a release tag. It tests Linux, macOS and
@@ -150,8 +151,10 @@ The tests replay saved [Vim cases](https://github.com/sprytnyk/side-vim/tree/mai
 so CI doesn't need Vim. Recording them needs Vim, and the scrolling cases need a
 Unix terminal.
 
-Before 0.1.0, complete the [Mac key checklist](https://github.com/sprytnyk/side-vim/blob/main/docs/mac-keys.md)
-on a real Mac.
+On a Mac, `make mac-keys` opens the demo and presses keys through macOS. It checks
+Ctrl and Cmd keys, search, read-only mode and the Ukrainian layout, and prints PASS
+or FAIL for each. Start it on the English (ABC) layout with Ukrainian-PC installed,
+and don't type until it finishes.
 
 ## Release
 
@@ -176,8 +179,8 @@ Set these up by hand before the first tag:
 
 For each release:
 
-1. On `main`, check the README and run `make check`. Finish the Mac checklist
-   before 0.1.0.
+1. On `main`, check the README and run `make check`. If key handling changed,
+   run `make mac-keys` on a Mac.
 2. Run `uv version X.Y.Z`. Write the dated `CHANGELOG.md` section from the commits
    since the previous release, using only sections with entries: Breaking,
    Highlights, Fixes, Changes and Removed. Review it before committing.

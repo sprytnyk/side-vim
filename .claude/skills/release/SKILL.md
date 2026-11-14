@@ -45,8 +45,8 @@ every new commit and tag.
   Report findings and ask before updating dependencies.
 - Compare user-visible changes with README's Install, Usage and Supported keys
   sections. Update documentation as needed; remove the pre-release installation
-  note for the first release. Before `0.1.0`, require the user's result from
-  `docs/mac-keys.md` on a real Mac.
+  note for the first release. If key handling changed since the last release,
+  ask the user to run `make mac-keys` on a Mac and send the result.
 - Confirm the user has configured the `pypi` GitHub environment with a required
   reviewer and the matching PyPI trusted publisher, as described in README.
 
