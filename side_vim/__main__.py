@@ -12,6 +12,7 @@ side-vim demo. Esc goes back to Normal mode; i, a, I, A, o and O start typing.
 Try w b e, W B E, 0 ^ $, gg G, h j k l, with counts: 3w, 2j, 5G.
 Edit with x, dw, d2j, cw, cc, C, D, dd, yy, yw, p, P and J; u undoes, Ctrl+R redoes.
 Tick "clipboard" to yank to the system clipboard and paste from it.
+v and V select, or drag with the mouse; then move, o, and d c y x p on the selection.
 
 \tA tab first, then words: foo.bar(baz) and foo-bar_baz.
 Emoji count as one character: 😀 👨‍👩‍👧 🇺🇦 1️⃣ and é.

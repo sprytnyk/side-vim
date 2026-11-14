@@ -1,5 +1,5 @@
 """Edits vim makes that are worked out on plain text: joining lines, and where the
-cursor goes after undo and redo. No Qt here.
+cursor goes after undo, redo and Visual mode operators. No Qt here.
 """
 
 from collections.abc import Sequence
@@ -68,3 +68,17 @@ def undo_cursor(lines: Sequence[Line], saved: Pos | None, first: int, last: int)
     text = lines[line]
     col = saved.col if saved is not None and saved.line == line else first_non_blank(text)
     return Pos(line, min(col, max(len(text) - 1, 0)))
+
+
+def visual_start(anchor: Pos, cursor: Pos, linewise: bool) -> Pos:
+    """Where an operator on a Visual selection starts: the cursor goes there after `y`,
+    and `u` puts it back there.
+
+    Part of a line: the start of the selection. Whole lines: the cursor if it's on a
+    line above the other end, otherwise column 0 of the first line, like vim.
+    """
+    if not linewise:
+        return min(anchor, cursor)
+    if cursor.line < anchor.line:
+        return cursor
+    return Pos(anchor.line, 0)

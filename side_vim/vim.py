@@ -4,6 +4,9 @@ It sits on the editor as an event filter. In Normal mode it takes the keys, turn
 into commands with the parser, and moves the cursor or edits the text. In Insert mode
 the editor types as usual, and only Esc (or Ctrl+[) is taken.
 
+In Visual mode the selection is the editor's own, set to exactly what vim selects, and
+caret.Caret draws vim's cursor over it. A mouse drag in Normal mode starts Visual mode.
+
 Every position goes through text.Lines, which works in whole characters (a family
 emoji is one) and converts to Qt's UTF-16 positions.
 
@@ -18,14 +21,14 @@ that watches textChanged sees the text change a few times then, ending as it was
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager, suppress
 from dataclasses import dataclass
-from math import ceil
 from typing import overload
 
 from PySide6.QtCore import QEvent, QObject, QTimer, Signal
 from PySide6.QtGui import QGuiApplication, QKeyEvent, QTextCursor, QTextDocument
 from PySide6.QtWidgets import QPlainTextEdit
 
-from side_vim.edits import Register, join, join_parts, undo_cursor
+from side_vim.caret import Caret, char_width
+from side_vim.edits import Register, join, join_parts, undo_cursor, visual_start
 from side_vim.keys import ESC, key_token
 from side_vim.mode import Mode
 from side_vim.motions import (
@@ -37,14 +40,17 @@ from side_vim.motions import (
     move,
     operator_range,
     range_text,
+    visual_range,
 )
 from side_vim.parser import LINE, OPERATORS, Command, Parser
-from side_vim.text import PARAGRAPH_SEPARATOR, Lines, split_clusters, utf16_len
+from side_vim.text import PARAGRAPH_SEPARATOR, Lines, utf16_len
 
 # The Ctrl keys vim takes in Normal and Visual mode. Other Ctrl keys go to the app.
 VIM_CTRL_KEYS = frozenset({"<C-r>"})
 
 INSERT_COMMANDS = frozenset({"i", "a", "I", "A", "o", "O"})
+
+VISUAL_MODES = frozenset({Mode.VISUAL, Mode.VISUAL_LINE})
 
 KEEP_ANCHOR = QTextCursor.MoveMode.KeepAnchor
 
@@ -111,9 +117,17 @@ class VimMode(QObject):
         self._synced = editor.document().revision()
         # set while vim edits, so the signals that fires don't count as the user's
         self._busy = False
+        # Visual mode: the two ends of the selection, as positions Qt moves along when
+        # the text changes. None outside Visual mode.
+        self._anchor: QTextCursor | None = None
+        self._end: QTextCursor | None = None
+        self._mouse_down = False
+        self._caret = Caret(editor)
         editor.installEventFilter(self)
         editor.viewport().installEventFilter(self)
         editor.cursorPositionChanged.connect(self._on_cursor_moved)
+        # the app can move the anchor alone, which doesn't move the cursor
+        editor.selectionChanged.connect(self._on_cursor_moved)
         self._on_cursor_moved()
 
     # --- the app's side ---
@@ -131,6 +145,7 @@ class VimMode(QObject):
         if not self._attached:
             return
         self._drop_insert()
+        self._drop_visual()
         self._parser.reset()
         self._emit_pending()
         self._enabled = enabled
@@ -149,6 +164,7 @@ class VimMode(QObject):
         self._editor.removeEventFilter(self)
         self._editor.viewport().removeEventFilter(self)
         self._editor.cursorPositionChanged.disconnect(self._on_cursor_moved)
+        self._editor.selectionChanged.disconnect(self._on_cursor_moved)
 
     # --- events ---
 
@@ -157,9 +173,14 @@ class VimMode(QObject):
             return False
         kind = event.type()
         if watched is not self._editor:
-            if kind == QEvent.Type.MouseButtonPress:
+            if kind in (QEvent.Type.MouseButtonPress, QEvent.Type.MouseButtonDblClick):
                 # a click forgets the column j and k aim for, even on the same spot
                 self._want_at = None
+                self._mouse_down = True
+            elif kind == QEvent.Type.MouseButtonRelease:
+                self._mouse_down = False
+            elif kind == QEvent.Type.Resize:
+                QTimer.singleShot(0, self._caret.place)
             return False
         if kind == QEvent.Type.ShortcutOverride:
             assert isinstance(event, QKeyEvent)
@@ -186,7 +207,7 @@ class VimMode(QObject):
             return token == ESC
         if token == ESC:
             # Esc with nothing pending goes on to the app, to close a dialog say
-            return bool(self._parser.pending)
+            return bool(self._parser.pending) or self._mode in VISUAL_MODES
         if token.startswith("<C-"):
             return token in VIM_CTRL_KEYS
         # every other key is vim's, so Normal mode never types text
@@ -200,7 +221,7 @@ class VimMode(QObject):
         if token == ESC:
             self._escape()
             return True
-        command = self._parser.feed(token)
+        command = self._parser.feed(token, visual=self._mode in VISUAL_MODES)
         self._emit_pending()
         if command is not None:
             self._run(command)
@@ -209,13 +230,17 @@ class VimMode(QObject):
     def _escape(self) -> None:
         if self._mode is Mode.INSERT:
             self._leave_insert()
-        else:
-            self._parser.reset()
-            self._emit_pending()
+            return
+        self._parser.reset()
+        self._emit_pending()
+        if self._mode in VISUAL_MODES:
+            self._leave_visual()
 
     def _run(self, command: Command) -> None:
         name = command.name
-        if name == "move":
+        if self._mode in VISUAL_MODES:
+            self._run_visual(command)
+        elif name == "move":
             self._move(command)
         elif name in INSERT_COMMANDS:
             self._start_insert(command)
@@ -227,6 +252,8 @@ class VimMode(QObject):
             self._join(command)
         elif name in ("u", "<C-r>"):
             self._undo(command.count or 1, redo=name == "<C-r>")
+        elif name in ("v", "V"):
+            self._start_visual(Mode.VISUAL if name == "v" else Mode.VISUAL_LINE)
         # the other commands come in later steps
 
     # --- the cursor ---
@@ -249,10 +276,21 @@ class VimMode(QObject):
         line = block.blockNumber()
         return Pos(line, lines.col_at(line, position - block.position()))
 
+    def _position(self) -> int:
+        """vim's cursor as a Qt position. In Visual mode it's one end of the selection,
+        not always where the editor's cursor is."""
+        if self._end is not None:
+            return self._end.position()
+        return self._editor.textCursor().position()
+
     def _pos(self, lines: Lines) -> Pos:
-        return self._from_qt(lines, self._editor.textCursor().position())
+        return self._from_qt(lines, self._position())
 
     def _go(self, lines: Lines, pos: Pos) -> None:
+        if self._end is not None:
+            self._end.setPosition(self._to_qt(lines, pos))
+            self._show_visual()
+            return
         cursor = self._editor.textCursor()
         cursor.setPosition(self._to_qt(lines, pos))
         self._editor.setTextCursor(cursor)
@@ -264,7 +302,7 @@ class VimMode(QObject):
         self._go(lines, Pos(line, min(max(pos.col, 0), max(len(lines[line]) - 1, 0))))
 
     def _where(self) -> tuple[int, int]:
-        return self._editor.textCursor().position(), self._editor.document().revision()
+        return self._position(), self._editor.document().revision()
 
     def _tabstop(self) -> int:
         """The editor's tab width in spaces."""
@@ -286,6 +324,7 @@ class VimMode(QObject):
             command.motion,
             command.count,
             want=self._wanted(),
+            visual=self._mode in VISUAL_MODES,
             tabstop=self._tabstop(),
         )
         if moved is None:
@@ -300,8 +339,14 @@ class VimMode(QObject):
         if not self._enabled or self._busy or self._mode is Mode.INSERT:
             return
         cursor = self._editor.textCursor()
+        if self._mode in VISUAL_MODES:
+            self._visual_cursor_moved(cursor)
+            return
         if cursor.hasSelection():
-            self._update_cursor_width()
+            if self._mouse_down:
+                self._adopt_selection(cursor)
+            else:
+                self._update_cursor_width()
             return
         lines = self._lines()
         pos = self._from_qt(lines, cursor.position())
@@ -312,35 +357,20 @@ class VimMode(QObject):
             self._update_cursor_width()
 
     def _update_cursor_width(self) -> None:
-        """A block cursor outside Insert mode, the editor's own cursor in it."""
-        block = self._enabled and self._mode is not Mode.INSERT
-        if block:
+        """A block cursor in Normal mode, the editor's own cursor in Insert mode. In
+        Visual mode the editor's cursor is hidden and the Caret draws vim's."""
+        visual = self._enabled and self._mode in VISUAL_MODES and self._end is not None
+        if self._enabled and self._mode is not Mode.INSERT:
             if not self._block_on:
                 self._plain_width = self._editor.cursorWidth()
                 self._block_on = True
-            width = self._block_width()
+            width = 0 if visual else char_width(self._editor, self._position())
             if self._editor.cursorWidth() != width:
                 self._editor.setCursorWidth(width)
         elif self._block_on:
             self._block_on = False
             self._editor.setCursorWidth(self._plain_width)
-
-    def _block_width(self) -> int:
-        """The width of the character under the cursor, as the editor draws it."""
-        cursor = self._editor.textCursor()
-        block = cursor.block()
-        offset = cursor.positionInBlock()
-        metrics = self._editor.fontMetrics()
-        cluster = _cluster_at(block.text(), offset)
-        if not cluster:
-            return max(metrics.horizontalAdvance("x"), 1)
-        line = block.layout().lineForTextPosition(offset)
-        end = offset + utf16_len(cluster)
-        if line.isValid() and end <= line.textStart() + line.textLength():
-            width = line.cursorToX(end)[0] - line.cursorToX(offset)[0]
-            if width >= 1:
-                return ceil(width)
-        return max(metrics.horizontalAdvance(cluster), metrics.horizontalAdvance("x"), 1)
+        self._caret.show_at(self._position() if visual else None)
 
     # --- operators: d, c, y ---
 
@@ -436,6 +466,201 @@ class VimMode(QObject):
         cursor = self._editor.textCursor()
         cursor.setPosition(begin)
         self._typing_starts(cursor)
+
+    # --- Visual mode ---
+
+    def _start_visual(self, mode: Mode) -> None:
+        document = self._editor.document()
+        position = self._editor.textCursor().position()
+        self._anchor = QTextCursor(document)
+        self._anchor.setPosition(position)
+        self._end = QTextCursor(document)
+        self._end.setPosition(position)
+        self._set_mode(mode)
+        self._show_visual()
+
+    def _run_visual(self, command: Command) -> None:
+        name = command.name
+        if name == "move":
+            self._move(command)
+        elif name in ("v", "V"):
+            mode = Mode.VISUAL if name == "v" else Mode.VISUAL_LINE
+            if mode is self._mode:
+                self._leave_visual()
+            else:
+                self._set_mode(mode)
+                self._show_visual()
+        elif name == "o":
+            self._anchor, self._end = self._end, self._anchor
+            self._want_at = None
+            self._show_visual()
+        elif name in OPERATORS:
+            self._visual_operate(name)
+        elif name == "p":
+            self._visual_paste(command.count or 1)
+        # n, N, / and ? come in a later step
+
+    def _selection(self, lines: Lines) -> tuple[Pos, Pos]:
+        """The two ends of the Visual selection: where it started, and the cursor."""
+        assert self._anchor is not None and self._end is not None
+        return (
+            self._from_qt(lines, self._anchor.position()),
+            self._from_qt(lines, self._end.position()),
+        )
+
+    def _qt_selection(self, lines: Lines) -> tuple[int, int]:
+        """The editor's anchor and position that show the Visual selection."""
+        anchor, end = self._selection(lines)
+        r = visual_range(lines, anchor, end, self._mode is Mode.VISUAL_LINE)
+        if r.linewise:
+            document = self._editor.document()
+            low = document.findBlockByNumber(r.start.line).position()
+            last = document.findBlockByNumber(r.end.line)
+            high = last.position() + last.length() - 1
+        else:
+            low, high = self._to_qt(lines, r.start), self._to_qt(lines, r.end)
+        return (low, high) if anchor <= end else (high, low)
+
+    def _show_visual(self) -> None:
+        """Set the editor's selection to the Visual one, and draw the cursor."""
+        anchor, position = self._qt_selection(self._lines())
+        cursor = self._editor.textCursor()
+        if (cursor.anchor(), cursor.position()) != (anchor, position):
+            cursor.setPosition(anchor)
+            cursor.setPosition(position, KEEP_ANCHOR)
+            self._busy = True
+            try:
+                self._editor.setTextCursor(cursor)
+            finally:
+                self._busy = False
+        self._update_cursor_width()
+
+    def _adopt_selection(self, cursor: QTextCursor) -> None:
+        """Visual mode for a selection the mouse or the app made: the same characters,
+        with vim's cursor on the last one at the editor's cursor end."""
+        lines = self._lines()
+        low = min(cursor.anchor(), cursor.position())
+        high = max(cursor.anchor(), cursor.position())
+        first = self._from_qt(lines, low)
+        last = self._from_qt(lines, high)
+        if last.col > 0:
+            last = Pos(last.line, last.col - 1)
+        elif last.line > first.line:
+            last = Pos(last.line - 1, len(lines[last.line - 1]))
+        anchor, end = (first, last) if cursor.position() == high else (last, first)
+        document = self._editor.document()
+        self._anchor = QTextCursor(document)
+        self._anchor.setPosition(self._to_qt(lines, anchor))
+        self._end = QTextCursor(document)
+        self._end.setPosition(self._to_qt(lines, end))
+        self._want_at = None
+        self._set_mode(Mode.VISUAL)
+
+    def _visual_cursor_moved(self, cursor: QTextCursor) -> None:
+        """The editor's cursor moved in Visual mode, and not by vim: a click, a drag, or
+        the app. Text changes move both ends along, which shows nothing new."""
+        valid = (
+            self._anchor is not None
+            and self._anchor.document() is self._editor.document()
+            and not self._mouse_down
+        )
+        if valid and self._qt_selection(self._lines()) == (cursor.anchor(), cursor.position()):
+            self._update_cursor_width()
+        elif cursor.hasSelection():
+            self._adopt_selection(cursor)
+        else:
+            # a click, or the app put the cursor somewhere: back to Normal mode there
+            self._drop_visual()
+            self._set_mode(Mode.NORMAL)
+            self._on_cursor_moved()
+
+    def _drop_visual(self) -> None:
+        """Forget the Visual selection; the editor's selection stays as it is."""
+        self._anchor = self._end = None
+        self._caret.show_at(None)
+
+    def _leave_visual(self) -> Lines:
+        """Back to Normal mode with the cursor at vim's cursor, kept on a character."""
+        lines = self._lines()
+        _, end = self._selection(lines)
+        self._drop_visual()
+        self._set_mode(Mode.NORMAL)
+        self._busy = True
+        try:
+            self._put(lines, end)
+        finally:
+            self._busy = False
+        return lines
+
+    def _visual_range(self) -> tuple[Lines, Range, Pos]:
+        """End Visual mode for an operator: the text, the range it acts on, and where
+        it starts (see visual_start)."""
+        lines = self._lines()
+        anchor, end = self._selection(lines)
+        linewise = self._mode is Mode.VISUAL_LINE
+        r = visual_range(lines, anchor, end, linewise)
+        start = visual_start(anchor, end, linewise)
+        self._leave_visual()
+        return lines, r, start
+
+    def _visual_operate(self, name: str) -> None:
+        lines, r, start = self._visual_range()
+        empty = not r.linewise and r.start == r.end
+        if not empty or name == "y":
+            self._store(range_text(lines, r), r.linewise)
+        if name == "y":
+            self._put(lines, start)
+            self._want_at = None
+        elif name == "d":
+            if empty:
+                self._put(lines, start)
+            else:
+                self._delete(lines, r, start)
+        else:
+            self._change_text(lines, r, start, empty)
+
+    def _visual_paste(self, count: int) -> None:
+        """p in Visual mode: the register's text takes the selection's place, and the
+        selection goes into the register. Whole lines put in part of a line go on lines
+        of their own; part of a line put over whole lines becomes a line."""
+        register = self._read_register()
+        lines, r, start = self._visual_range()
+        empty = not r.linewise and r.start == r.end
+        deleted = range_text(lines, r)
+        if not register.text:
+            if not empty:
+                self._store(deleted, r.linewise)
+                self._delete(lines, r, start)
+            return
+        body = register.text.removesuffix("\n") if register.linewise else register.text
+        document = self._editor.document()
+        with self._change(start) as edit:
+            if r.linewise:
+                first = document.findBlockByNumber(r.start.line)
+                last = document.findBlockByNumber(r.end.line)
+                begin = first.position()
+                edit.setPosition(begin)
+                edit.setPosition(last.position() + last.length() - 1, KEEP_ANCHOR)
+                chunk = "\n".join([body] * count)
+            else:
+                begin, end = self._span(lines, r)
+                edit.setPosition(begin)
+                edit.setPosition(end, KEEP_ANCHOR)
+                if register.linewise:
+                    chunk = "\n" + "\n".join([body] * count) + "\n"
+                else:
+                    chunk = body * count
+            edit.insertText(chunk)
+        if not empty:
+            self._store(deleted, r.linewise)
+        lines = self._lines()
+        if r.linewise or register.linewise:
+            line = r.start.line + (not r.linewise)
+            self._put(lines, Pos(line, first_non_blank(lines[line])))
+        elif "\n" in chunk:
+            self._put(lines, self._from_qt(lines, begin))
+        else:
+            self._put(lines, self._from_qt(lines, begin + utf16_len(chunk) - 1))
 
     # --- p, P, J ---
 
@@ -842,13 +1067,3 @@ class _Blocks(Sequence[str]):
         if not 0 <= index < len(self):
             raise IndexError(index)
         return self._document.findBlockByNumber(index).text()
-
-
-def _cluster_at(text: str, offset: int) -> str:
-    """The character starting at a UTF-16 offset in a block's text, or "" at its end."""
-    end = 0
-    for cluster in split_clusters(text):
-        end += utf16_len(cluster)
-        if end > offset:
-            return cluster
-    return ""

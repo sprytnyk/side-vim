@@ -399,6 +399,23 @@ def line_range(lines: Sequence[Line], pos: Pos, count: int | None = None) -> Ran
     return Range(Pos(pos.line, 0), Pos(last, 0), linewise=True)
 
 
+def visual_range(lines: Sequence[Line], anchor: Pos, cursor: Pos, linewise: bool) -> Range:
+    """The text a Visual selection covers, both ends included (vim's 'selection' set to
+    inclusive). A selection that ends on the line end takes the line break, unless it's
+    the last line."""
+    a, b = sorted((anchor, cursor))
+    if linewise:
+        return Range(Pos(a.line, 0), Pos(b.line, 0), linewise=True)
+    text = lines[b.line]
+    if b.col < len(text):
+        end = Pos(b.line, b.col + 1)
+    elif b.line < len(lines) - 1:
+        end = Pos(b.line + 1, 0)
+    else:
+        end = Pos(b.line, len(text))
+    return Range(a, end, linewise=False)
+
+
 def range_text(lines: Sequence[Line], r: Range) -> str:
     """The text a range covers. Linewise text ends with a newline, like vim's register."""
     if r.linewise:

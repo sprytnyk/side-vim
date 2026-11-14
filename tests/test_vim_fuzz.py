@@ -3,19 +3,21 @@
 Motions must land where motions.move says (checked against vim on its own), which
 tests every conversion to and from Qt's UTF-16 positions. Insert commands, operators
 and paste, with emoji, flags and accents, must give the text, cursor and register a
-simple model predicts. Random runs of commands must undo and redo step by step.
+simple model predicts. Random runs of commands must undo and redo step by step. Visual
+mode must select what the model says after every key, and its operators must match it.
 """
 
 import random
 from collections.abc import Iterator
 
 import pytest
+from PySide6.QtGui import QTextCursor
 from PySide6.QtWidgets import QApplication, QPlainTextEdit
-from qtkeys import cursor_of, put_cursor, send, text_of, type_text
+from qtkeys import cursor_of, plain, put_cursor, send, text_of, type_text
 from test_motions_fuzz import CHARS, delete, random_lines, whole
 
 from side_vim import Mode, VimMode
-from side_vim.edits import Register
+from side_vim.edits import Register, visual_start
 from side_vim.motions import (
     MOTIONS,
     Line,
@@ -25,9 +27,10 @@ from side_vim.motions import (
     move,
     operator_range,
     range_text,
+    visual_range,
 )
 from side_vim.parser import LINE
-from side_vim.text import split_clusters
+from side_vim.text import Lines, split_clusters
 from side_vim.vim import _Shared
 
 SEED_COUNT = 30
@@ -317,10 +320,13 @@ def random_command(rng: random.Random) -> list[str]:
         return [rng.choice(CHARS) for _ in range(rng.randint(0, 3))]
 
     simple = ["x", "3x", "dw", "d2w", "db", "dd", "2dd", "D", "J", "3J", "p", "P", "yyp", "ywP"]
+    simple += ["vld", "vjd", "Vd", "Vjd", "vlp", "Vp", "v$y", "vey"]
     roll = rng.random()
     if roll < 0.5:
         return [rng.choice(simple)]
-    start = rng.choice(["i", "a", "A", "I", "o", "O", "2i", "2o", "cw", "cc", "C", "c2w", "cb"])
+    start = rng.choice(
+        ["i", "a", "A", "I", "o", "O", "2i", "2o", "cw", "cc", "C", "c2w", "cb", "vlc", "Vjc"]
+    )
     middle = typed()
     if rng.random() < 0.4:
         middle += [rng.choice(["<CR>", "<BS>", "<Left>", "<Right>", "<Del>"]), *typed()]
@@ -359,7 +365,12 @@ def test_undo_and_redo_walk_every_step(editor: QPlainTextEdit, seed: int) -> Non
         split_by_qt = split_by_qt or bool({"<BS>", "<Del>", "<Left>", "<Right>"} & set(keys))
         if not split_by_qt:
             assert whole(text_of(editor)), (states[-1], keys)
-        if text_of(editor) != states[-1]:
+        # one undo step per command that changed something; `Vp` putting back the
+        # same text is a step too, as in vim
+        steps = len(vim._done)
+        assert steps - len(done) in (0, 1), (states[-1], keys)
+        assert steps > len(done) or text_of(editor) == states[-1], (states[-1], keys)
+        if steps > len(done):
             states.append(text_of(editor))
             done.append(keys)
 
@@ -387,3 +398,181 @@ def test_undo_and_redo_walk_every_step(editor: QPlainTextEdit, seed: int) -> Non
         document.redo()
         assert text_of(editor) == state, (states, done)
     vim.detach()
+
+
+def visual_model(
+    lines: list[tuple[str, ...]],
+    anchor: Pos,
+    end: Pos,
+    linewise: bool,
+    op: str,
+    typed: list[str],
+    register: Register,
+    count: int,
+) -> tuple[str, Pos, Register]:
+    """What vim does for d, y, c (typing `typed`, then Esc) and p on a selection."""
+    r = visual_range(lines, anchor, end, linewise)
+    start = visual_start(anchor, end, linewise)
+    empty = not r.linewise and r.start == r.end
+    taken = register if empty else Register(range_text(lines, r), r.linewise)
+    rows = ["".join(line) for line in lines]
+    a, b = r.start.line, r.end.line
+    head = "".join(lines[a][: r.start.col])
+    tail = "".join(lines[b][r.end.col :])
+    if op == "y":
+        return as_text(lines), on_a_char(lines, start), Register(range_text(lines, r), r.linewise)
+    if op == "p" and register.text:
+        body = register.text.removesuffix("\n") if register.linewise else register.text
+        if r.linewise:
+            new = "\n".join([body] * count).split("\n")
+            rows[a : b + 1] = new
+            return "\n".join(rows), Pos(a, first_non_blank(split_clusters(new[0]))), taken
+        middle = body * count
+        if register.linewise:
+            middle = "\n" + "\n".join([body] * count) + "\n"
+        rows[a : b + 1] = (head + middle + tail).split("\n")
+        text = "\n".join(rows)
+        if register.linewise:
+            return text, Pos(a + 1, first_non_blank(split(text)[a + 1])), taken
+        if "\n" in middle:
+            return text, on_a_char(split(text), r.start), taken
+        return text, Pos(a, r.start.col + len(split_clusters(middle)) - 1), taken
+    if op in "dp":
+        if empty:
+            return as_text(lines), on_a_char(lines, start), taken
+        text = delete(lines, r.start, r.end, r.linewise)
+        new = split(text)
+        if r.linewise:
+            line = min(a, len(new) - 1)
+            return text, Pos(line, first_non_blank(new[line])), taken
+        return text, on_a_char(new, r.start), taken
+    added = "".join(typed)
+    if r.linewise:
+        rows[a : b + 1] = [added]
+        return "\n".join(rows), Pos(a, max(len(typed) - 1, 0)), taken
+    rows[a : b + 1] = [head + added + tail]
+    return "\n".join(rows), Pos(a, max(r.start.col + len(typed) - 1, 0)), taken
+
+
+def shown(editor: QPlainTextEdit, vim: VimMode) -> tuple[int, int, int | None]:
+    """The editor's anchor and position, and where vim's cursor is drawn."""
+    cursor = editor.textCursor()
+    caret = vim._caret
+    return cursor.anchor(), cursor.position(), caret.position if caret.isVisible() else None
+
+
+def expected_shown(
+    lines: list[tuple[str, ...]], anchor: Pos, end: Pos, linewise: bool
+) -> tuple[int, int, int]:
+    qt = Lines(["".join(line) for line in lines])
+    r = visual_range(lines, anchor, end, linewise)
+    if linewise:
+        low = qt.to_qt(Pos(r.start.line, 0))
+        high = qt.to_qt(Pos(r.end.line, len(lines[r.end.line])))
+    else:
+        low, high = qt.to_qt(r.start), qt.to_qt(r.end)
+    anchor_qt, position_qt = (low, high) if anchor <= end else (high, low)
+    return anchor_qt, position_qt, qt.to_qt(end)
+
+
+@pytest.mark.parametrize("seed", range(SEED_COUNT))
+def test_visual_mode_matches_the_model(editor: QPlainTextEdit, seed: int) -> None:
+    rng = random.Random(5000 + seed)
+    motions = sorted(MOTIONS)
+    for _ in range(10):
+        lines = random_lines(rng)
+        editor.setPlainText(as_text(lines))
+        vim = VimMode(editor)
+        pos = random_pos(rng, lines)
+        put_cursor(editor, pos)
+        linewise = rng.random() < 0.3
+        send(editor, "V" if linewise else "v")
+        anchor = end = pos
+        want: int | None = None
+        keys = ["V" if linewise else "v"]
+        for _ in range(rng.randint(0, 6)):
+            roll = rng.random()
+            if roll < 0.1:
+                key = "o"
+                anchor, end = end, anchor
+                want = None
+            elif roll < 0.2:
+                key = "v" if linewise else "V"
+                linewise = not linewise
+            else:
+                motion = rng.choice(motions)
+                count = None if motion == "0" else rng.choice((None, None, 2, 3))
+                key = f"{count or ''}{motion}"
+                moved = move(lines, end, motion, count, want=want, visual=True, tabstop=TABSTOP)
+                if moved is not None:
+                    end, want = moved.pos, moved.want
+            send(editor, key)
+            keys.append(key)
+            assert vim.mode is (Mode.VISUAL_LINE if linewise else Mode.VISUAL), keys
+            assert shown(editor, vim) == expected_shown(lines, anchor, end, linewise), (lines, keys)
+
+        op = rng.choice(["d", "x", "y", "c", "p", "p", "<Esc>"])
+        register = random_register(rng)
+        _Shared.register = register
+        count = rng.choice((1, 1, 2)) if op == "p" else 1
+        typed = [rng.choice(CHARS) for _ in range(rng.randint(0, 2))] if op == "c" else []
+        send(editor, f"{count if count > 1 else ''}{op}")
+        keys.append(op)
+        what = (lines, pos, keys, typed, register)
+        if op == "c":
+            assert vim.mode is Mode.INSERT, what
+            type_chars(editor, typed)
+            send(editor, "<Esc>")
+        assert vim.mode is Mode.NORMAL, what
+        assert shown(editor, vim)[2] is None, what
+        if op == "<Esc>":
+            assert text_of(editor) == as_text(lines), what
+            assert cursor_of(editor) == on_a_char(lines, end), what
+            vim.detach()
+            continue
+        model = "d" if op == "x" else op
+        text, cursor, after = visual_model(
+            lines, anchor, end, linewise, model, typed, register, count
+        )
+        assert text_of(editor) == text, what
+        assert whole(text_of(editor)), what
+        assert cursor_of(editor) == cursor, what
+        assert _Shared.register == after, what
+        if text != as_text(lines):
+            send(editor, "u")
+            assert text_of(editor) == as_text(lines), what
+            send(editor, "<C-r>")
+            assert text_of(editor) == text, what
+        vim.detach()
+
+
+@pytest.mark.parametrize("seed", range(SEED_COUNT))
+def test_a_selection_made_outside_vim_is_kept(editor: QPlainTextEdit, seed: int) -> None:
+    """A selection from the mouse or the app, at any character edges: Visual mode keeps
+    the same characters selected, and y yanks them."""
+    rng = random.Random(6000 + seed)
+    for _ in range(10):
+        lines = random_lines(rng)
+        editor.setPlainText(as_text(lines))
+        vim = VimMode(editor)
+        send(editor, "v")
+        qt = Lines(["".join(line) for line in lines])
+        edges = sorted(
+            {qt.to_qt(Pos(i, col)) for i, line in enumerate(lines) for col in range(len(line) + 1)}
+        )
+        if len(edges) < 2:  # an empty text: nothing to select
+            vim.detach()
+            continue
+        a, b = rng.sample(edges, 2)
+        cursor = editor.textCursor()
+        cursor.setPosition(a)
+        cursor.setPosition(b, QTextCursor.MoveMode.KeepAnchor)
+        editor.setTextCursor(cursor)
+        what = (lines, a, b)
+        assert vim.mode is Mode.VISUAL, what
+        after = editor.textCursor()
+        assert (after.anchor(), after.position()) == (a, b), what
+        selected = plain(after.selectedText())
+        send(editor, "y")
+        assert _Shared.register == Register(selected, linewise=False), what
+        vim.detach()
