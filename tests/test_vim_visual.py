@@ -6,6 +6,9 @@ commands: vim's `:normal` makes one undo step of everything it runs, so the vim 
 ran each part on its own.
 """
 
+import os
+import subprocess
+import sys
 from collections.abc import Iterator
 
 import pytest
@@ -714,3 +717,112 @@ def test_yank_to_the_clipboard(editor: QPlainTextEdit) -> None:
     send(editor, "vp")  # on the first non-blank after Vd
     assert text_of(editor) == "  newh ij\nkl"
     assert QGuiApplication.clipboard().text() == "g"
+
+
+# --- the editor's own cursor ---
+
+
+def test_the_editors_cursor_is_off_in_visual_mode(editor: QPlainTextEdit) -> None:
+    flags = editor.textInteractionFlags()
+    vim = start(editor, T)
+    send(editor, "V")
+    assert not editor.textInteractionFlags() & Qt.TextInteractionFlag.TextEditable
+    send(editor, "v<Esc>")
+    assert editor.textInteractionFlags() == flags
+    send(editor, "vl")
+    vim.set_enabled(False)
+    assert editor.textInteractionFlags() == flags
+
+
+def test_flags_the_app_sets_in_visual_mode_stay(editor: QPlainTextEdit) -> None:
+    start(editor, T)
+    send(editor, "v")
+    editor.setReadOnly(True)
+    send(editor, "<Esc>")
+    assert editor.isReadOnly()
+    editor.setReadOnly(False)
+    send(editor, "v")
+    editor.setReadOnly(False)
+    assert not editor.textInteractionFlags() & Qt.TextInteractionFlag.TextEditable
+    send(editor, "<Esc>")
+    assert not editor.isReadOnly()
+    send(editor, "v")
+    editor.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
+    send(editor, "<Esc>")
+    assert editor.textInteractionFlags() == Qt.TextInteractionFlag.NoTextInteraction
+
+
+def caret_pixels(editor: QPlainTextEdit, vim: VimMode) -> set[str]:
+    """The colours at the middle of vim's cursor over a few blinks."""
+    caret = vim._caret
+    seen = set()
+    for _ in range(6):
+        QTest.qWait(60)
+        image = editor.viewport().grab().toImage()
+        seen.add(image.pixelColor(caret.geometry().center()).name())
+    return seen
+
+
+@pytest.fixture
+def fast_blink(qapp: QApplication) -> Iterator[None]:
+    hints = QGuiApplication.styleHints()
+    flash = hints.cursorFlashTime()
+    hints.setCursorFlashTime(160)
+    yield
+    hints.setCursorFlashTime(flash)
+
+
+@pytest.mark.usefixtures("fast_blink")
+def test_the_cursor_blinks_while_the_editor_has_focus(editor: QPlainTextEdit) -> None:
+    vim = start(editor, "abc")
+    editor.activateWindow()
+    editor.setFocus()
+    send(editor, "v")
+    assert len(caret_pixels(editor, vim)) == 2
+    editor.clearFocus()
+    assert len(caret_pixels(editor, vim)) == 1
+
+
+SCALED = """
+import sys
+from PySide6.QtGui import QTextCursor
+from PySide6.QtTest import QTest
+from PySide6.QtWidgets import QApplication, QPlainTextEdit
+from side_vim import VimMode
+
+app = QApplication([])
+editor = QPlainTextEdit()
+editor.resize(400, 200)
+editor.show()
+editor.activateWindow()
+editor.setFocus()
+editor.setPlainText("abcdef\\nxyz")
+vim = VimMode(editor)
+QTest.keyClick(editor, "V")
+cursor = QTextCursor(editor.document())
+cursor.setPosition(editor.textCursor().position())
+rect = editor.cursorRect(cursor)
+ratio = editor.devicePixelRatioF()
+seen = set()
+for _ in range(8):
+    QTest.qWait(150)
+    image = editor.viewport().grab().toImage()
+    x = round(rect.x() * ratio)
+    column = tuple(
+        image.pixel(x + dx, y)
+        for dx in (-1, 0, 1)
+        for y in range(round(rect.top() * ratio), round(rect.bottom() * ratio))
+    )
+    seen.add(column)
+print(ratio, len(seen))
+"""
+
+
+def test_no_editor_cursor_on_a_scaled_screen(qapp: QApplication) -> None:
+    """At 150%, Qt draws a cursor of width 0 as a thin line. Nothing may blink at
+    the end of the selection, where the editor's cursor is."""
+    env = {**os.environ, "QT_SCALE_FACTOR": "1.5", "QT_QPA_PLATFORM": "offscreen"}
+    out = subprocess.run(
+        [sys.executable, "-c", SCALED], env=env, capture_output=True, text=True, check=True
+    )
+    assert out.stdout.split() == ["1.5", "1"]

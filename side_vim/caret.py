@@ -3,13 +3,14 @@
 The selection is the editor's own, so the app's copy (Ctrl+C) copies what `y` yanks.
 But Qt draws its cursor at one end of its selection, and in vim the character under
 the cursor is part of the selection, so the two don't line up. In Visual mode the
-editor's cursor is hidden and this widget draws vim's one on top of the text.
+editor's cursor is hidden and this widget draws vim's one on top of the text. It
+blinks like the editor's cursor, and only while the editor has focus.
 """
 
 from math import ceil
 
-from PySide6.QtCore import QPointF, QRect, Qt
-from PySide6.QtGui import QPainter, QPaintEvent, QPalette, QTextCursor
+from PySide6.QtCore import QPointF, QRect, Qt, QTimer
+from PySide6.QtGui import QGuiApplication, QPainter, QPaintEvent, QPalette, QTextCursor
 from PySide6.QtWidgets import QPlainTextEdit, QWidget
 
 from side_vim.text import split_clusters, utf16_len
@@ -22,6 +23,9 @@ class Caret(QWidget):
         self._position: int | None = None
         self._text = ""
         self._ascent = 0.0
+        self._on = True  # the half of the blink it's drawn in
+        self._blink = QTimer(self)
+        self._blink.timeout.connect(self._toggle)
         self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.hide()
@@ -34,8 +38,25 @@ class Caret(QWidget):
 
     def show_at(self, position: int | None) -> None:
         """Draw the cursor on the character at this Qt position; None hides it."""
-        self._position = position
+        if position != self._position:
+            self._position = position
+            self.restart_blink()
         self.place()
+
+    def restart_blink(self) -> None:
+        """Drawn from now on for half a blink, like the editor's cursor after a move.
+        Call it when the editor gets or loses focus."""
+        self._on = True
+        flash = QGuiApplication.styleHints().cursorFlashTime()
+        if self._position is not None and flash > 0 and self._editor.hasFocus():
+            self._blink.start(flash // 2)
+        else:
+            self._blink.stop()
+        self.update()
+
+    def _toggle(self) -> None:
+        self._on = not self._on
+        self.update()
 
     def place(self) -> None:
         """Put the widget over its character again, after a scroll or a change."""
@@ -68,6 +89,8 @@ class Caret(QWidget):
             self.place()
 
     def paintEvent(self, event: QPaintEvent) -> None:
+        if not (self._on and self._editor.hasFocus()):
+            return
         palette = self._editor.palette()
         painter = QPainter(self)
         painter.fillRect(self.rect(), palette.color(QPalette.ColorRole.Text))

@@ -23,7 +23,7 @@ from contextlib import contextmanager, suppress
 from dataclasses import dataclass
 from typing import overload
 
-from PySide6.QtCore import QEvent, QObject, QTimer, Signal
+from PySide6.QtCore import QEvent, QObject, Qt, QTimer, Signal
 from PySide6.QtGui import QGuiApplication, QKeyEvent, QTextCursor, QTextDocument
 from PySide6.QtWidgets import QPlainTextEdit
 
@@ -53,6 +53,9 @@ INSERT_COMMANDS = frozenset({"i", "a", "I", "A", "o", "O"})
 VISUAL_MODES = frozenset({Mode.VISUAL, Mode.VISUAL_LINE})
 
 KEEP_ANCHOR = QTextCursor.MoveMode.KeepAnchor
+
+# The editor draws its cursor only if one of these is on.
+DRAWS_CURSOR = Qt.TextInteractionFlag.TextEditable | Qt.TextInteractionFlag.TextSelectableByKeyboard
 
 
 class _Shared:
@@ -123,6 +126,8 @@ class VimMode(QObject):
         self._end: QTextCursor | None = None
         self._mouse_down = False
         self._caret = Caret(editor)
+        # the editor's interaction flags while Visual mode has turned DRAWS_CURSOR off
+        self._saved_flags: Qt.TextInteractionFlag | None = None
         editor.installEventFilter(self)
         editor.viewport().installEventFilter(self)
         editor.cursorPositionChanged.connect(self._on_cursor_moved)
@@ -194,6 +199,12 @@ class VimMode(QObject):
         if kind == QEvent.Type.InputMethod:
             # an input method must not type text outside Insert mode
             return self._mode is not Mode.INSERT
+        if kind == QEvent.Type.ReadOnlyChange and self._saved_flags is not None:
+            # the app's setReadOnly: its flags are the ones to put back after Visual mode
+            self._saved_flags = None
+            self._update_cursor_width()
+        if kind in (QEvent.Type.FocusIn, QEvent.Type.FocusOut):
+            self._caret.restart_blink()
         if kind == QEvent.Type.FontChange:
             # the editor lays out the text again first
             QTimer.singleShot(0, self._update_cursor_width)
@@ -370,7 +381,24 @@ class VimMode(QObject):
         elif self._block_on:
             self._block_on = False
             self._editor.setCursorWidth(self._plain_width)
+        self._hide_editor_cursor(visual)
         self._caret.show_at(self._position() if visual else None)
+
+    def _hide_editor_cursor(self, hide: bool) -> None:
+        """Width 0 doesn't hide the editor's cursor everywhere: on a screen scaled by a
+        fraction (125%, 150%) Qt still draws a thin blinking line. So in Visual mode the
+        editor stops taking keys to edit (vim takes them anyway), and then Qt draws no
+        cursor. Meanwhile isReadOnly() is True. If the app changes the flags meanwhile
+        (setReadOnly, or other flags), its change stays."""
+        flags = self._editor.textInteractionFlags()
+        if hide:
+            if self._saved_flags is None and flags & DRAWS_CURSOR:
+                self._saved_flags = flags
+                self._editor.setTextInteractionFlags(flags & ~DRAWS_CURSOR)
+        elif self._saved_flags is not None:
+            if flags == self._saved_flags & ~DRAWS_CURSOR:
+                self._editor.setTextInteractionFlags(self._saved_flags)
+            self._saved_flags = None
 
     # --- operators: d, c, y ---
 
