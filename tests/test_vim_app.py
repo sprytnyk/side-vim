@@ -5,10 +5,23 @@ editors, and the keyboard layout map. Cases marked "vim" were checked against vi
 from collections.abc import Iterator
 
 import pytest
+import shiboken6
 from PySide6.QtCore import QKeyCombination, Qt
-from PySide6.QtGui import QKeyEvent, QKeySequence, QShortcut
+from PySide6.QtGui import (
+    QKeyEvent,
+    QKeySequence,
+    QShortcut,
+    QSyntaxHighlighter,
+    QTextDocument,
+)
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QPlainTextDocumentLayout,
+    QPlainTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
 from qtkeys import cursor_of, plain, put_cursor, send, start_vim, text_of, type_text
 
 import side_vim.vim as vim_module
@@ -314,3 +327,32 @@ def test_ctrl_and_the_key_of_the_bracket_is_esc(editor: QPlainTextEdit) -> None:
     send(editor, "i")
     QTest.keyClick(editor, Qt.Key(0x445), control_modifier())
     assert vim.mode is Mode.INSERT
+
+
+class Highlighter(QSyntaxHighlighter):
+    def highlightBlock(self, text: str) -> None:  # noqa: N802
+        pass
+
+
+@pytest.mark.parametrize("shared", [True, False])
+def test_an_editor_can_go_away_in_insert_mode(
+    qapp: QApplication, monkeypatch: pytest.MonkeyPatch, shared: bool
+) -> None:
+    """When the editor goes, on quit say, its highlighter lets go of the document, and Qt
+    reports the whole text as changed to the insert session still listening. The editor
+    is half gone by then. An app with tabs keeps the document (shared), or it goes too."""
+    errors: list[BaseException] = []
+    monkeypatch.setattr("sys.excepthook", lambda kind, error, trace: errors.append(error))
+    e = QPlainTextEdit()
+    document = QTextDocument() if shared else e.document()
+    if shared:
+        document.setDocumentLayout(QPlainTextDocumentLayout(document))
+        e.setDocument(document)
+    document.setPlainText("abc\ndef")
+    Highlighter(document).setParent(e)  # the editor's, made before vim, so it goes first
+    VimMode(e)
+    send(e, "GA")
+    shiboken6.delete(e)
+    assert errors == []
+    if shared:
+        assert document.toPlainText() == "abc\ndef"

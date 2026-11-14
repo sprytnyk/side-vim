@@ -430,13 +430,8 @@ class VimMode(QObject):
         return start + lines.offset(pos)
 
     def _from_qt(self, lines: Lines, position: int) -> Pos:
-        """Like Lines.from_qt, but the document finds the line."""
-        document = self._editor.document()
-        block = document.findBlock(position)
-        if not block.isValid():
-            block = document.lastBlock()
-        line = block.blockNumber()
-        return Pos(line, lines.col_at(line, position - block.position()))
+        """A Qt position in the editor's document as vim's line and column."""
+        return _from_qt(self._editor.document(), lines, position)
 
     def _position(self) -> int:
         """vim's cursor as a Qt position. In Visual mode it's one end of the selection,
@@ -1186,7 +1181,10 @@ class VimMode(QObject):
         insert.seen = insert.levels
         insert.edited = True
         if insert.saved is None:
-            insert.saved = self._from_qt(self._lines(), position)
+            # the session's own document: the editor may show another one by now, or be
+            # half gone, as when the app quits in Insert mode
+            document = insert.document
+            insert.saved = _from_qt(document, Lines(_Blocks(document)), position)
 
     def _on_redo_available(self, available: bool) -> None:
         if available and self._insert is not None and not self._busy:
@@ -1324,6 +1322,15 @@ class VimMode(QObject):
         if pending != self._pending:
             self._pending = pending
             self.pending_changed.emit(pending)
+
+
+def _from_qt(document: QTextDocument, lines: Lines, position: int) -> Pos:
+    """Like Lines.from_qt, but the document finds the line."""
+    block = document.findBlock(position)
+    if not block.isValid():
+        block = document.lastBlock()
+    line = block.blockNumber()
+    return Pos(line, lines.col_at(line, position - block.position()))
 
 
 def _replace(document: QTextDocument, old: str, new: str) -> None:
