@@ -70,9 +70,6 @@ def test_whole_characters(
     assert vim.mode is Mode.NORMAL
 
 
-# --- what the editor shows ---
-
-
 @pytest.mark.parametrize(
     ("keys", "selected"),
     [
@@ -230,8 +227,6 @@ def test_esc_in_visual_mode_stays_with_vim(qapp: QApplication) -> None:
     window.deleteLater()
 
 
-# --- the mouse ---
-
 LEFT = Qt.MouseButton.LeftButton
 NO_KEYS = Qt.KeyboardModifier.NoModifier
 
@@ -314,9 +309,6 @@ def test_a_drag_in_insert_mode_stays_a_plain_selection(editor: QPlainTextEdit) -
     assert caret_of(vim) is None
 
 
-# --- the app ---
-
-
 def test_the_app_changing_text_elsewhere_keeps_the_selection(editor: QPlainTextEdit) -> None:
     vim = start_vim(editor, T, 1, 2)
     send(editor, "vl")
@@ -378,9 +370,6 @@ def test_turning_vim_off_in_visual_mode(editor: QPlainTextEdit) -> None:
     assert editor.cursorWidth() == plain_width
 
 
-# --- undo and the register ---
-
-
 @pytest.mark.parametrize(
     "keys",
     ["vjd", "Vjd", "vjcXY<Esc>", "VcXY<Esc>", "vlp", "Vp", "vjp", "Vjp", "vx"],
@@ -410,9 +399,6 @@ def test_yank_to_the_clipboard(editor: QPlainTextEdit) -> None:
     send(editor, "vp")  # on the first non-blank after Vd
     assert text_of(editor) == "  newh ij\nkl"
     assert QGuiApplication.clipboard().text() == "g"
-
-
-# --- the editor's own cursor ---
 
 
 def test_the_editors_cursor_is_off_in_visual_mode(editor: QPlainTextEdit) -> None:

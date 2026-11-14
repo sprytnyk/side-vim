@@ -35,9 +35,6 @@ def editor(qapp: QApplication) -> Iterator[QPlainTextEdit]:
     e.deleteLater()
 
 
-# --- search ---
-
-
 @pytest.mark.parametrize(
     ("text", "line", "col", "keys", "pattern", "forward", "cursor"),
     [
@@ -127,9 +124,6 @@ def test_search_keys_call_the_hook(editor: QPlainTextEdit) -> None:
     assert cursor_of(editor) == Pos(0, 0)
 
 
-# --- the Esc hook ---
-
-
 class Window(QWidget):
     """An editor in a window that records the keys the editor passed on."""
 
@@ -186,16 +180,10 @@ def test_the_esc_hook_comes_first(window: Window) -> None:
     assert calls == [Mode.INSERT, Mode.INSERT, Mode.VISUAL, Mode.VISUAL] + [Mode.NORMAL] * 3
 
 
-# --- the command table ---
-
-
 def test_every_command_has_a_handler(editor: QPlainTextEdit) -> None:
     vim = VimMode(editor)
     assert set(vim._normal_handlers) == {"move"} | set(OPERATORS) | set(NORMAL_ACTIONS)
     assert set(vim._visual_handlers) == {"move"} | set(VISUAL_ACTIONS)
-
-
-# --- read-only ---
 
 
 @pytest.mark.parametrize(
@@ -258,9 +246,6 @@ def test_turning_read_only_on_in_insert_mode(editor: QPlainTextEdit) -> None:
     editor.setReadOnly(False)
     send(editor, "u")
     assert text_of(editor) == "abc"
-
-
-# --- the keyboard layout ---
 
 
 def test_the_ukrainian_layout_types_vim_keys(editor: QPlainTextEdit) -> None:

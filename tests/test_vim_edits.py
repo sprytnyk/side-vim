@@ -50,9 +50,7 @@ def test_vim(
     assert vim.mode is Mode.NORMAL
 
 
-# --- whole characters, which vim doesn't do for family emoji and flags ---
-
-
+# Edits take whole characters. Vim splits family emoji and flags into parts.
 @pytest.mark.parametrize(
     ("text", "line", "col", "keys", "expected", "cursor"),
     [
@@ -93,8 +91,6 @@ def test_whole_characters(
     assert text_of(editor) == expected
     assert cursor_of(editor) == Pos(*cursor)
 
-
-# --- undo steps ---
 
 UNDO_TEXT = "abc def ghi\n  jkl\nmno pqr\nstu"
 
@@ -239,9 +235,6 @@ def test_undo_in_a_long_document(editor: QPlainTextEdit) -> None:
     assert cursor_of(editor) == Pos(2499, 0)
 
 
-# --- the register ---
-
-
 def test_the_register_is_shared_by_editors(qapp: QApplication) -> None:
     a, b = QPlainTextEdit(), QPlainTextEdit()
     a.setPlainText("foo bar")
@@ -310,9 +303,6 @@ def test_clipboard_off_pastes_the_register(editor: QPlainTextEdit) -> None:
     start_vim(editor, "abc", 0, 0)
     send(editor, "ylp")
     assert text_of(editor) == "aabc"
-
-
-# --- keys and signals ---
 
 
 def test_signals_for_operators(editor: QPlainTextEdit) -> None:

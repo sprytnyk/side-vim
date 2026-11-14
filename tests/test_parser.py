@@ -160,9 +160,6 @@ def test_scrolling_keys(key: str) -> None:
     assert last(["d", key]) is None
 
 
-# --- the command table ---
-
-
 def test_ctrl_keys() -> None:
     assert {"<C-r>", "<C-e>", "<C-y>", "<C-d>", "<C-u>", "<C-f>", "<C-b>"} == CTRL_KEYS
 

@@ -234,8 +234,6 @@ class VimMode(QObject):
         }
         return normal, visual
 
-    # --- the app's side ---
-
     @property
     def mode(self) -> Mode:
         return self._mode
@@ -278,8 +276,6 @@ class VimMode(QObject):
         self._editor.viewport().removeEventFilter(self)
         self._editor.cursorPositionChanged.disconnect(self._on_cursor_moved)
         self._editor.selectionChanged.disconnect(self._on_cursor_moved)
-
-    # --- events ---
 
     def eventFilter(self, watched: QObject, event: QEvent) -> bool:
         if not self._enabled:
@@ -414,8 +410,6 @@ class VimMode(QObject):
         if self.search_hook is not None:
             self.search_hook(command.name == "/")
 
-    # --- the cursor ---
-
     def _lines(self) -> Lines:
         """The text as it is now. Make a new one after changing the text."""
         return Lines(_Blocks(self._editor.document()))
@@ -490,8 +484,6 @@ class VimMode(QObject):
         self._go(lines, moved.pos)
         self._want = moved.want
         self._want_at = self._where()
-
-    # --- n, N and scrolling ---
 
     def _search_next(self, command: Command) -> None:
         if self._search is None:
@@ -644,8 +636,6 @@ class VimMode(QObject):
                 self._editor.setTextInteractionFlags(self._saved_flags)
             self._saved_flags = None
 
-    # --- operators: d, c, y ---
-
     def _operate(self, command: Command) -> None:
         assert command.motion is not None
         name = command.name
@@ -746,8 +736,6 @@ class VimMode(QObject):
         cursor = self._editor.textCursor()
         cursor.setPosition(begin)
         self._typing_starts(cursor)
-
-    # --- Visual mode ---
 
     def _start_visual_command(self, command: Command) -> None:
         self._start_visual(Mode.VISUAL if command.name == "v" else Mode.VISUAL_LINE)
@@ -943,8 +931,6 @@ class VimMode(QObject):
         else:
             self._put(lines, self._from_qt(lines, begin + utf16_len(chunk) - 1))
 
-    # --- p, P, J ---
-
     def _paste(self, command: Command) -> None:
         register = self._read_register()
         if not register.text:
@@ -1009,8 +995,6 @@ class VimMode(QObject):
         lines = self._lines()
         self._put(lines, self._from_qt(lines, start + utf16_len(joined[:at])))
 
-    # --- the register ---
-
     def _store(self, text: str, linewise: bool) -> None:
         global _register
         _register = Register(text, linewise)
@@ -1026,8 +1010,6 @@ class VimMode(QObject):
         if text == _register.text:
             return _register
         return Register(text, linewise=text.endswith("\n"))
-
-    # --- undo ---
 
     def _check_synced(self) -> None:
         """Forget where `u` goes if the document changed without vim, since its undo
@@ -1119,8 +1101,6 @@ class VimMode(QObject):
             self._put(lines, undo_cursor(lines, saved, first, last))
         else:
             self._put(lines, self._pos(lines))
-
-    # --- Insert mode ---
 
     def _start_insert(self, command: Command) -> None:
         lines = self._lines()
@@ -1315,8 +1295,6 @@ class VimMode(QObject):
 
     def _utf16(self) -> bytes:
         return self._editor.document().toRawText().encode("utf-16-le", "surrogatepass")
-
-    # --- signals ---
 
     def _set_mode(self, mode: Mode) -> None:
         changed = mode is not self._mode

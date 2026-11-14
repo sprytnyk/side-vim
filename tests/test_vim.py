@@ -53,9 +53,6 @@ def editor(window: Window) -> QPlainTextEdit:
     return window.editor
 
 
-# --- motions ---
-
-
 @pytest.mark.parametrize(
     ("text", "line", "col", "keys", "expected"),
     [
@@ -133,9 +130,6 @@ def test_empty_document(editor: QPlainTextEdit) -> None:
     send(editor, "hjklwbeWBE0^$ggG3w")
     assert cursor_of(editor) == Pos(0, 0)
     assert text_of(editor) == ""
-
-
-# --- Normal mode never types ---
 
 
 # QTest gives Alt+x the text "x", which on macOS is what Option typed, so vim's x.
@@ -261,9 +255,6 @@ def test_page_down_goes_to_the_editor(editor: QPlainTextEdit) -> None:
     assert cursor_of(editor).col <= len("line 99") - 1
 
 
-# --- Insert mode ---
-
-
 @pytest.mark.parametrize(
     ("text", "line", "col", "keys", "expected", "cursor"),
     [
@@ -313,9 +304,6 @@ def test_insert_mode_cursor_can_sit_after_the_last_character(editor: QPlainTextE
     assert cursor_of(editor) == Pos(0, 3)
 
 
-# --- Esc ---
-
-
 def test_esc_with_nothing_pending_goes_to_the_app(window: Window) -> None:
     start_vim(window.editor, "abc")
     send(window.editor, "<Esc>")
@@ -336,9 +324,6 @@ def test_esc_in_insert_mode_stays_with_vim(window: Window) -> None:
     assert window.passed_on == []
     send(window.editor, "i<C-[>")
     assert Qt.Key.Key_Escape not in window.passed_on
-
-
-# --- signals ---
 
 
 def test_mode_signal(editor: QPlainTextEdit) -> None:
@@ -368,9 +353,6 @@ def test_pending_signal(editor: QPlainTextEdit) -> None:
     assert pending[-2:] == ["g", ""]
     send(editor, "3z")
     assert pending[-2:] == ["3", ""]
-
-
-# --- the cursor ---
 
 
 def test_block_cursor(editor: QPlainTextEdit) -> None:
@@ -441,9 +423,6 @@ def test_new_text_from_the_app(editor: QPlainTextEdit) -> None:
     send(editor, "$")
     assert cursor_of(editor) == Pos(0, 4)
     assert vim.mode is Mode.NORMAL
-
-
-# --- turning vim off ---
 
 
 def test_set_enabled(editor: QPlainTextEdit) -> None:
