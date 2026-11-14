@@ -12,10 +12,10 @@ from PySide6.QtGui import QGuiApplication, QTextCursor
 from PySide6.QtWidgets import QApplication, QPlainTextEdit
 from qtkeys import cursor_of, put_cursor, send, text_of
 
+import side_vim.vim as vim_module
 from side_vim import Mode, VimMode
 from side_vim.edits import Register
 from side_vim.motions import Pos
-from side_vim.vim import _Shared
 
 SMILE = "\U0001f600"
 FAMILY = "\U0001f468\u200d\U0001f469\u200d\U0001f467"
@@ -26,9 +26,9 @@ UNDO_CC = "ab cd ef\n  gh ij\nkl"
 
 @pytest.fixture(autouse=True)
 def empty_register() -> Iterator[None]:
-    _Shared.register = Register()
+    vim_module._register = Register()
     yield
-    _Shared.register = Register()
+    vim_module._register = Register()
 
 
 @pytest.fixture
@@ -470,15 +470,15 @@ def test_the_register_is_shared_by_editors(qapp: QApplication) -> None:
 def test_operators_fill_the_register(editor: QPlainTextEdit) -> None:
     start(editor, "foo bar\nbaz", 0, 4)
     send(editor, "yw")
-    assert _Shared.register == Register("bar", linewise=False)
+    assert vim_module._register == Register("bar", linewise=False)
     send(editor, "yy")
-    assert _Shared.register == Register("foo bar\n", linewise=True)
+    assert vim_module._register == Register("foo bar\n", linewise=True)
     send(editor, "x")
-    assert _Shared.register == Register("b", linewise=False)
+    assert vim_module._register == Register("b", linewise=False)
     send(editor, "2dd")
-    assert _Shared.register == Register("foo ar\nbaz\n", linewise=True)
+    assert vim_module._register == Register("foo ar\nbaz\n", linewise=True)
     send(editor, "cwx<Esc>")  # an empty line: nothing to delete
-    assert _Shared.register == Register("foo ar\nbaz\n", linewise=True)
+    assert vim_module._register == Register("foo ar\nbaz\n", linewise=True)
 
 
 def test_clipboard(editor: QPlainTextEdit) -> None:
@@ -510,7 +510,7 @@ def test_clipboard_keeps_the_kind_of_our_own_yank(editor: QPlainTextEdit) -> Non
     send(editor, "yj")  # whole lines
     send(editor, "y2w")  # part of lines, yet it ends at a line end
     assert QGuiApplication.clipboard().text() == "b\ncd"
-    _Shared.register = Register("x\n", linewise=False)
+    vim_module._register = Register("x\n", linewise=False)
     QGuiApplication.clipboard().setText("x\n")
     send(editor, "Gp")
     assert text_of(editor) == "ab\ncd\nex\nf"

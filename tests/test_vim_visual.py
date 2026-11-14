@@ -18,12 +18,12 @@ from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
 from qtkeys import cursor_of, plain, put_cursor, send, text_of
 
+import side_vim.vim as vim_module
 from side_vim import Mode, VimMode
 from side_vim.caret import char_width
 from side_vim.edits import Register
 from side_vim.motions import Pos
 from side_vim.text import Lines
-from side_vim.vim import _Shared
 
 T = "ab cd ef\n  gh ij\nkl"
 W = "foo bar\n\n  baz qux\nend"
@@ -34,9 +34,9 @@ UA = "\U0001f1fa\U0001f1e6"
 
 @pytest.fixture(autouse=True)
 def empty_register() -> Iterator[None]:
-    _Shared.register = Register()
+    vim_module._register = Register()
     yield
-    _Shared.register = Register()
+    vim_module._register = Register()
 
 
 @pytest.fixture
@@ -339,7 +339,7 @@ def test_vim(
     run(editor, keys)
     assert text_of(editor) == expected
     assert cursor_of(editor) == Pos(*cursor)
-    assert _Shared.register == Register(*register)
+    assert vim_module._register == Register(*register)
     assert vim.mode is Mode.NORMAL
 
 
@@ -373,7 +373,7 @@ def test_whole_characters(
     run(editor, keys)
     assert text_of(editor) == expected
     assert cursor_of(editor) == Pos(*cursor)
-    assert _Shared.register == Register(*register)
+    assert vim_module._register == Register(*register)
     assert vim.mode is Mode.NORMAL
 
 
@@ -405,7 +405,7 @@ def test_the_editor_selects_what_vim_does(editor: QPlainTextEdit, keys: str, sel
     assert plain(editor.textCursor().selectedText()) == selected
     linewise = keys.startswith("V") or "V" in keys
     send(editor, "y")
-    assert _Shared.register == Register(selected + "\n" if linewise else selected, linewise)
+    assert vim_module._register == Register(selected + "\n" if linewise else selected, linewise)
 
 
 def test_an_empty_last_line_selects_nothing(editor: QPlainTextEdit) -> None:
@@ -503,7 +503,7 @@ def test_counts_and_pending_keys(editor: QPlainTextEdit) -> None:
     assert shown == ["2", "", "2", "2g", ""]
     assert vim.mode is Mode.VISUAL
     send(editor, "y")
-    assert _Shared.register == Register("ab cd ef\n  g", linewise=False)
+    assert vim_module._register == Register("ab cd ef\n  g", linewise=False)
 
 
 class Window(QWidget):
@@ -579,7 +579,7 @@ def test_a_drag_starts_visual_mode(
     assert plain(editor.textCursor().selectedText()) == selected
     assert caret_of(vim) == caret_rect(editor, cursor)
     send(editor, "y")
-    assert _Shared.register == Register(selected, linewise=False)
+    assert vim_module._register == Register(selected, linewise=False)
     send(editor, "v")
     assert caret_of(vim) == caret_rect(editor, min(a, b))
 
@@ -633,7 +633,7 @@ def test_the_app_changing_text_elsewhere_keeps_the_selection(editor: QPlainTextE
     assert editor.textCursor().selectedText() == "gh"
     assert caret_of(vim) == caret_rect(editor, Pos(2, 3))
     send(editor, "y")
-    assert _Shared.register == Register("gh", linewise=False)
+    assert vim_module._register == Register("gh", linewise=False)
 
 
 def test_new_text_from_the_app_ends_visual_mode(editor: QPlainTextEdit) -> None:
@@ -694,7 +694,7 @@ def test_turning_vim_off_in_visual_mode(editor: QPlainTextEdit) -> None:
 )
 def test_each_visual_command_is_one_undo_step(editor: QPlainTextEdit, keys: str) -> None:
     start(editor, T, 0, 1)
-    _Shared.register = Register("reg\n", linewise=True) if "V" in keys else Register("r")
+    vim_module._register = Register("reg\n", linewise=True) if "V" in keys else Register("r")
     send(editor, keys)
     assert text_of(editor) != T
     after = text_of(editor)

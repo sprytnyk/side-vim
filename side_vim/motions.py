@@ -229,7 +229,7 @@ def screen_col(text: Line, col: int, tabstop: int = 8) -> int:
     return vcol
 
 
-def _coladvance(text: Line, want: int, visual: bool, tabstop: int) -> int:
+def column_for(text: Line, want: int, visual: bool = False, tabstop: int = 8) -> int:
     """The column j and k land on for a wanted screen column (vim's coladvance). In
     Visual mode the cursor may sit on the line end."""
     if want >= MAXCOL:
@@ -241,11 +241,6 @@ def _coladvance(text: Line, want: int, visual: bool, tabstop: int) -> int:
     if vcol > want or not visual:
         col -= 1
     return max(col, 0)
-
-
-def column_for(text: Line, want: int, visual: bool = False, tabstop: int = 8) -> int:
-    """The column j and k land on in a line, for the screen column they aim for."""
-    return _coladvance(text, want, visual, tabstop)
 
 
 def move(
@@ -303,7 +298,7 @@ def move(
             line = max(pos.line - n, 0)
         if want is None:
             want = screen_col(text, pos.col, tabstop)
-        col = _coladvance(lines[line], want, visual, tabstop)
+        col = column_for(lines[line], want, visual, tabstop)
         return Move(Pos(line, col), Kind.LINEWISE, want)
 
     if motion == "0":
@@ -316,7 +311,7 @@ def move(
         if n > 1 and pos.line >= len(lines) - 1:
             return None
         line = min(pos.line + n - 1, len(lines) - 1)
-        col = _coladvance(lines[line], MAXCOL, visual, tabstop)
+        col = column_for(lines[line], MAXCOL, visual, tabstop)
         return Move(Pos(line, col), Kind.INCLUSIVE, MAXCOL)
 
     if motion in ("gg", "G"):

@@ -11,11 +11,11 @@ from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
 from qtkeys import cursor_of, plain, put_cursor, send, text_of, type_text
 
+import side_vim.vim as vim_module
 from side_vim import UKRAINIAN, Mode, VimMode
 from side_vim.edits import Register
 from side_vim.motions import Pos
 from side_vim.parser import NORMAL_ACTIONS, OPERATORS, VISUAL_ACTIONS
-from side_vim.vim import _Shared
 
 T = "foo bar foo\nbaz foo\nfoo"
 FAMILY = "\U0001f468‍\U0001f469‍\U0001f467"
@@ -24,9 +24,9 @@ UA = "\U0001f1fa\U0001f1e6"
 
 @pytest.fixture(autouse=True)
 def empty_register() -> Iterator[None]:
-    _Shared.register = Register()
+    vim_module._register = Register()
     yield
-    _Shared.register = Register()
+    vim_module._register = Register()
 
 
 @pytest.fixture
@@ -164,7 +164,7 @@ def test_n_in_visual_mode_moves_the_end(editor: QPlainTextEdit) -> None:
     assert vim.mode is Mode.VISUAL
     assert plain(editor.textCursor().selectedText()) == "oo bar f"
     send(editor, "Ny")
-    assert _Shared.register == Register("fo", linewise=False)
+    assert vim_module._register == Register("fo", linewise=False)
 
 
 def test_search_keys_call_the_hook(editor: QPlainTextEdit) -> None:
@@ -256,7 +256,7 @@ def test_every_command_has_a_handler(editor: QPlainTextEdit) -> None:
 def test_a_read_only_editor_doesnt_edit(editor: QPlainTextEdit, keys: str) -> None:
     editor.setReadOnly(True)
     vim = start(editor, "abc def\nghi", 0, 1)
-    _Shared.register = Register("reg", linewise=False)
+    vim_module._register = Register("reg", linewise=False)
     send(editor, keys)
     assert text_of(editor) == "abc def\nghi"
     assert vim.mode in (Mode.NORMAL, Mode.VISUAL, Mode.VISUAL_LINE)
@@ -268,9 +268,9 @@ def test_a_read_only_editor_moves_selects_and_yanks(editor: QPlainTextEdit) -> N
     send(editor, "w")
     assert cursor_of(editor) == Pos(0, 4)
     send(editor, "yw")
-    assert _Shared.register == Register("def", linewise=False)
+    assert vim_module._register == Register("def", linewise=False)
     send(editor, "vjy")  # j goes past the end of the short last line
-    assert _Shared.register == Register("def\nghi", linewise=False)
+    assert vim_module._register == Register("def\nghi", linewise=False)
     vim.set_search("gh")
     assert cursor_of(editor) == Pos(1, 0)
     send(editor, "u<C-r>")
@@ -284,7 +284,7 @@ def test_a_read_only_editor_swaps_the_ends_of_the_selection(editor: QPlainTextEd
     send(editor, "vllo")
     assert vim._pos(vim._lines()) == Pos(0, 1)
     send(editor, "y")
-    assert _Shared.register == Register("bc ", linewise=False)
+    assert vim_module._register == Register("bc ", linewise=False)
 
 
 def test_a_read_only_editor_shows_vims_cursor(editor: QPlainTextEdit) -> None:
@@ -329,7 +329,7 @@ def test_the_ukrainian_layout_types_vim_keys(editor: QPlainTextEdit) -> None:
     assert text_of(editor) == "abc Жghi"
     send(editor, "0мдн")  # v l y
     assert vim.mode is Mode.NORMAL
-    assert _Shared.register == Register("ab", linewise=False)
+    assert vim_module._register == Register("ab", linewise=False)
 
 
 def test_the_layout_map_can_be_changed(editor: QPlainTextEdit) -> None:

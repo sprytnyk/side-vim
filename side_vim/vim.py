@@ -76,11 +76,8 @@ KEEP_ANCHOR = QTextCursor.MoveMode.KeepAnchor
 DRAWS_CURSOR = Qt.TextInteractionFlag.TextEditable | Qt.TextInteractionFlag.TextSelectableByKeyboard
 
 
-class _Shared:
-    """The one unnamed register, shared by every VimMode in the process, so text
-    yanked in one editor pastes in another."""
-
-    register: Register = Register()
+# The unnamed register is shared by all editors, so yanks paste between them.
+_register = Register()
 
 
 @dataclass
@@ -962,7 +959,8 @@ class VimMode(QObject):
     # --- the register ---
 
     def _store(self, text: str, linewise: bool) -> None:
-        _Shared.register = Register(text, linewise)
+        global _register
+        _register = Register(text, linewise)
         if self.clipboard:
             QGuiApplication.clipboard().setText(text)
 
@@ -970,10 +968,10 @@ class VimMode(QObject):
         """What p pastes. From the clipboard: if it still holds our last yank, that
         yank's kind; otherwise whole lines if the text ends in a newline."""
         if not self.clipboard:
-            return _Shared.register
+            return _register
         text = QGuiApplication.clipboard().text().replace("\r\n", "\n")
-        if text == _Shared.register.text:
-            return _Shared.register
+        if text == _register.text:
+            return _register
         return Register(text, linewise=text.endswith("\n"))
 
     # --- undo ---

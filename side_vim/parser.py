@@ -29,7 +29,12 @@ OPERATORS = {"d": True, "c": True, "y": False}
 # Keys vim treats as an operator with a fixed motion.
 SHORTHANDS = {"x": ("d", "l"), "D": ("d", "$"), "C": ("c", "$")}
 
-_BOTH_MODES = {"n": False, "N": False, "/": False, "?": False} | dict.fromkeys(SCROLL_KEYS, False)
+COMMON_ACTIONS = {
+    "n": False,
+    "N": False,
+    "/": False,
+    "?": False,
+} | dict.fromkeys(SCROLL_KEYS, False)
 
 # Commands that take a count but no motion, in Normal mode.
 NORMAL_ACTIONS = {
@@ -46,10 +51,10 @@ NORMAL_ACTIONS = {
     "O": True,
     "v": False,
     "V": False,
-} | _BOTH_MODES
+} | COMMON_ACTIONS
 
 # Commands that act on the selection or the mode, in Visual mode. `x` is `d` here.
-VISUAL_ACTIONS = OPERATORS | {"p": True, "o": False, "v": False, "V": False} | _BOTH_MODES
+VISUAL_ACTIONS = OPERATORS | {"p": True, "o": False, "v": False, "V": False} | COMMON_ACTIONS
 
 # The Normal mode commands that start Insert mode.
 INSERT_COMMANDS = frozenset({"i", "a", "I", "A", "o", "O"})
@@ -91,7 +96,7 @@ class _Pending:
     pass
 
 
-_PENDING = _Pending()
+PENDING = _Pending()
 
 
 class Parser:
@@ -134,11 +139,11 @@ def _read_count(keys: list[str], i: int) -> tuple[int | None, int]:
 def _read_motion(keys: list[str], i: int) -> str | _Pending | None:
     """Read a motion that must end the keys. None if keys[i:] isn't one."""
     if i == len(keys):
-        return _PENDING
+        return PENDING
     key = ALIASES.get(keys[i], keys[i])
     if key == "g":
         if i + 1 == len(keys):
-            return _PENDING
+            return PENDING
         return "gg" if keys[i + 1] == "g" and i + 2 == len(keys) else None
     if key in MOTIONS and i + 1 == len(keys):
         return key
@@ -148,7 +153,7 @@ def _read_motion(keys: list[str], i: int) -> str | _Pending | None:
 def _parse(keys: list[str], visual: bool) -> Command | _Pending | None:
     count, i = _read_count(keys, 0)
     if i == len(keys):
-        return _PENDING
+        return PENDING
     key = keys[i]
 
     motion = _read_motion(keys, i)

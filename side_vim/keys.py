@@ -14,42 +14,42 @@ from PySide6.QtGui import QKeyEvent
 ESC = "<Esc>"
 IS_MAC = sys.platform == "darwin"
 
-_K = Qt.Key
-_M = Qt.KeyboardModifier
+# Invisible characters used in emoji and Indic scripts.
+JOINERS = frozenset({"\u200c", "\u200d"})
 
 # Keys without text, by their vim name. Shift and Alt add "S-" and "A-".
 NAMED = {
-    _K.Key_Escape: "Esc",
-    _K.Key_Left: "Left",
-    _K.Key_Right: "Right",
-    _K.Key_Up: "Up",
-    _K.Key_Down: "Down",
-    _K.Key_Home: "Home",
-    _K.Key_End: "End",
-    _K.Key_Return: "CR",
-    _K.Key_Enter: "CR",
-    _K.Key_Backspace: "BS",
-    _K.Key_Delete: "Del",
-    _K.Key_Tab: "Tab",
-    _K.Key_Backtab: "Tab",
-    _K.Key_Insert: "Insert",
+    Qt.Key.Key_Escape: "Esc",
+    Qt.Key.Key_Left: "Left",
+    Qt.Key.Key_Right: "Right",
+    Qt.Key.Key_Up: "Up",
+    Qt.Key.Key_Down: "Down",
+    Qt.Key.Key_Home: "Home",
+    Qt.Key.Key_End: "End",
+    Qt.Key.Key_Return: "CR",
+    Qt.Key.Key_Enter: "CR",
+    Qt.Key.Key_Backspace: "BS",
+    Qt.Key.Key_Delete: "Del",
+    Qt.Key.Key_Tab: "Tab",
+    Qt.Key.Key_Backtab: "Tab",
+    Qt.Key.Key_Insert: "Insert",
 }
 
 MODIFIER_KEYS = frozenset(
     {
-        _K.Key_Shift,
-        _K.Key_Control,
-        _K.Key_Meta,
-        _K.Key_Alt,
-        _K.Key_AltGr,
-        _K.Key_CapsLock,
-        _K.Key_NumLock,
-        _K.Key_ScrollLock,
-        _K.Key_Super_L,
-        _K.Key_Super_R,
-        _K.Key_Hyper_L,
-        _K.Key_Hyper_R,
-        _K.Key_Mode_switch,
+        Qt.Key.Key_Shift,
+        Qt.Key.Key_Control,
+        Qt.Key.Key_Meta,
+        Qt.Key.Key_Alt,
+        Qt.Key.Key_AltGr,
+        Qt.Key.Key_CapsLock,
+        Qt.Key.Key_NumLock,
+        Qt.Key.Key_ScrollLock,
+        Qt.Key.Key_Super_L,
+        Qt.Key.Key_Super_R,
+        Qt.Key.Key_Hyper_L,
+        Qt.Key.Key_Hyper_R,
+        Qt.Key.Key_Mode_switch,
     }
 )
 
@@ -77,7 +77,9 @@ def control_modifier(mac: bool = IS_MAC) -> Qt.KeyboardModifier:
     """The modifier the physical Control key arrives as. On macOS Qt swaps Ctrl and Cmd,
     so Control arrives as Meta, unless the app turned the swap off."""
     swapped = not QCoreApplication.testAttribute(Qt.ApplicationAttribute.AA_MacDontSwapCtrlAndMeta)
-    return _M.MetaModifier if mac and swapped else _M.ControlModifier
+    if mac and swapped:
+        return Qt.KeyboardModifier.MetaModifier
+    return Qt.KeyboardModifier.ControlModifier
 
 
 def _name(key: int) -> str | None:
@@ -92,11 +94,7 @@ def _name(key: int) -> str | None:
 def _is_text(text: str) -> bool:
     """True if a key typed text. Not str.isprintable: that refuses the joiner in a
     family emoji, and the key would then type in Normal mode."""
-    return bool(text) and all(unicodedata.category(ch)[0] != "C" or ch in _JOINERS for ch in text)
-
-
-# invisible characters that are part of what people type (emoji, Indic scripts)
-_JOINERS = frozenset({"\u200c", "\u200d"})
+    return bool(text) and all(unicodedata.category(ch)[0] != "C" or ch in JOINERS for ch in text)
 
 
 def key_token(event: QKeyEvent, mac: bool = IS_MAC) -> str | None:
@@ -104,23 +102,25 @@ def key_token(event: QKeyEvent, mac: bool = IS_MAC) -> str | None:
     key = event.key()
     if key in MODIFIER_KEYS:
         return None
-    mods = event.modifiers() & ~(_M.KeypadModifier | _M.GroupSwitchModifier)
+    mods = event.modifiers() & ~(
+        Qt.KeyboardModifier.KeypadModifier | Qt.KeyboardModifier.GroupSwitchModifier
+    )
     ctrl = control_modifier(mac)
     # Cmd on macOS, the Meta (Super) key elsewhere: always the app's
-    if mods & (_M.ControlModifier | _M.MetaModifier) & ~ctrl:
+    if mods & (Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.MetaModifier) & ~ctrl:
         return None
-    shift = "S-" if mods & _M.ShiftModifier else ""
-    alt = "A-" if mods & _M.AltModifier else ""
+    shift = "S-" if mods & Qt.KeyboardModifier.ShiftModifier else ""
+    alt = "A-" if mods & Qt.KeyboardModifier.AltModifier else ""
     text = event.text()
 
     if mods & ctrl:
-        if (key == _K.Key_BracketLeft or text == "\x1b") and not (shift or alt):
+        if (key == Qt.Key.Key_BracketLeft or text == "\x1b") and not (shift or alt):
             return ESC
         name = _name(key)
         return f"<C-{alt}{shift}{name}>" if name else None
 
     if key in NAMED:
-        if key == _K.Key_Escape:
+        if key == Qt.Key.Key_Escape:
             return ESC
         return f"<{alt}{shift}{NAMED[key]}>"
     if text == "\x1b":

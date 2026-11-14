@@ -4,10 +4,10 @@
 # so Normal mode keys work without switching layouts. Only letters: punctuation stays
 # as it is, so the English layout keeps working. ґ is left out, since its key differs
 # between layout variants.
-_LOWER = "йцукенгшщзхїфівапролджєячсмитьбю"
-_LATIN_LOWER = "qwertyuiop[]asdfghjkl;'zxcvbnm,."
-_LATIN_UPPER = 'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>'
+UKRAINIAN_LOWER = "йцукенгшщзхїфівапролджєячсмитьбю"
+LATIN_LOWER = "qwertyuiop[]asdfghjkl;'zxcvbnm,."
+LATIN_UPPER = 'QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>'
 UKRAINIAN: dict[str, str] = {
-    **dict(zip(_LOWER, _LATIN_LOWER, strict=True)),
-    **dict(zip(_LOWER.upper(), _LATIN_UPPER, strict=True)),
+    **dict(zip(UKRAINIAN_LOWER, LATIN_LOWER, strict=True)),
+    **dict(zip(UKRAINIAN_LOWER.upper(), LATIN_UPPER, strict=True)),
 }

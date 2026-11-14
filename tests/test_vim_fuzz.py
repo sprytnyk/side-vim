@@ -17,6 +17,7 @@ from PySide6.QtWidgets import QApplication, QPlainTextEdit
 from qtkeys import cursor_of, plain, put_cursor, send, text_of, type_text
 from test_motions_fuzz import CHARS, delete, random_lines, whole
 
+import side_vim.vim as vim_module
 from side_vim import Mode, VimMode
 from side_vim.edits import Register, visual_start
 from side_vim.motions import (
@@ -36,7 +37,6 @@ from side_vim.parser import LINE
 from side_vim.scroll import SCROLL_KEYS, scroll
 from side_vim.search import search
 from side_vim.text import Lines, split_clusters
-from side_vim.vim import _Shared
 
 SEED_COUNT = 30
 SAMPLES = 60
@@ -233,7 +233,7 @@ def test_operators_match_the_model(editor: QPlainTextEdit, seed: int) -> None:
         motion = rng.choice(motions)
         count = None if motion == "0" else rng.choice((None, 2, 3))
         typed = [rng.choice(CHARS) for _ in range(rng.randint(0, 2))] if op == "c" else []
-        _Shared.register = Register("before", linewise=False)
+        vim_module._register = Register("before", linewise=False)
 
         keys = f"{count or ''}{op}{op if motion == LINE else motion}"
         send(editor, keys)
@@ -252,7 +252,7 @@ def test_operators_match_the_model(editor: QPlainTextEdit, seed: int) -> None:
         assert text_of(editor) == text, what
         assert whole(text_of(editor)), what
         assert cursor_of(editor) == cursor, what
-        assert _Shared.register == (register or Register("before", linewise=False)), what
+        assert vim_module._register == (register or Register("before", linewise=False)), what
         assert vim.mode is Mode.NORMAL, what
         if text != as_text(lines):
             send(editor, "u")
@@ -302,7 +302,7 @@ def test_paste_matches_the_model(editor: QPlainTextEdit, seed: int) -> None:
         pos = random_pos(rng, lines)
         put_cursor(editor, pos)
         register = random_register(rng)
-        _Shared.register = register
+        vim_module._register = register
         after = rng.random() < 0.5
         count = rng.choice((1, 1, 2, 3))
         keys = f"{count if count > 1 else ''}{'p' if after else 'P'}"
@@ -312,7 +312,7 @@ def test_paste_matches_the_model(editor: QPlainTextEdit, seed: int) -> None:
         assert text_of(editor) == text, what
         assert whole(text_of(editor)), what
         assert cursor_of(editor) == cursor, what
-        assert _Shared.register == register
+        assert vim_module._register == register
         send(editor, "u")
         assert text_of(editor) == as_text(lines), what
         vim.detach()
@@ -354,7 +354,7 @@ def test_undo_and_redo_walk_every_step(editor: QPlainTextEdit, seed: int) -> Non
     lines = random_lines(rng)
     editor.setPlainText(as_text(lines))
     vim = VimMode(editor)
-    _Shared.register = random_register(rng)
+    vim_module._register = random_register(rng)
     states = [text_of(editor)]
     done: list[list[str]] = []
     split_by_qt = False
@@ -518,7 +518,7 @@ def test_visual_mode_matches_the_model(editor: QPlainTextEdit, seed: int) -> Non
 
         op = rng.choice(["d", "x", "y", "c", "p", "p", "<Esc>"])
         register = random_register(rng)
-        _Shared.register = register
+        vim_module._register = register
         count = rng.choice((1, 1, 2)) if op == "p" else 1
         typed = [rng.choice(CHARS) for _ in range(rng.randint(0, 2))] if op == "c" else []
         send(editor, f"{count if count > 1 else ''}{op}")
@@ -542,7 +542,7 @@ def test_visual_mode_matches_the_model(editor: QPlainTextEdit, seed: int) -> Non
         assert text_of(editor) == text, what
         assert whole(text_of(editor)), what
         assert cursor_of(editor) == cursor, what
-        assert _Shared.register == after, what
+        assert vim_module._register == after, what
         if text != as_text(lines):
             send(editor, "u")
             assert text_of(editor) == as_text(lines), what
@@ -579,7 +579,7 @@ def test_a_selection_made_outside_vim_is_kept(editor: QPlainTextEdit, seed: int)
         assert (after.anchor(), after.position()) == (a, b), what
         selected = plain(after.selectedText())
         send(editor, "y")
-        assert _Shared.register == Register(selected, linewise=False), what
+        assert vim_module._register == Register(selected, linewise=False), what
         vim.detach()
 
 
