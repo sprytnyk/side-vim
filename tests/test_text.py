@@ -142,3 +142,19 @@ def test_no_break_space_stays(qapp: QApplication) -> None:
     doc = QTextDocument()
     doc.setPlainText("a\xa0b")
     assert Lines(doc.toRawText())[0] == ("a", "\xa0", "b")
+
+
+def test_lines_from_a_sequence_of_line_texts() -> None:
+    lines = Lines([f"a{SMILE}", "", FAMILY])
+    assert len(lines) == 3
+    assert lines[0] == ("a", SMILE)
+    assert lines[-1] == (FAMILY,)
+    assert lines.raw(0) == f"a{SMILE}"
+    assert lines.to_qt(Pos(2, 1)) == 3 + 1 + 1 + 8
+    assert lines.from_qt(5) == Pos(2, 0)
+
+
+def test_offset_and_col_at() -> None:
+    lines = Lines(f"a{SMILE}{FAMILY}b")
+    assert [lines.offset(Pos(0, c)) for c in range(5)] == [0, 1, 3, 11, 12]
+    assert [lines.col_at(0, o) for o in range(13)] == [0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4]

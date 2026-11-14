@@ -26,7 +26,7 @@ PARAGRAPH_SEPARATOR = " "
 
 def utf16_len(s: str) -> int:
     """Length in UTF-16 code units, the way Qt counts."""
-    return len(s) + sum(1 for ch in s if ord(ch) > 0xFFFF)
+    return len(s.encode("utf-16-le", "surrogatepass")) // 2
 
 
 def split_clusters(line: str) -> tuple[str, ...]:
@@ -77,11 +77,13 @@ def _pair_flags(clusters: list[str]) -> list[str]:
 class Lines(Sequence[tuple[str, ...]]):
     """The document's lines, each split into clusters when first used.
 
-    raw: QTextDocument.toRawText(), with blocks separated by U+2029.
+    raw: QTextDocument.toRawText(), with blocks separated by U+2029. Or the lines'
+    texts as a sequence that reads them when asked, so that a long document isn't
+    copied for every key. Such a sequence must not change while this is in use.
     """
 
-    def __init__(self, raw: str) -> None:
-        self._raw: list[str] = raw.split(PARAGRAPH_SEPARATOR)
+    def __init__(self, raw: str | Sequence[str]) -> None:
+        self._raw: Sequence[str] = raw.split(PARAGRAPH_SEPARATOR) if isinstance(raw, str) else raw
         self._split: dict[int, tuple[str, ...]] = {}
 
     def __len__(self) -> int:
@@ -110,26 +112,35 @@ class Lines(Sequence[tuple[str, ...]]):
         """A line as plain text."""
         return self._raw[index]
 
+    def offset(self, pos: Pos) -> int:
+        """A column as a UTF-16 offset in its line. Past the line end means the end."""
+        return utf16_len("".join(self[pos.line][: pos.col]))
+
+    def col_at(self, line: int, offset: int) -> int:
+        """The column at a UTF-16 offset in a line. Inside a cluster (which Qt's own
+        cursor never does, but an app could) means the start of that cluster."""
+        end = col = 0
+        for cluster in self[line]:
+            end += utf16_len(cluster)
+            if end > offset:
+                break
+            col += 1
+        return col
+
     def to_qt(self, pos: Pos) -> int:
         """A position as a Qt document position. A column past the line end means the
-        line end."""
+        line end. The editor asks the document where lines start instead, which is
+        faster in long texts."""
         start = sum(utf16_len(line) + 1 for line in self._raw[: pos.line])
-        return start + utf16_len("".join(self[pos.line][: pos.col]))
+        return start + self.offset(pos)
 
     def from_qt(self, position: int) -> Pos:
-        """A Qt document position as a position. Inside a cluster (which Qt's own cursor
-        never does, but an app could) means the start of that cluster. Past the end of
-        the document means its end."""
+        """A Qt document position as a position. Past the end of the document means its
+        end."""
         for index, raw in enumerate(self._raw):
             length = utf16_len(raw)
             if position <= length:
-                offset = col = 0
-                for cluster in self[index]:
-                    offset += utf16_len(cluster)
-                    if offset > position:
-                        break
-                    col += 1
-                return Pos(index, col)
+                return Pos(index, self.col_at(index, position))
             position -= length + 1
         last = len(self._raw) - 1
         return Pos(last, len(self[last]))
