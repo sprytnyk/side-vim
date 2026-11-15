@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0 - 2026-11-15
+
+### Highlights
+
+- Add `r` to replace characters in Normal and Visual mode. After `r`, Enter,
+  `Ctrl+E`, `Ctrl+Y`, `Ctrl+V` and `Ctrl+K` digraphs work as in Vim.
+- Add `~` to switch case in Normal and Visual mode, with Vim's case rules.
+- Pass `Ctrl+W` and the next key to a new `window_hook`, so an app can move the
+  focus between its panels.
+- Pass `z=`, `]s`, `[s`, `zg` and `zG` to a new `spell_hook`.
+
+### Fixes
+
+- Drop pending keys when the focus moves to another widget, so a click elsewhere
+  no longer leaves an `r` or `2d` waiting.
+
 ## 0.1.1 - 2026-11-15
 
 ### Fixes
