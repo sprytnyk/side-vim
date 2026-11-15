@@ -2,8 +2,9 @@
 
 Run `make mac-keys` on a Mac with the English (ABC) layout active, and leave the
 keyboard alone until it prints the results. The Ukrainian check also needs the
-Ukrainian-PC layout installed; the script switches to it and back. It saves the
-clipboard first and puts it back at the end.
+Ukrainian-PC layout installed; the script switches to it and back. The focus check
+makes the app inactive for a moment and brings it back. The script saves the clipboard
+first and puts it back at the end.
 
 CGEventCreateKeyboardEvent takes the characters from the active layout. Each event
 becomes an NSEvent posted to the app's own queue, so Qt reads it as a key from the
@@ -14,6 +15,7 @@ the script needs no extra packages.
 
 import sys
 import traceback
+from contextlib import contextmanager
 from ctypes import (
     CDLL,
     CFUNCTYPE,
@@ -29,13 +31,14 @@ from ctypes import (
 from ctypes.util import find_library
 
 from PySide6 import __version__ as pyside_version
-from PySide6.QtCore import QTimer
-from PySide6.QtGui import QGuiApplication, QTextCursor
+from PySide6.QtCore import QKeyCombination, Qt, QTimer
+from PySide6.QtGui import QGuiApplication, QKeySequence, QShortcut, QTextCursor
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QCheckBox
 
 from side_vim import Mode
 from side_vim.__main__ import Demo, sample
+from side_vim.keys import control_modifier
 
 if sys.platform != "darwin":
     sys.exit("mac_keys.py runs only on macOS.")
@@ -58,6 +61,8 @@ cg.CGEventSetFlags.argtypes = [c_void_p, c_uint64]
 cf.CFRelease.argtypes = [c_void_p]
 
 SHIFT, CONTROL, COMMAND = 0x20000, 0x40000, 0x100000
+# macOS marks the arrow keys as keys on the numeric pad and Fn keys
+NUMERIC_PAD, SECONDARY_FN = 0x200000, 0x800000
 
 # macOS key codes, named by what the key types on the English layout
 KEYCODES = {
@@ -66,7 +71,7 @@ KEYCODES = {
     "3": 20, "4": 21, "6": 22, "5": 23, "=": 24, "9": 25, "7": 26, "-": 27, "8": 28,
     "0": 29, "]": 30, "o": 31, "u": 32, "[": 33, "i": 34, "p": 35, "l": 37, "j": 38,
     "'": 39, "k": 40, ";": 41, "\\": 42, ",": 43, "/": 44, "n": 45, "m": 46, ".": 47,
-    "Return": 36, "Tab": 48, " ": 49, "Delete": 51, "Esc": 53,
+    "Return": 36, "Tab": 48, " ": 49, "`": 50, "Delete": 51, "Esc": 53, "Left": 123,
 }  # fmt: skip
 
 
@@ -196,20 +201,33 @@ boxes = {box.text(): box for box in demo.findChildren(QCheckBox)}
 results: list[tuple[str, bool, str]] = []
 CHECKS = []
 
-SHIFTED = {"?": "/", ":": ";", "_": "-", "$": "4", "^": "6"}
-NAMED = {"<Esc>": "Esc", "<CR>": "Return", "<Tab>": "Tab", "<BS>": "Delete"}
+SHIFTED = {"?": "/", ":": ";", "_": "-", "$": "4", "^": "6", "~": "`"}
+NAMED = {
+    "<Esc>": "Esc",
+    "<CR>": "Return",
+    "<Tab>": "Tab",
+    "<BS>": "Delete",
+    "<Left>": "Left",
+}
 
 
 def press(name: str, flags: int = 0) -> list[str]:
+    if name == "Left":
+        flags |= NUMERIC_PAD | SECONDARY_FN
     chars = post(KEYCODES[name], flags)
     QTest.qWait(40)
     return chars
 
 
 def press_keys(keys: str) -> None:
-    """Types plain keys: letters, digits, `?`, capitals, and <Esc>, <CR>, <Tab>, <BS>."""
+    """Types keys: letters, digits, the symbols in SHIFTED, capitals, the keys in NAMED,
+    and Ctrl with one key, such as <C-e>."""
     i = 0
     while i < len(keys):
+        if keys.startswith("<C-", i) and keys[i + 4 : i + 5] == ">":
+            ctrl(keys[i + 3])
+            i += 5
+            continue
         for token, name in NAMED.items():
             if keys.startswith(token, i):
                 press(name)
@@ -259,6 +277,43 @@ def height() -> int:
         count += 1
         block = block.next()
     return count
+
+
+def changed(line: int, col: int, new: str, length: int = 1) -> str:
+    """The sample with `length` characters at line and col replaced by `new`."""
+    lines = sample().split("\n")
+    lines[line] = lines[line][:col] + new + lines[line][col + length :]
+    return "\n".join(lines)
+
+
+def try_keys(cases: list[tuple[str, str, tuple[int, int]]]) -> tuple[bool, str]:
+    """Types each case's keys on a fresh sample. Checks the text, the cursor and that
+    the editor is back in Normal mode with nothing pending."""
+    ok, out, pending = True, [], []
+
+    def note(keys_text: str) -> None:
+        pending.append(keys_text)
+
+    for keys, want_text, want_pos in cases:
+        reset()
+        pending.clear()
+        demo.vim.pending_changed.connect(note)
+        try:
+            press_keys(keys)
+        finally:
+            demo.vim.pending_changed.disconnect(note)
+        good_text = text() == want_text
+        good_pos = pos() == want_pos
+        normal = demo.vim.mode is Mode.NORMAL
+        done = not pending or pending[-1] == ""
+        good = good_text and good_pos and normal and done
+        ok &= good
+        line = editor.document().findBlockByNumber(pos()[0]).text()
+        out.append(
+            f"{keys} {'ok' if good else 'WRONG'}: text={good_text} at {pos()} "
+            f"(want {want_pos}) line {line[:12]!r} normal={normal} done={done}"
+        )
+    return ok, "; ".join(out)
 
 
 def first_non_blank(line: int) -> int:
@@ -515,16 +570,128 @@ def check_read_only():
     )
 
 
-@check("Ukrainian: ц, ш, Esc, г, Ctrl+к")
-def check_ukrainian():
+@check("r, 3r, Visual r, r Esc")
+def check_replace():
+    return try_keys(
+        [
+            ("rx", changed(0, 0, "x"), (0, 0)),
+            ("3rx", changed(0, 0, "xxx", 3), (0, 2)),
+            ("vllrx", changed(0, 0, "xxx", 3), (0, 0)),
+            ("r<Esc>l", sample(), (0, 1)),
+        ]
+    )
+
+
+@check("r then Enter, Ctrl+E, Ctrl+Y")
+def check_replace_from_lines():
+    return try_keys(
+        [
+            ("r<CR>", changed(0, 0, "\n"), (1, 0)),
+            ("r<C-e>", changed(0, 0, "T"), (0, 0)),
+            ("jr<C-y>", changed(1, 0, "s"), (1, 0)),
+        ]
+    )
+
+
+@check("r then Ctrl+V and a code, Ctrl+K and a digraph")
+def check_replace_codes():
+    return try_keys(
+        [
+            ("r<C-v>065", changed(0, 0, "A"), (0, 0)),
+            ("r<C-v>u20ac", changed(0, 0, "\u20ac"), (0, 0)),
+            ("r<C-v>q", changed(0, 0, "q"), (0, 0)),
+            ("r<C-k>e:", changed(0, 0, "\u00eb"), (0, 0)),
+            ("2r<C-k>a*", changed(0, 0, "\u03b1\u03b1", 2), (0, 1)),
+        ]
+    )
+
+
+@check("~, 3~, Visual ~")
+def check_switch_case():
+    return try_keys(
+        [
+            ("~", changed(0, 0, "S"), (0, 1)),
+            ("3~", changed(0, 0, "SID", 3), (0, 3)),
+            ("ve~", changed(0, 0, "SIDE", 4), (0, 0)),
+        ]
+    )
+
+
+@check("Ctrl+W h, Ctrl+W Ctrl+H, Ctrl+W Left")
+def check_window_keys():
+    calls, pending = [], []
+
+    def note(keys_text: str) -> None:
+        pending.append(keys_text)
+
+    demo.vim.window_hook = calls.append
+    demo.vim.pending_changed.connect(note)
+    try:
+        press_keys("<C-w>h<C-w><C-h><C-w><Left><C-w>l")
+    finally:
+        demo.vim.window_hook = None
+        demo.vim.pending_changed.disconnect(note)
+    kept = text() == sample() and pos() == (0, 0)
+    ok = calls == ["h", "h", "h", "l"] and pending == ["^W", ""] * 4 and kept
+    return ok, f"hook got {calls}, pending {pending}, text and cursor kept={kept}"
+
+
+@check("Ctrl+W Ctrl+L wins over an app's Ctrl+L")
+def check_window_key_over_shortcut():
+    calls, fired = [], []
+    shortcut = QShortcut(QKeySequence(QKeyCombination(control_modifier(), Qt.Key.Key_L)), demo)
+    shortcut.activated.connect(lambda: fired.append("Ctrl+L"))
+    demo.vim.window_hook = calls.append
+    try:
+        press_keys("<C-w><C-l>")
+        after_w = (list(calls), list(fired))
+        chars = ctrl("l")
+    finally:
+        demo.vim.window_hook = None
+        shortcut.setEnabled(False)
+        shortcut.deleteLater()
+    ok = after_w == (["l"], []) and fired == ["Ctrl+L"]
+    return ok, (
+        f"after Ctrl+W Ctrl+L: hook {after_w[0]}, shortcut {after_w[1]}; "
+        f"Ctrl+L alone ({chars!r}) fired the shortcut={fired == ['Ctrl+L']}"
+    )
+
+
+@check("z=, ]s, [s, zg, zG")
+def check_spelling_keys():
+    calls = []
+    demo.vim.spell_hook = lambda name, count: calls.append((name, count))
+    try:
+        press_keys("z=2]s[szgzG")
+    finally:
+        demo.vim.spell_hook = None
+    want = [("z=", None), ("]s", 2), ("[s", None), ("zg", None), ("zG", None)]
+    kept = text() == sample() and pos() == (0, 0)
+    return calls == want and kept, f"hook got {calls}, text and cursor kept={kept}"
+
+
+@contextmanager
+def ukrainian_layout():
+    """Switches to the Ukrainian-PC layout and back. Yields its ID, or None without it."""
     old = current_source()
     ukrainian = find_source("com.apple.keylayout.Ukrainian-PC")
     if not ukrainian:
-        return False, "Ukrainian-PC input source not found"
+        yield None
+        return
     carbon.TISSelectInputSource(ukrainian)
     QTest.qWait(300)
     try:
-        layout = source_id(current_source())
+        yield source_id(current_source())
+    finally:
+        carbon.TISSelectInputSource(old)
+        QTest.qWait(300)
+
+
+@check("Ukrainian: ц, ш, Esc, г, Ctrl+к")
+def check_ukrainian():
+    with ukrainian_layout() as layout:
+        if layout is None:
+            return False, "Ukrainian-PC input source not found"
         t0 = text()
         p0 = pos()
         chars_w = press("w")  # ц
@@ -540,9 +707,6 @@ def check_ukrainian():
         undone = text() == t0
         chars_r = ctrl("r")  # Ctrl+к
         redone = text() != t0 and "ой" in text()
-    finally:
-        carbon.TISSelectInputSource(old)
-        QTest.qWait(300)
     back = source_id(current_source())
     ok = moved_ok and insert and typed_ok and normal and undone and redone
     return ok, (
@@ -550,6 +714,16 @@ def check_ukrainian():
         f"ш {chars_i!r} insert={insert}; typed {typed} in text={typed_ok}; "
         f"Esc normal={normal}; г {chars_u!r} undid={undone}; Ctrl+к {chars_r!r} redid={redone}"
     )
+
+
+@check("Ukrainian: к then ц puts in ц")
+def check_ukrainian_replace():
+    with ukrainian_layout() as layout:
+        if layout is None:
+            return False, "Ukrainian-PC input source not found"
+        chars = press("r") + press("w")  # к, ц
+        replaced = text() == changed(0, 0, "ц") and pos() == (0, 0)
+    return replaced, f"layout {layout}; typed {chars}, put in ц={replaced}"
 
 
 @check("vim checkbox off/on")
@@ -569,6 +743,35 @@ def check_vim_checkbox():
     x_works = text() == before[:col] + before[col + 1 :] and text() != before
     ok = off and typed and on and x_works
     return ok, f"disabled={off} plain typing={typed} enabled Normal={on} x works again={x_works}"
+
+
+@check("focus: another widget drops r, another app keeps it")
+def check_focus():
+    # the find bar takes the focus as a click on it would, then gives it back
+    press_keys("r")
+    demo.find.show()
+    demo.find.setFocus(Qt.FocusReason.MouseFocusReason)
+    QTest.qWait(50)
+    demo.find.hide()
+    editor.setFocus()
+    QTest.qWait(50)
+    press_keys("l")
+    dropped = text() == sample() and pos() == (0, 1)
+    # another app comes to the front, then this one again
+    press_keys("0r")
+    send(nsapp(), "deactivate")
+    QTest.qWait(500)
+    inactive = app.activeWindow() is None
+    activate()
+    back = QTest.qWaitForWindowActive(demo, 3000)
+    QTest.qWait(100)
+    press_keys("l")
+    kept = text() == changed(0, 0, "l") and pos() == (0, 0)
+    ok = dropped and inactive and back and kept
+    return ok, (
+        f"find bar dropped r={dropped}; app went inactive={inactive}, came back={back}, "
+        f"r kept={kept}"
+    )
 
 
 def run_checks() -> bool:
