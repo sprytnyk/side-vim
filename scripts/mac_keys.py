@@ -286,22 +286,29 @@ def changed(line: int, col: int, new: str, length: int = 1) -> str:
     return "\n".join(lines)
 
 
-def try_keys(cases: list[tuple[str, str, tuple[int, int]]]) -> tuple[bool, str]:
-    """Types each case's keys on a fresh sample. Checks the text, the cursor and that
-    the editor is back in Normal mode with nothing pending."""
-    ok, out, pending = True, [], []
+@contextmanager
+def recorded_pending():
+    """Yields a list that collects each pending-keys text vim sends."""
+    pending = []
 
     def note(keys_text: str) -> None:
         pending.append(keys_text)
 
+    demo.vim.pending_changed.connect(note)
+    try:
+        yield pending
+    finally:
+        demo.vim.pending_changed.disconnect(note)
+
+
+def try_keys(cases: list[tuple[str, str, tuple[int, int]]]) -> tuple[bool, str]:
+    """Types each case's keys on a fresh sample. Checks the text, the cursor and that
+    the editor is back in Normal mode with nothing pending."""
+    ok, out = True, []
     for keys, want_text, want_pos in cases:
         reset()
-        pending.clear()
-        demo.vim.pending_changed.connect(note)
-        try:
+        with recorded_pending() as pending:
             press_keys(keys)
-        finally:
-            demo.vim.pending_changed.disconnect(note)
         good_text = text() == want_text
         good_pos = pos() == want_pos
         normal = demo.vim.mode is Mode.NORMAL
@@ -619,18 +626,13 @@ def check_switch_case():
 
 @check("Ctrl+W h, Ctrl+W Ctrl+H, Ctrl+W Left")
 def check_window_keys():
-    calls, pending = [], []
-
-    def note(keys_text: str) -> None:
-        pending.append(keys_text)
-
+    calls = []
     demo.vim.window_hook = calls.append
-    demo.vim.pending_changed.connect(note)
     try:
-        press_keys("<C-w>h<C-w><C-h><C-w><Left><C-w>l")
+        with recorded_pending() as pending:
+            press_keys("<C-w>h<C-w><C-h><C-w><Left><C-w>l")
     finally:
         demo.vim.window_hook = None
-        demo.vim.pending_changed.disconnect(note)
     kept = text() == sample() and pos() == (0, 0)
     ok = calls == ["h", "h", "h", "l"] and pending == ["^W", ""] * 4 and kept
     return ok, f"hook got {calls}, pending {pending}, text and cursor kept={kept}"
@@ -672,7 +674,8 @@ def check_spelling_keys():
 
 @contextmanager
 def ukrainian_layout():
-    """Switches to the Ukrainian-PC layout and back. Yields its ID, or None without it."""
+    """Switches to the Ukrainian-PC layout and back. Yields the layout's ID, or None if
+    the layout isn't installed."""
     old = current_source()
     ukrainian = find_source("com.apple.keylayout.Ukrainian-PC")
     if not ukrainian:
