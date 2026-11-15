@@ -1197,10 +1197,14 @@ class VimMode(QObject):
 
     def _leave_insert(self) -> None:
         insert = self._insert
-        if insert is not None:
+        if insert is not None and insert.document is self._editor.document():
             if insert.count > 1:
                 self._repeat(insert)
             self._end_insert(insert)
+        else:
+            # A tab switch may have deleted the old document. Drop its session
+            # before reading it again or repeating its text in the new one.
+            self._drop_insert()
         self._set_mode(Mode.NORMAL)
         # like vim, the cursor steps back onto the last character typed
         lines = self._lines()
@@ -1216,14 +1220,16 @@ class VimMode(QObject):
             document.redoAvailable.disconnect(self._on_redo_available)
 
     def _drop_insert(self) -> None:
-        """End a session without making it one undo step (vim turned off mid-way)."""
+        """End a session without making it one undo step."""
         insert = self._insert
         if insert is not None:
             self._disconnect(insert)
             self._done.clear()
             self._undone.clear()
             self._synced = self._version()
-            if insert.edited:
+            if insert.document is not self._editor.document():
+                self._no_lines = not self._editor.document().toRawText()
+            elif insert.edited:
                 self._no_lines = False
 
     def _end_insert(self, insert: _Insert) -> None:
@@ -1231,7 +1237,7 @@ class VimMode(QObject):
         document = insert.document
         final = document.toRawText()
         changed = final != insert.origin
-        if insert.messy or document is not self._editor.document():
+        if insert.messy:
             # the app's own undo ran: leave its steps as they are
             self._done.clear()
             self._undone.clear()

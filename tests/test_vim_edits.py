@@ -6,6 +6,7 @@ everything it runs, so the vim check ran each part on its own.
 """
 
 import pytest
+import shiboken6
 from PySide6.QtGui import QGuiApplication, QKeySequence, QTextCursor, QTextDocument
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextDocumentLayout, QPlainTextEdit
@@ -382,3 +383,38 @@ def test_the_app_can_go_back_to_normal_mode(editor: QPlainTextEdit) -> None:
     vim.normal()
     assert vim.mode is Mode.NORMAL
     assert not editor.textCursor().hasSelection()
+
+
+@pytest.mark.parametrize("shared", [False, True])
+@pytest.mark.parametrize("finish", ["normal", "escape", "disable", "detach"])
+def test_switching_documents_in_insert_mode(
+    editor: QPlainTextEdit, shared: bool, finish: str
+) -> None:
+    vim = start_vim(editor, "old")
+    previous = editor.document()
+    if shared:
+        previous.setParent(None)  # an app with tabs keeps its documents alive
+    send(editor, "3ix")
+    replacement = QTextDocument(editor)
+    replacement.setDocumentLayout(QPlainTextDocumentLayout(replacement))
+    replacement.setPlainText("xold")
+    editor.setDocument(replacement)
+    cursor = editor.textCursor()
+    cursor.setPosition(1)  # the same text and cursor would allow the old count to repeat
+    editor.setTextCursor(cursor)
+    assert shiboken6.isValid(previous) is shared
+    if finish == "normal":
+        vim.normal()
+        assert vim.mode is Mode.NORMAL
+    elif finish == "escape":
+        send(editor, "<Esc>")
+        assert vim.mode is Mode.NORMAL
+    elif finish == "disable":
+        vim.set_enabled(False)
+    else:
+        vim.detach()
+    assert text_of(editor) == "xold"
+    assert not replacement.isUndoAvailable()
+    if shared:
+        assert previous.toPlainText() == "xold"
+        shiboken6.delete(previous)
