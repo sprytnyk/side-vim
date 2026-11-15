@@ -31,7 +31,7 @@ from qtkeys import cursor_of, plain, put_cursor, send, start_vim, text_of, type_
 import side_vim.vim as vim_module
 from side_vim import UKRAINIAN, Mode, VimMode
 from side_vim.edits import Register
-from side_vim.keys import control_modifier
+from side_vim.keys import IS_MAC, control_modifier
 from side_vim.motions import Pos
 from side_vim.parser import NORMAL_ACTIONS, OPERATORS, VISUAL_ACTIONS
 
@@ -381,6 +381,31 @@ def test_the_key_after_ctrl_w_wins_over_app_shortcuts(qapp: QApplication) -> Non
     assert (calls, fired) == (["l"], [])
     send(window.editor, "<C-l>")  # on its own it's the app's
     assert fired == ["Ctrl+L"]
+    window.close()
+    window.deleteLater()
+
+
+@pytest.mark.skipif(IS_MAC, reason="Option types text on macOS, so it's never a shortcut")
+def test_alt_keys_go_to_app_shortcuts_first(qapp: QApplication) -> None:
+    """Like gvim's winaltkeys=menu: Alt+H can open a Help menu. side-vim has no Alt keys,
+    so an Alt key that no shortcut uses does nothing, and Normal mode types no text."""
+    window = Window()
+    fired: list[str] = []
+    alt_h = QKeySequence(QKeyCombination(Qt.KeyboardModifier.AltModifier, Qt.Key.Key_H))
+    QShortcut(alt_h, window).activated.connect(lambda: fired.append("Alt+H"))
+    window.show()
+    window.activateWindow()
+    assert QTest.qWaitForWindowActive(window)
+    window.editor.setFocus()
+    vim = start_vim(window.editor, "abc")
+    send(window.editor, "<A-h>")
+    assert fired == ["Alt+H"]
+    send(window.editor, "<A-q>")
+    assert (text_of(window.editor), vim.mode) == ("abc", Mode.NORMAL)
+    send(window.editor, "vl<A-h>")
+    assert fired == ["Alt+H", "Alt+H"]  # Visual mode too
+    send(window.editor, "<Esc>r<A-h>")  # r waits for any key, so vim gets it
+    assert fired == ["Alt+H", "Alt+H"]
     window.close()
     window.deleteLater()
 

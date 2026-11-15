@@ -338,7 +338,10 @@ class VimMode(QObject):
             return False
         if kind == QEvent.Type.ShortcutOverride:
             assert isinstance(event, QKeyEvent)
-            if self._takes(self._token(event)) or self._blocks(event):
+            token = self._token(event)
+            if self._app_first(token):
+                return False
+            if self._takes(token) or self._blocks(event):
                 event.accept()
                 return True
             return False
@@ -409,6 +412,13 @@ class VimMode(QObject):
             return token in CTRL_KEYS or self._parser.wants_any_key
         # every other key is vim's, so Normal mode never types text
         return True
+
+    def _app_first(self, token: str | None) -> bool:
+        """True for an Alt key, unless r or Ctrl+W waits for the next key. The app's
+        shortcuts get it first, so Alt+H can open a Help menu, as in gvim with
+        winaltkeys=menu. side-vim has no Alt keys. If no shortcut takes the key, the key
+        press still comes here, so Normal mode types no text."""
+        return token is not None and token.startswith("<A-") and not self._parser.wants_any_key
 
     def _blocks(self, event: QKeyEvent) -> bool:
         """True for a key of Qt's that would change the text outside Insert mode. Vim's

@@ -147,6 +147,10 @@ side-vim follows Vim 9.1 with its default settings, except for these:
   selects all, for example. Qt's keys that change the text do nothing in these
   modes: paste, cut, `Ctrl+Backspace` and `Ctrl+Delete`. In Vim, `Ctrl+V` starts
   a block selection, which side-vim doesn't have.
+- In Normal and Visual modes, Alt keys go to the app's shortcuts first, so
+  `Alt+H` can open a Help menu. gvim does the same with `winaltkeys=menu`.
+  side-vim has no Alt keys of its own, so an Alt key that no shortcut uses does
+  nothing. After `r` and `Ctrl+W`, the next key is side-vim's, even with Alt.
 - Other keys without a command do nothing in Normal mode. They never type text.
 - In Normal mode, an Esc with nothing pending goes to the app, so it can close a
   dialog, for example. Vim does nothing with that Esc except ring its error bell.
