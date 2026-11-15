@@ -24,6 +24,7 @@ record:
 # dumps vim's character classes and widths into side_vim/_unicode_data.py
 unicode:
 	uv run python scripts/unicode_tables.py
+	uv run ruff format side_vim/_unicode_data.py
 
 # dumps vim's default digraphs, for r and Ctrl+K, into side_vim/_digraphs.py
 digraphs:
