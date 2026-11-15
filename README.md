@@ -47,7 +47,7 @@ Attach one `VimMode` per editor. Import `Mode` to compare `vim.mode` with
 | API | Behavior |
 | --- | --- |
 | `vim.mode_changed.connect(callback)` | Calls `callback(mode)` when the mode changes. |
-| `vim.pending_changed.connect(callback)` | Calls `callback(text)` with pending keys such as `2d`, or `""` when done. |
+| `vim.pending_changed.connect(callback)` | Calls `callback(text)` with pending keys such as `2d`, or `""` when done. Moving the focus to another widget drops pending keys, as a click in another window does in Vim. Switching apps or opening a menu keeps them. |
 | `vim.escape_hook = callback` | Calls `callback()` before handling Esc. Return `True` if the app used it, for example to close a popup. |
 | `vim.search_hook = callback` | `/` calls `callback(True)`; `?` calls `callback(False)`. The app opens its search UI. |
 | `vim.window_hook = callback` | `Ctrl+W` and one more key call `callback(key)`, such as `"h"` for `Ctrl+W h`. The app moves the focus, for example to a panel beside the editor. |

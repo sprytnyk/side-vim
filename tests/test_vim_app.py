@@ -8,6 +8,7 @@ import pytest
 import shiboken6
 from PySide6.QtCore import QEvent, QKeyCombination, QObject, Qt
 from PySide6.QtGui import (
+    QFocusEvent,
     QFont,
     QKeyEvent,
     QKeySequence,
@@ -378,6 +379,32 @@ def test_the_key_after_ctrl_w_wins_over_app_shortcuts(qapp: QApplication) -> Non
     assert fired == ["Ctrl+L"]
     window.close()
     window.deleteLater()
+
+
+@pytest.mark.parametrize(
+    ("reason", "dropped"),
+    [
+        (Qt.FocusReason.MouseFocusReason, True),
+        (Qt.FocusReason.TabFocusReason, True),
+        (Qt.FocusReason.OtherFocusReason, True),
+        (Qt.FocusReason.ActiveWindowFocusReason, False),
+        (Qt.FocusReason.PopupFocusReason, False),
+    ],
+)
+def test_moving_the_focus_to_another_widget_drops_pending_keys(
+    editor: QPlainTextEdit, reason: Qt.FocusReason, dropped: bool
+) -> None:
+    vim = start_vim(editor, "abc")
+    pending: list[str] = []
+    vim.pending_changed.connect(pending.append)
+    send(editor, "2d")
+    QApplication.sendEvent(editor, QFocusEvent(QEvent.Type.FocusOut, reason))
+    assert pending == (["2", "2d", ""] if dropped else ["2", "2d"])
+    send(editor, "<Esc>r")
+    QApplication.sendEvent(editor, QFocusEvent(QEvent.Type.FocusOut, reason))
+    send(editor, "l")  # dropped: a motion. Kept: r's character
+    expected = ("abc", Pos(0, 1)) if dropped else ("lbc", Pos(0, 0))
+    assert (text_of(editor), cursor_of(editor)) == expected
 
 
 def test_insert_mode_types_cyrillic(editor: QPlainTextEdit) -> None:

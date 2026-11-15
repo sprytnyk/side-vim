@@ -30,6 +30,7 @@ from typing import overload
 
 from PySide6.QtCore import QEvent, QObject, Qt, QTimer, Signal
 from PySide6.QtGui import (
+    QFocusEvent,
     QGuiApplication,
     QInputMethodEvent,
     QKeyEvent,
@@ -139,6 +140,15 @@ class _Insert:
     messy: bool = False  # the app undid or redid something during the session
     no_lines: bool = False  # VimMode._no_lines when the session started
     edited: bool = False  # the text changed during the session, even if back as it was
+
+
+# Losing the focus for these reasons keeps the pending keys. Another app's window or a
+# menu has the focus only for a while.
+KEEPS_KEYS = (
+    Qt.FocusReason.ActiveWindowFocusReason,
+    Qt.FocusReason.PopupFocusReason,
+    Qt.FocusReason.MenuBarFocusReason,
+)
 
 
 class VimMode(QObject):
@@ -349,6 +359,13 @@ class VimMode(QObject):
             self._update_cursor()
         if kind in (QEvent.Type.FocusIn, QEvent.Type.FocusOut):
             self._caret.restart_blink()
+        if kind == QEvent.Type.FocusOut:
+            assert isinstance(event, QFocusEvent)
+            if event.reason() not in KEEPS_KEYS:
+                # another widget has the focus now. Like a click in another window in
+                # vim, that drops the pending keys.
+                self._parser.reset()
+                self._emit_pending()
         if kind == QEvent.Type.FontChange:
             # the editor lays out the text again first
             QTimer.singleShot(0, self, self._update_cursor)
