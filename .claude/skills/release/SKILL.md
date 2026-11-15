@@ -110,7 +110,9 @@ git push origin vX.Y.Z
 Find the tag's run with `gh run list --workflow release.yml --branch vX.Y.Z`.
 Use `gh run view <id> --json url,status,conclusion,jobs` to check progress. The
 workflow reuses CI's lint, platform tests, lowest-dependency tests and audit,
-then verifies the version and builds the distributions.
+then verifies the version and builds the distributions. Before uploading, the
+publish job signs PEP 740 attestations for them with `astral-sh/attest-action`,
+and `uv publish` uploads them with the files.
 
 When the checks and build pass, give the user the run link and wait for them to
 approve the `pypi` job. Do not wait for the entire workflow to finish before
@@ -126,8 +128,11 @@ version unless the user decides otherwise.
 ## 5. Confirm and write GitHub notes
 
 Check `https://pypi.org/pypi/side-vim/X.Y.Z/json` and confirm the published
-version, wheel and source distribution. Use the reviewed CHANGELOG section as
-the release notes, saved to a temporary file.
+version, wheel and source distribution. Check that both files have provenance:
+`https://pypi.org/integrity/side-vim/X.Y.Z/<filename>/provenance` must return
+200 for each one. If it doesn't, report it; the version is already published, so
+don't try to upload it again. Use the reviewed CHANGELOG section as the release
+notes, saved to a temporary file.
 
 Attach the wheel PyPI serves, not the local build, so the GitHub file is the one
 people install. Take its `url` and `digests.sha256` from the `bdist_wheel` entry
