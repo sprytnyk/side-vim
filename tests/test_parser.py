@@ -5,6 +5,7 @@ from side_vim.parser import (
     LINE,
     NORMAL_ACTIONS,
     VISUAL_ACTIONS,
+    WINDOW,
     Command,
     Parser,
     changes_text,
@@ -92,6 +93,38 @@ def test_ctrl_r_and_arrow_keys() -> None:
 
 
 @pytest.mark.parametrize(
+    ("keys", "expected"),
+    [
+        (["<C-w>", "h"], "h"),
+        (["<C-w>", "<C-h>"], "h"),  # Ctrl held down, as in vim
+        (["<C-w>", "<Left>"], "h"),
+        (["<C-w>", "<Right>"], "l"),
+        (["<C-w>", "W"], "W"),
+        (["<C-w>", "<C-w>"], "w"),
+    ],
+)
+def test_ctrl_w_takes_one_more_key(keys: list[str], expected: str) -> None:
+    results, pending = feed(keys)
+    assert results == [None, Command(WINDOW, None, key=expected)]
+    assert pending == ""
+
+
+def test_ctrl_w_shows_as_in_vim_and_takes_any_key() -> None:
+    parser = Parser()
+    parser.feed("2")
+    assert not parser.wants_any_key
+    parser.feed(WINDOW)
+    assert parser.pending == "2^W"
+    assert parser.wants_any_key
+    assert parser.feed("l") == Command(WINDOW, 2, key="l")
+    assert not parser.wants_any_key
+
+
+def test_ctrl_w_is_dropped_in_visual_mode() -> None:
+    assert feed(["<C-w>"], visual=True) == ([None], "")
+
+
+@pytest.mark.parametrize(
     ("keys", "pending"),
     [("2", "2"), ("2d", "2d"), ("d3", "d3"), ("g", "g"), ("dg", "dg"), ("12", "12")],
 )
@@ -161,7 +194,7 @@ def test_scrolling_keys(key: str) -> None:
 
 
 def test_ctrl_keys() -> None:
-    assert {"<C-r>", "<C-e>", "<C-y>", "<C-d>", "<C-u>", "<C-f>", "<C-b>"} == CTRL_KEYS
+    assert {"<C-r>", "<C-e>", "<C-y>", "<C-d>", "<C-u>", "<C-f>", "<C-b>", "<C-w>"} == CTRL_KEYS
 
 
 @pytest.mark.parametrize(
@@ -183,6 +216,7 @@ def test_ctrl_keys() -> None:
         (Command("n"), True, False),
         (Command("<C-d>"), False, False),
         (Command("/"), True, False),
+        (Command(WINDOW, key="h"), False, False),
     ],
 )
 def test_changes_text(command: Command, visual: bool, changes: bool) -> None:
@@ -191,6 +225,11 @@ def test_changes_text(command: Command, visual: bool, changes: bool) -> None:
 
 def test_every_key_in_the_tables_makes_its_command() -> None:
     for key in NORMAL_ACTIONS:
-        assert Parser().feed(key) == Command(key)
+        parser = Parser()
+        if key == WINDOW:  # waits for one more key
+            assert parser.feed(key) is None
+            assert parser.feed("h") == Command(key, key="h")
+        else:
+            assert parser.feed(key) == Command(key)
     for key in VISUAL_ACTIONS:
         assert Parser().feed(key, visual=True) == Command(key)

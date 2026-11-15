@@ -50,6 +50,7 @@ Attach one `VimMode` per editor. Import `Mode` to compare `vim.mode` with
 | `vim.pending_changed.connect(callback)` | Calls `callback(text)` with pending keys such as `2d`, or `""` when done. |
 | `vim.escape_hook = callback` | Calls `callback()` before handling Esc. Return `True` if the app used it, for example to close a popup. |
 | `vim.search_hook = callback` | `/` calls `callback(True)`; `?` calls `callback(False)`. The app opens its search UI. |
+| `vim.window_hook = callback` | `Ctrl+W` and one more key call `callback(key)`, such as `"h"` for `Ctrl+W h`. The app moves the focus, for example to a panel beside the editor. |
 | `vim.set_search("rent", forward=True)` | Saves the search text and jumps to the next match. `n` repeats in that direction; `N` reverses it. |
 | `vim.normal()` | Goes to Normal mode as Esc does, from Insert or Visual mode. |
 | `vim.clipboard = True` | Uses the system clipboard for yank, delete, change and paste. Defaults to `False`. |
@@ -88,6 +89,7 @@ repeats the typed text: `3ix<Esc>` inserts `xxx`.
 | Scroll half a screen | `Ctrl+D`, `Ctrl+U` |
 | Scroll a screen | `Ctrl+F`, `Ctrl+B` |
 | Return to Normal | `Esc`, `Ctrl+[` |
+| Window command | `Ctrl+W` and a key, through the app hook |
 
 In Normal and Visual modes, the Ctrl keys above take priority over app shortcuts.
 `j` and `k` keep the screen column across tabs and wide characters, and a wrapped
@@ -105,6 +107,9 @@ side-vim follows Vim 9.1 with its default settings, except for these:
 - Search uses plain text, not regular expressions. There is no command line.
   `/` and `?` call `search_hook`, then the app shows its own search box and
   passes the text to `set_search`.
+- side-vim has no windows. `Ctrl+W` and the key after it go to `window_hook`,
+  and the app decides what they do. `Ctrl+W Ctrl+H` and `Ctrl+W Left` arrive as
+  `h`, as in Vim. It works only in Normal mode, and the hook gets no count.
 - `J` puts one space after a period, like Vim with `nojoinspaces`. Vim's default
   puts two.
 - Qt stops scrolling when the last line reaches the bottom of the editor. Vim

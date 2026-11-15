@@ -36,6 +36,9 @@ COMMON_ACTIONS = {
     "?": False,
 } | dict.fromkeys(SCROLL_KEYS, False)
 
+# vim's window command: Ctrl+W and one more key. VimMode passes that key to window_hook.
+WINDOW = "<C-w>"
+
 # Commands that take a count but no motion, in Normal mode.
 NORMAL_ACTIONS = {
     "p": True,
@@ -51,6 +54,7 @@ NORMAL_ACTIONS = {
     "O": True,
     "v": False,
     "V": False,
+    WINDOW: False,
 } | COMMON_ACTIONS
 
 # Commands that act on the selection or the mode, in Visual mode. `x` is `d` here.
@@ -76,11 +80,14 @@ class Command:
     counts are multiplied (`2d3w` is `d` with 6).
     motion: for "move" and for operators in Normal mode, the motion ("w", "gg", or
     LINE for `dd`). None for actions and for operators in Visual mode.
+    key: for WINDOW, the key after Ctrl+W. Ctrl and the arrows read as the letter,
+    as in vim: Ctrl+W Ctrl+H and Ctrl+W Left are both "h".
     """
 
     name: str
     count: int | None = None
     motion: str | None = None
+    key: str | None = None
 
 
 def changes_text(command: Command, visual: bool) -> bool:
@@ -107,8 +114,14 @@ class Parser:
 
     @property
     def pending(self) -> str:
-        """The keys typed so far for the next command, like vim's showcmd."""
-        return "".join(self._keys)
+        """The keys typed so far for the next command, like vim's showcmd: "2d", "^W"."""
+        return "".join(_shown(key) for key in self._keys)
+
+    @property
+    def wants_any_key(self) -> bool:
+        """True right after Ctrl+W. The next key is then vim's, even a Ctrl key that is an
+        app shortcut."""
+        return bool(self._keys) and self._keys[-1] == WINDOW
 
     def reset(self) -> None:
         self._keys.clear()
@@ -122,6 +135,23 @@ class Parser:
             return None
         self._keys.clear()
         return result
+
+
+def _ctrl_letter(key: str) -> str | None:
+    """The character of a plain Ctrl key: "w" for <C-w>. None for other keys."""
+    return key[3] if key.startswith("<C-") and len(key) == 5 else None
+
+
+def _shown(key: str) -> str:
+    """A key as showcmd writes it: Ctrl+W is ^W."""
+    letter = _ctrl_letter(key)
+    return "^" + letter.upper() if letter else key
+
+
+def _window_key(key: str) -> str:
+    """The key after Ctrl+W, with <C-h> and <Left> read as h."""
+    key = ALIASES.get(key, key)
+    return _ctrl_letter(key) or key
 
 
 def _read_count(keys: list[str], i: int) -> tuple[int | None, int]:
@@ -165,6 +195,11 @@ def _parse(keys: list[str], visual: bool) -> Command | _Pending | None:
         if key in VISUAL_ACTIONS and i + 1 == len(keys):
             return Command(key, count)
         return None
+
+    if key == WINDOW:
+        if i + 1 == len(keys):
+            return PENDING
+        return Command(WINDOW, count, key=_window_key(keys[i + 1]))
 
     if key in SHORTHANDS and i + 1 == len(keys):
         op, fixed = SHORTHANDS[key]

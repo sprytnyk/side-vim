@@ -61,6 +61,7 @@ from side_vim.parser import (
     INSERT_COMMANDS,
     LINE,
     OPERATORS,
+    WINDOW,
     Command,
     Parser,
     changes_text,
@@ -143,6 +144,9 @@ class VimMode(QObject):
     (it closed a popup, say), vim does nothing else with that Esc.
     search_hook: `/` calls it with True, `?` with False. The app shows its search, and
     passes the text to set_search.
+    window_hook: Ctrl+W and one more key call it with that key, in Normal mode: "h"
+    for Ctrl+W h, Ctrl+W Ctrl+H and Ctrl+W Left. The app moves the focus, to a panel
+    beside the editor say.
     layout_map: keys outside Insert mode go through it, so a Cyrillic letter works as
     the Latin key in the same place. UKRAINIAN by default; None turns it off.
     """
@@ -161,6 +165,7 @@ class VimMode(QObject):
         self.clipboard = False
         self.escape_hook: Callable[[], bool] | None = None
         self.search_hook: Callable[[bool], None] | None = None
+        self.window_hook: Callable[[str], None] | None = None
         self.layout_map: dict[str, str] | None = UKRAINIAN
         self._search: tuple[str, bool] | None = None
         # what Ctrl+D and Ctrl+U scroll, once a count set it (vim's 'scroll')
@@ -228,6 +233,7 @@ class VimMode(QObject):
             "<C-r>": self._undo_command,
             "v": self._start_visual_command,
             "V": self._start_visual_command,
+            WINDOW: self._window,
         }
         visual = both | dict.fromkeys(OPERATORS, self._visual_operate)
         visual |= {
@@ -362,7 +368,7 @@ class VimMode(QObject):
             # Esc with nothing pending goes on to the app, to close a dialog say
             return bool(self._parser.pending) or self._mode in VISUAL_MODES
         if token.startswith("<C-"):
-            return token in CTRL_KEYS
+            return token in CTRL_KEYS or self._parser.wants_any_key
         # every other key is vim's, so Normal mode never types text
         return True
 
@@ -421,6 +427,10 @@ class VimMode(QObject):
     def _open_search(self, command: Command) -> None:
         if self.search_hook is not None:
             self.search_hook(command.name == "/")
+
+    def _window(self, command: Command) -> None:
+        if self.window_hook is not None and command.key is not None:
+            self.window_hook(command.key)
 
     def _lines(self) -> Lines:
         """The text as it is now. Make a new one after changing the text."""

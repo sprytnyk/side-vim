@@ -140,6 +140,21 @@ def test_search_keys_call_the_hook(editor: QPlainTextEdit) -> None:
     assert cursor_of(editor) == Pos(0, 0)
 
 
+def test_ctrl_w_and_a_key_call_the_window_hook(editor: QPlainTextEdit) -> None:
+    vim = start_vim(editor, T)
+    send(editor, "<C-w>l")  # no hook: nothing happens
+    calls: list[str] = []
+    vim.window_hook = calls.append
+    pending: list[str] = []
+    vim.pending_changed.connect(pending.append)
+    send(editor, "<C-w>h<C-w><C-l>2<C-w>j<C-w><Esc>")
+    assert calls == ["h", "l", "j"]  # Esc drops a Ctrl+W
+    assert pending == ["^W", "", "^W", "", "2", "2^W", "", "^W", ""]
+    assert cursor_of(editor) == Pos(0, 0)  # h and j went to the hook, not the cursor
+    send(editor, "i<C-w>")
+    assert calls == ["h", "l", "j"]  # Insert mode: not vim's
+
+
 class Window(QWidget):
     """An editor in a window that records the keys the editor passed on."""
 
@@ -306,6 +321,26 @@ def test_ctrl_and_the_ukrainian_layout_win_over_app_shortcuts(qapp: QApplication
     send(window.editor, "x<C-к>")
     assert fired == []
     assert vim.mode is Mode.NORMAL
+    window.close()
+    window.deleteLater()
+
+
+def test_the_key_after_ctrl_w_wins_over_app_shortcuts(qapp: QApplication) -> None:
+    window = Window()
+    fired: list[str] = []
+    shortcut = QShortcut(QKeySequence(QKeyCombination(control_modifier(), Qt.Key.Key_L)), window)
+    shortcut.activated.connect(lambda: fired.append("Ctrl+L"))
+    window.show()
+    window.activateWindow()
+    assert QTest.qWaitForWindowActive(window)
+    window.editor.setFocus()
+    vim = start_vim(window.editor, "abc")
+    calls: list[str] = []
+    vim.window_hook = calls.append
+    send(window.editor, "<C-w><C-l>")
+    assert (calls, fired) == (["l"], [])
+    send(window.editor, "<C-l>")  # on its own it's the app's
+    assert fired == ["Ctrl+L"]
     window.close()
     window.deleteLater()
 
