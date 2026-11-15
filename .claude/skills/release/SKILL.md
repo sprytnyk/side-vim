@@ -129,14 +129,37 @@ Check `https://pypi.org/pypi/side-vim/X.Y.Z/json` and confirm the published
 version, wheel and source distribution. Use the reviewed CHANGELOG section as
 the release notes, saved to a temporary file.
 
+Attach the wheel PyPI serves, not the local build, so the GitHub file is the one
+people install. Take its `url` and `digests.sha256` from the `bdist_wheel` entry
+in that JSON. Download it into a fresh, empty scratchpad directory, keeping
+PyPI's filename, and check the hash. Stop if it doesn't match.
+
+```sh
+curl -fsSL -o <scratchpad>/pypi-wheel/side_vim-X.Y.Z-py3-none-any.whl <url>
+echo "<sha256>  <scratchpad>/pypi-wheel/side_vim-X.Y.Z-py3-none-any.whl" | sha256sum -c
+```
+
+Write `SHA256SUMS` next to it from that checked hash, with the bare filename so
+`sha256sum -c SHA256SUMS` works in a download folder. Sign it with the release
+key and check the signature. It must be good and from the required key; if gpg's
+pinentry times out, ask the user to run the signing command with a `!` prefix.
+
+```sh
+printf '%s  %s\n' <sha256> side_vim-X.Y.Z-py3-none-any.whl > <scratchpad>/pypi-wheel/SHA256SUMS
+gpg --local-user 0xC00C0F0D647BD3C6 --armor --detach-sign --output <scratchpad>/pypi-wheel/SHA256SUMS.asc <scratchpad>/pypi-wheel/SHA256SUMS
+gpg --verify <scratchpad>/pypi-wheel/SHA256SUMS.asc <scratchpad>/pypi-wheel/SHA256SUMS
+```
+
 Ask: publish the GitHub release, create a draft, or leave it to the user?
 
 ```sh
-gh release create vX.Y.Z --verify-tag --title "side-vim vX.Y.Z" --notes-file <scratchpad>/release-notes.md
+gh release create vX.Y.Z --verify-tag --title "side-vim vX.Y.Z" --notes-file <scratchpad>/release-notes.md <scratchpad>/pypi-wheel/side_vim-X.Y.Z-py3-none-any.whl <scratchpad>/pypi-wheel/SHA256SUMS <scratchpad>/pypi-wheel/SHA256SUMS.asc
 ```
 
-Add `--draft` only if requested. Attach no files. Confirm with
-`gh release view vX.Y.Z --json url,isDraft,assets`.
+Add `--draft` only if requested. Attach only those three files. Confirm with
+`gh release view vX.Y.Z --json url,isDraft,assets`. The assets must list exactly
+the wheel, `SHA256SUMS` and `SHA256SUMS.asc`, and the wheel must have the same
+name, size and sha256 as on PyPI.
 
-Report the version, signature checks, local wheel check, CI result, PyPI link,
-and GitHub release link or notes path. State any unfinished work.
+Report the version, signature checks (commit, tag and `SHA256SUMS.asc`), local
+wheel check, CI result, PyPI link, and GitHub release link or notes path. State any unfinished work.

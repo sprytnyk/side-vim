@@ -194,7 +194,9 @@ For each release:
    `pypi` job. It publishes those files using
    [uv trusted publishing](https://docs.astral.sh/uv/guides/integration/github/#publishing-to-pypi).
 5. Confirm the version is on PyPI, then create a GitHub release using just the
-   changelog section as its notes. Attach no files.
+   changelog section as its notes. Attach the wheel downloaded from PyPI, after
+   checking its sha256 against PyPI's, with a `SHA256SUMS` file for it and
+   `SHA256SUMS.asc`, a signature of that file made with the release key.
 
 The project [release skill](https://github.com/sprytnyk/side-vim/blob/main/.claude/skills/release/SKILL.md)
 has the command sequence and approval points.
