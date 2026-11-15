@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1 - 2026-11-15
+
+### Fixes
+
+- In Normal and Visual modes, Alt keys go to the app's shortcuts first, so
+  `Alt+H` can open a Help menu, as in gvim with `winaltkeys=menu`. An Alt key
+  that no shortcut uses still does nothing, and after `r` or `Ctrl+W` the next
+  key is still side-vim's.
+
 ## 0.2.0 - 2026-11-15
 
 ### Highlights
