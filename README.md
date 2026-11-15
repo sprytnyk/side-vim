@@ -110,17 +110,18 @@ side-vim follows Vim 9.1 with its default settings, except for these:
 - Qt stops scrolling when the last line reaches the bottom of the editor. Vim
   scrolls on until the last line is at the top, so `Ctrl+F` and `Ctrl+E` stop
   sooner near the end. The cursor still goes to the line Vim picks.
-- In Insert mode the editor handles every key except Esc and `Ctrl+[`. Arrows,
-  Backspace and app shortcuts work as in any Qt editor. Vim's Insert mode keys,
-  such as `Ctrl+W`, `Ctrl+U` and `Ctrl+O`, are not there.
+- In Insert mode, Esc and `Ctrl+[` go back to Normal mode. Every other key goes
+  to the editor, so arrows, Backspace and app shortcuts work as in any Qt
+  editor. side-vim doesn't have Vim's Insert mode keys, such as `Ctrl+W`,
+  `Ctrl+U` and `Ctrl+O`.
 - In Normal and Visual modes, Ctrl keys that side-vim doesn't use go to the
   editor or the app, and so do PageUp, PageDown and the function keys. `Ctrl+A`
   selects all, for example. Qt's keys that change the text do nothing in these
   modes: paste, cut, `Ctrl+Backspace` and `Ctrl+Delete`. In Vim, `Ctrl+V` starts
   a block selection, which side-vim doesn't have.
 - Other keys without a command do nothing in Normal mode. They never type text.
-- Esc in Normal mode with nothing pending goes to the app, for example to close a
-  dialog. Vim beeps.
+- In Normal mode, an Esc with nothing pending goes to the app, so it can close a
+  dialog, for example. Vim does nothing with that Esc except ring its error bell.
 - A read-only editor allows movement, scrolling, selection, yank and search, and
   ignores edits. Vim only warns when you change a read-only file.
 - Dragging with the mouse in Normal mode starts Visual mode.
