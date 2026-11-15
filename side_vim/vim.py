@@ -61,6 +61,7 @@ from side_vim.parser import (
     INSERT_COMMANDS,
     LINE,
     OPERATORS,
+    SPELL,
     WINDOW,
     Command,
     Parser,
@@ -147,6 +148,10 @@ class VimMode(QObject):
     window_hook: Ctrl+W and one more key call it with that key, in Normal mode: "h"
     for Ctrl+W h, Ctrl+W Ctrl+H and Ctrl+W Left. The app moves the focus, to a panel
     beside the editor say.
+    spell_hook: the spelling commands call it in Normal mode, with the command and the
+    count typed (None if none): "z=", "]s", "[s", "zg" and "zG". The app has the
+    dictionary, so it suggests, moves the cursor or adds the word. z= never runs in a
+    read-only editor.
     layout_map: keys outside Insert mode go through it, so a Cyrillic letter works as
     the Latin key in the same place. UKRAINIAN by default; None turns it off.
     """
@@ -166,6 +171,7 @@ class VimMode(QObject):
         self.escape_hook: Callable[[], bool] | None = None
         self.search_hook: Callable[[bool], None] | None = None
         self.window_hook: Callable[[str], None] | None = None
+        self.spell_hook: Callable[[str, int | None], None] | None = None
         self.layout_map: dict[str, str] | None = UKRAINIAN
         self._search: tuple[str, bool] | None = None
         # what Ctrl+D and Ctrl+U scroll, once a count set it (vim's 'scroll')
@@ -235,6 +241,7 @@ class VimMode(QObject):
             "V": self._start_visual_command,
             WINDOW: self._window,
         }
+        normal |= dict.fromkeys(SPELL, self._spell)
         visual = both | dict.fromkeys(OPERATORS, self._visual_operate)
         visual |= {
             "p": self._visual_paste,
@@ -431,6 +438,10 @@ class VimMode(QObject):
     def _window(self, command: Command) -> None:
         if self.window_hook is not None and command.key is not None:
             self.window_hook(command.key)
+
+    def _spell(self, command: Command) -> None:
+        if self.spell_hook is not None:
+            self.spell_hook(command.name, command.count)
 
     def _lines(self) -> Lines:
         """The text as it is now. Make a new one after changing the text."""

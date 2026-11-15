@@ -4,6 +4,7 @@ from side_vim.parser import (
     CTRL_KEYS,
     LINE,
     NORMAL_ACTIONS,
+    SPELL,
     VISUAL_ACTIONS,
     WINDOW,
     Command,
@@ -124,6 +125,25 @@ def test_ctrl_w_is_dropped_in_visual_mode() -> None:
     assert feed(["<C-w>"], visual=True) == ([None], "")
 
 
+@pytest.mark.parametrize("name", list(SPELL))
+def test_spelling_commands_take_two_keys(name: str) -> None:
+    first, second = name
+    assert feed(["3", first, second]) == ([None, None, Command(name, 3)], "")
+
+
+def test_spelling_commands_wait_for_their_second_key() -> None:
+    parser = Parser()
+    parser.feed("2")
+    parser.feed("z")
+    assert parser.pending == "2z"
+    assert parser.feed("x") is None  # side-vim has no zx: dropped
+    assert parser.pending == ""
+
+
+def test_spelling_commands_are_dropped_in_visual_mode() -> None:
+    assert feed(["z", "="], visual=True) == ([None, None], "")
+
+
 @pytest.mark.parametrize(
     ("keys", "pending"),
     [("2", "2"), ("2d", "2d"), ("d3", "d3"), ("g", "g"), ("dg", "dg"), ("12", "12")],
@@ -134,7 +154,7 @@ def test_pending_keys(keys: str, pending: str) -> None:
     assert left == pending
 
 
-@pytest.mark.parametrize("keys", ["q", "dx", "dp", "gx", "dgx", "2q", "dc", "z"])
+@pytest.mark.parametrize("keys", ["q", "dx", "dp", "gx", "dgx", "2q", "dc", "zx"])
 def test_bad_keys_are_dropped(keys: str) -> None:
     results, pending = feed(keys)
     assert all(r is None for r in results)
@@ -217,6 +237,9 @@ def test_ctrl_keys() -> None:
         (Command("<C-d>"), False, False),
         (Command("/"), True, False),
         (Command(WINDOW, key="h"), False, False),
+        (Command("z="), False, True),  # replaces the word
+        (Command("]s"), False, False),
+        (Command("zg"), False, False),
     ],
 )
 def test_changes_text(command: Command, visual: bool, changes: bool) -> None:
@@ -229,6 +252,9 @@ def test_every_key_in_the_tables_makes_its_command() -> None:
         if key == WINDOW:  # waits for one more key
             assert parser.feed(key) is None
             assert parser.feed("h") == Command(key, key="h")
+        elif key in SPELL:  # two keys
+            assert parser.feed(key[0]) is None
+            assert parser.feed(key[1]) == Command(key)
         else:
             assert parser.feed(key) == Command(key)
     for key in VISUAL_ACTIONS:

@@ -155,6 +155,22 @@ def test_ctrl_w_and_a_key_call_the_window_hook(editor: QPlainTextEdit) -> None:
     assert calls == ["h", "l", "j"]  # Insert mode: not vim's
 
 
+def test_spelling_commands_call_the_spell_hook(editor: QPlainTextEdit) -> None:
+    vim = start_vim(editor, T)
+    send(editor, "z=")  # no hook: nothing happens
+    calls: list[tuple[str, int | None]] = []
+    vim.spell_hook = lambda name, count: calls.append((name, count))
+    send(editor, "z=2]s[szgzGzx")
+    assert calls == [("z=", None), ("]s", 2), ("[s", None), ("zg", None), ("zG", None)]
+    assert cursor_of(editor) == Pos(0, 0)
+    editor.setReadOnly(True)
+    send(editor, "z=]s")  # z= would change the text
+    assert calls[5:] == [("]s", None)]
+    editor.setReadOnly(False)
+    send(editor, "iz=")
+    assert len(calls) == 6  # Insert mode: typed
+
+
 class Window(QWidget):
     """An editor in a window that records the keys the editor passed on."""
 

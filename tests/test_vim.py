@@ -364,7 +364,7 @@ def test_pending_signal(editor: QPlainTextEdit) -> None:
     assert pending == ["2", "", "1", "12", "12g", ""]
     send(editor, "g<Esc>")
     assert pending[-2:] == ["g", ""]
-    send(editor, "3z")
+    send(editor, "3q")
     assert pending[-2:] == ["3", ""]
 
 

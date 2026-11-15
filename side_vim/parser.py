@@ -39,6 +39,10 @@ COMMON_ACTIONS = {
 # vim's window command: Ctrl+W and one more key. VimMode passes that key to window_hook.
 WINDOW = "<C-w>"
 
+# vim's spelling commands. VimMode passes them to spell_hook, since the app has the
+# dictionary. z= changes the text: it replaces the word.
+SPELL = {"z=": True, "]s": False, "[s": False, "zg": False, "zG": False}
+
 # Commands that take a count but no motion, in Normal mode.
 NORMAL_ACTIONS = {
     "p": True,
@@ -55,6 +59,7 @@ NORMAL_ACTIONS = {
     "v": False,
     "V": False,
     WINDOW: False,
+    **SPELL,
 } | COMMON_ACTIONS
 
 # Commands that act on the selection or the mode, in Visual mode. `x` is `d` here.
@@ -217,4 +222,9 @@ def _parse(keys: list[str], visual: bool) -> Command | _Pending | None:
 
     if key in NORMAL_ACTIONS and i + 1 == len(keys):
         return Command(key, count)
+    name = "".join(keys[i:])
+    if name in SPELL:
+        return Command(name, count)
+    if i + 1 == len(keys) and any(spell.startswith(key) for spell in SPELL):
+        return PENDING  # z, ] or [ waits for one more key
     return None
