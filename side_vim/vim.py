@@ -299,7 +299,8 @@ class VimMode(QObject):
             elif kind == QEvent.Type.MouseButtonRelease:
                 self._mouse_down = False
             elif kind == QEvent.Type.Resize:
-                QTimer.singleShot(0, self._caret.place)
+                # Qt skips the call if the caret is deleted before the timer fires
+                QTimer.singleShot(0, self._caret, self._caret.place)
             return False
         if kind == QEvent.Type.ShortcutOverride:
             assert isinstance(event, QKeyEvent)
@@ -329,7 +330,7 @@ class VimMode(QObject):
             self._caret.restart_blink()
         if kind == QEvent.Type.FontChange:
             # the editor lays out the text again first
-            QTimer.singleShot(0, self._update_cursor_width)
+            QTimer.singleShot(0, self, self._update_cursor_width)
         return False
 
     def _token(self, event: QKeyEvent) -> str | None:

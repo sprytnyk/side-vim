@@ -361,6 +361,32 @@ def test_an_editor_can_go_away_in_insert_mode(
         assert document.toPlainText() == "abc\ndef"
 
 
+@pytest.mark.parametrize("change", ["resize", "font"])
+@pytest.mark.parametrize("keys", ["", "v"])
+def test_an_editor_can_go_away_right_after_a_resize_or_font_change(
+    qapp: QApplication, monkeypatch: pytest.MonkeyPatch, change: str, keys: str
+) -> None:
+    """A resize or a font change makes vim schedule a call for later. When the app
+    deletes the editor before that call runs, Qt skips the call."""
+    errors: list[BaseException] = []
+    monkeypatch.setattr("sys.excepthook", lambda kind, error, trace: errors.append(error))
+    e = QPlainTextEdit()
+    e.resize(300, 200)
+    e.show()
+    start_vim(e, "abc\ndef")
+    send(e, keys)
+    if change == "resize":
+        e.resize(400, 250)
+    else:
+        font = QFont(e.font())
+        font.setPointSize(font.pointSize() + 6)
+        e.setFont(font)
+    e.deleteLater()
+    qapp.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    QTest.qWait(10)
+    assert errors == []
+
+
 class Paints(QObject):
     """The parts of a widget it paints."""
 
