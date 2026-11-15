@@ -23,7 +23,7 @@ if sys.platform != "win32":
     import pty
     import termios
 
-from side_vim.notation import tokens
+from side_vim.notation import is_named, tokens
 from side_vim.text import split_clusters
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -63,7 +63,7 @@ def vim_keys(keys: str) -> str:
         raise ValueError("use <CR> for a typed newline")
     parts = []
     for token in tokens(keys):
-        if len(token) > 1:
+        if is_named(token):
             parts.append("\\" + token.replace("\\", "\\\\").replace('"', '\\"'))
         elif token in '\\"':
             parts.append("\\" + token)

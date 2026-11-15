@@ -1,5 +1,6 @@
 import pytest
 
+from side_vim.notation import tokens
 from side_vim.parser import (
     CTRL_KEYS,
     LINE,
@@ -259,3 +260,17 @@ def test_every_key_in_the_tables_makes_its_command() -> None:
             assert parser.feed(key) == Command(key)
     for key in VISUAL_ACTIONS:
         assert Parser().feed(key, visual=True) == Command(key)
+
+
+@pytest.mark.parametrize(
+    ("keys", "expected"),
+    [
+        ("3w<Esc>ix", ["3", "w", "<Esc>", "i", "x"]),
+        ("<<", ["<", "<"]),
+        ("a<b", ["a", "<", "b"]),
+        ("<<Esc>", ["<", "<Esc>"]),
+        ("e\u0301\U0001f1fa\U0001f1e6", ["e\u0301", "\U0001f1fa\U0001f1e6"]),
+    ],
+)
+def test_tokens_split_keys_into_whole_characters(keys: str, expected: list[str]) -> None:
+    assert tokens(keys) == expected
