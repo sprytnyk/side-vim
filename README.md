@@ -146,8 +146,9 @@ make unicode   # Regenerate Vim character classes and widths
 make mac-keys  # Key checks on a Mac
 ```
 
-Tests run Qt offscreen. CI runs only for a release tag. It tests Linux, macOS and
-Windows on Python 3.12 and 3.14, and the lowest allowed PySide6 on Python 3.12.
+Tests run Qt offscreen. CI runs for release tags and can also be started from
+**Actions → CI → Run workflow**. It tests Linux, macOS and Windows on Python 3.12
+and 3.14, and the lowest allowed PySide6 on Python 3.12.
 The tests replay saved [Vim cases](https://github.com/sprytnyk/side-vim/tree/main/tests/cases),
 so CI doesn't need Vim. Recording them needs Vim, and the scrolling cases need a
 Unix terminal.

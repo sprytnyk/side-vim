@@ -118,10 +118,10 @@ asking: publishing cannot start until that approval. Never approve or bypass
 the environment gate. After approval, use `gh run watch <id> --exit-status` to
 wait for publication. Stop and report any failure.
 
-CI runs only for release tags, so a failed check shows up after the tag is
-pushed. Then nothing is published. Don't delete or move the tag. Report the
-failure; the fix goes out as the next patch version unless the user decides
-otherwise.
+CI can also run before tagging, from **Actions → CI → Run workflow**. The release
+workflow runs it again for the pushed tag. If that run fails, nothing is published.
+Don't delete or move the tag. Report the failure; the fix goes out as the next patch
+version unless the user decides otherwise.
 
 ## 5. Confirm and write GitHub notes
 

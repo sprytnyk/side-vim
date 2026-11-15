@@ -1,8 +1,9 @@
 name: CI
 
-# Runs only when release.yml calls it for a v* tag.
+# Runs manually or when release.yml calls it for a v* tag.
 on:
   workflow_call:
+  workflow_dispatch:
 
 permissions:
   contents: read
