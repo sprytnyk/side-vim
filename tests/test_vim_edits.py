@@ -418,3 +418,19 @@ def test_switching_documents_in_insert_mode(
     if shared:
         assert previous.toPlainText() == "xold"
         shiboken6.delete(previous)
+
+
+def test_a_save_in_insert_mode_stays_saved(editor: QPlainTextEdit) -> None:
+    vim = start_vim(editor, "original")
+    send(editor, "Atext<CR>more")  # more than one Qt undo step needs regrouping
+    saved = text_of(editor)
+    editor.document().setModified(False)
+    vim.normal()
+    assert text_of(editor) == saved
+    assert not editor.document().isModified()
+    send(editor, "u")
+    assert text_of(editor) == "original"
+    assert editor.document().isModified()
+    send(editor, "<C-r>")
+    assert text_of(editor) == saved
+    assert not editor.document().isModified()

@@ -1264,6 +1264,7 @@ class VimMode(QObject):
         again in one edit block. False if the steps didn't lead back to where the
         session started; then everything is put back as it was."""
         document = insert.document
+        modified = document.isModified()
         position = self._editor.textCursor().position()
         steps = insert.levels + insert.merged_outside
         self._busy = True
@@ -1286,6 +1287,9 @@ class VimMode(QObject):
                 document.clearUndoRedoStacks(QTextDocument.Stacks.RedoStack)
         finally:
             self._busy = False
+            # The app may have saved during Insert mode. Regrouping undo steps
+            # leaves the text as it was, so it must keep that saved state too.
+            document.setModified(modified)
             cursor = self._editor.textCursor()
             cursor.setPosition(min(position, document.characterCount() - 1))
             self._editor.setTextCursor(cursor)
