@@ -235,7 +235,26 @@ def test_every_command_has_a_handler(editor: QPlainTextEdit) -> None:
 
 @pytest.mark.parametrize(
     "keys",
-    ["x", "dd", "dw", "D", "cwab<Esc>", "ix<Esc>", "ox<Esc>", "J", "p", "P", "vd", "Vc", "vp"],
+    [
+        "x",
+        "dd",
+        "dw",
+        "D",
+        "cwab<Esc>",
+        "ix<Esc>",
+        "ox<Esc>",
+        "J",
+        "p",
+        "P",
+        "vd",
+        "Vc",
+        "vp",
+        "rX",
+        "3r<CR>",
+        "r<C-e>",
+        "vrX",
+        "Vr<Tab>",
+    ],
 )
 def test_a_read_only_editor_doesnt_edit(editor: QPlainTextEdit, keys: str) -> None:
     editor.setReadOnly(True)

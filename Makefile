@@ -1,4 +1,4 @@
-.PHONY: all run check lint test format record unicode mac-keys clean
+.PHONY: all run check lint test format record unicode digraphs mac-keys clean
 
 all: check
 
@@ -24,6 +24,10 @@ record:
 # dumps vim's character classes and widths into side_vim/_unicode_data.py
 unicode:
 	uv run python scripts/unicode_tables.py
+
+# dumps vim's default digraphs, for r and Ctrl+K, into side_vim/_digraphs.py
+digraphs:
+	uv run python scripts/digraph_table.py
 
 # on a Mac: presses keys in the demo through macOS and checks what they do
 mac-keys:

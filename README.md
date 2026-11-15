@@ -82,9 +82,10 @@ repeats the typed text: `3ix<Esc>` inserts `xxx`.
 | Insert | `i a I A o O` |
 | Delete, change, yank | `d c y` followed by a motion; `dd cc yy`, `x D C` |
 | Paste, join | `p P`, `J` |
+| Replace characters | `r` and a character: `3rx` turns three characters into `xxx` |
 | Undo, redo | `u`, `Ctrl+R` |
 | Select | `v` for characters, `V` for lines; motions extend the selection |
-| Edit a selection | `d c y x p`; `o` switches its ends |
+| Edit a selection | `d c y x p r`; `o` switches its ends |
 | Search | `/ ?` through the app hook, then `n N` |
 | Scroll a line | `Ctrl+E`, `Ctrl+Y` |
 | Scroll half a screen | `Ctrl+D`, `Ctrl+U` |
@@ -97,15 +98,29 @@ In Normal and Visual modes, the Ctrl keys above take priority over app shortcuts
 `j` and `k` keep the screen column across tabs and wide characters, and a wrapped
 line counts as one line, as in Vim.
 
+After `r`, Enter puts in a line break, and `Ctrl+E` or `Ctrl+Y` copy the
+characters below or above. `Ctrl+V` puts in the next key as it is, or a character
+code such as `065` or `u20ac`. `Ctrl+K` and two characters put in a
+[digraph](https://vimhelp.org/digraph.txt.html), such as `e:` for ë. Esc cancels
+`r`. These work as in Vim.
+
 This release has only the keys above. It has no repeat (`.`), text objects,
-`f t r ~`, colon commands, macros, marks, named registers or block selection.
+`f t ~`, colon commands, macros, marks, named registers or block selection.
 
 ## Differences from Vim
 
 side-vim follows Vim 9.1 with its default settings, except for these:
 
 - Joined emoji and flags, such as 👨‍👩‍👧 and 🇺🇦, are one character. Vim splits
-  them into their parts. Accents, CJK and single emoji work as in Vim.
+  them into their parts. Accents, CJK and single emoji work as in Vim, except
+  that `r Ctrl+E` and `r Ctrl+Y` copy an accented letter made of two code points
+  whole. Vim copies it without the accent.
+- Qt turns a carriage return into a line break, so `r` can't put one in. Vim
+  puts one in for `r Ctrl+V Enter`, and for Enter after `r` in Visual mode.
+  side-vim does nothing there, and Visual mode keeps its selection.
+- After `r Ctrl+V` and part of a code, such as `r Ctrl+V 6`, a key with no
+  character, such as an arrow, ends the code. Vim then also runs that key as a
+  command, but side-vim drops it.
 - Search uses plain text, not regular expressions. There is no command line.
   `/` and `?` call `search_hook`, then the app shows its own search box and
   passes the text to `set_search`.
@@ -139,7 +154,8 @@ side-vim follows Vim 9.1 with its default settings, except for these:
 - Outside Insert mode, Ukrainian letters work as the Latin keys in the same
   place, so `ц` is `w`. Vim needs `langmap` for that. Punctuation stays as typed,
   `ґ` isn't mapped because its key moves between layout variants, and `/` needs
-  the English layout.
+  the English layout. The character after `r` is text, so `кц` puts in ц, as
+  `langmap` does in Vim.
 - On macOS, Ctrl means the physical Control key. Command shortcuts stay with the
   app.
 - The tab width comes from the editor's tab stop, not from a `tabstop` setting.
@@ -155,6 +171,7 @@ make check     # Ruff and pytest
 make format    # Format Python
 make record    # Record expected results using local Vim
 make unicode   # Regenerate Vim character classes and widths
+make digraphs  # Regenerate Vim digraphs
 make mac-keys  # Key checks on a Mac
 ```
 

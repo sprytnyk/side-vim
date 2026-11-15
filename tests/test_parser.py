@@ -2,9 +2,13 @@ import pytest
 
 from side_vim.notation import tokens
 from side_vim.parser import (
+    ABOVE,
+    BELOW,
     CTRL_KEYS,
     LINE,
+    LINE_BREAK,
     NORMAL_ACTIONS,
+    REPLACE,
     SPELL,
     VISUAL_ACTIONS,
     WINDOW,
@@ -256,10 +260,123 @@ def test_every_key_in_the_tables_makes_its_command() -> None:
         elif key in SPELL:  # two keys
             assert parser.feed(key[0]) is None
             assert parser.feed(key[1]) == Command(key)
+        elif key == REPLACE:  # waits for its character
+            assert parser.feed(key) is None
+            assert parser.feed("x") == Command(key, key="x")
         else:
             assert parser.feed(key) == Command(key)
     for key in VISUAL_ACTIONS:
-        assert Parser().feed(key, visual=True) == Command(key)
+        parser = Parser()
+        if key == REPLACE:
+            assert parser.feed(key, visual=True) is None
+            assert parser.feed("x", visual=True) == Command(key, key="x")
+        else:
+            assert parser.feed(key, visual=True) == Command(key)
+
+
+def replace(keys: str, visual: bool = False) -> tuple[str | None, int | None]:
+    """What r and the keys after it give: the character and count, or None if r was
+    cancelled. Every key but the last must wait for more."""
+    parser = Parser()
+    *first, last = tokens(keys)
+    for key in first:
+        assert parser.feed(key, visual) is None, key
+    command = parser.feed(last, visual)
+    assert parser.pending == ""
+    if command is None:
+        return None, None
+    assert command.name == REPLACE
+    return command.key, command.count
+
+
+@pytest.mark.parametrize(
+    ("keys", "expected"),
+    [
+        ("rx", "x"),
+        ("r<", "<"),
+        ("rц", "ц"),
+        ("r🇺🇦", "🇺🇦"),
+        ("r<CR>", LINE_BREAK),
+        ("r<C-j>", LINE_BREAK),
+        ("r<C-m>", LINE_BREAK),
+        ("r<Tab>", "\t"),
+        ("r<C-e>", BELOW),
+        ("r<C-y>", ABOVE),
+        ("r<C-a>", "\x01"),
+        ("r<C-\\>", "\x1c"),
+        ("r<C-]>", "\x1d"),
+        ("r<C-v><CR>", "\r"),  # VimMode can't put it in
+        ("r<C-v><C-j>", "\x00"),  # vim keeps NUL as a line feed
+        ("r<C-v><C-e>", "\x05"),
+        ("r<C-v>000", "\x00"),
+        ("r<C-v>010", "\x00"),
+        ("r<C-v>013", "\r"),
+        ("r<C-v>0x", "\x00"),
+        ("r<C-v>ud800q", None),  # half of a surrogate pair isn't a character
+        ("r<C-v>U00110000", None),
+        ("r<C-k>EQ", BELOW),
+        ("r<C-k>e<C-e>", BELOW),
+        ("r<C-k>LF", LINE_BREAK),
+        ("r<C-k>e<C-c>", None),
+        ("r<C-k><C-c>", None),
+        ("r<C-c>", None),
+        ("r<Esc>", None),
+        ("r<S-Left>", None),
+        ("r<A-x>", None),
+        ("r<C-S-a>", None),
+        ("r<Insert>", None),
+    ],
+)
+def test_r_reads_its_character(keys: str, expected: str | None) -> None:
+    assert replace(keys)[0] == expected
+
+
+@pytest.mark.parametrize(
+    ("keys", "expected"),
+    [
+        ("rx", "x"),
+        ("r<CR>", "\r"),
+        ("r<C-j>", "\x00"),
+        ("r<C-e>", "\x05"),
+        ("r<C-y>", "\x19"),
+        ("r<C-c>", "\x03"),
+        ("r<C-k>e:", "ë"),
+        ("r<C-k>CR", "\r"),
+        ("r<C-k>LF", "\x00"),
+        ("r<C-v>065", "A"),
+        ("r<Esc>", None),
+        ("r<Left>", None),
+    ],
+)
+def test_r_in_visual_mode_puts_keys_in_as_they_are(keys: str, expected: str | None) -> None:
+    assert replace(keys, visual=True)[0] == expected
+
+
+def test_r_takes_a_count() -> None:
+    assert replace("3rx") == ("x", 3)
+    assert replace("12r<C-v>u20ac") == ("€", 12)
+    assert replace("3rx", visual=True) == ("x", 3)
+
+
+def test_r_shows_its_pending_keys_and_wants_text() -> None:
+    parser = Parser()
+    shown = []
+    for key in ["2", "r", "<C-v>", "u", "2", "0", "a"]:
+        parser.feed(key)
+        shown.append((parser.pending, parser.wants_text, parser.wants_any_key))
+    assert shown == [
+        ("2", False, False),
+        ("2r", True, True),
+        ("2r^V", True, True),
+        ("2r^Vu", True, True),
+        ("2r^Vu2", True, True),
+        ("2r^Vu20", True, True),
+        ("2r^Vu20a", True, True),
+    ]
+    assert parser.feed("c") == Command(REPLACE, 2, key="€")
+    assert (parser.pending, parser.wants_text, parser.wants_any_key) == ("", False, False)
+    parser.feed("<C-w>")
+    assert (parser.wants_text, parser.wants_any_key) == (False, True)
 
 
 @pytest.mark.parametrize(

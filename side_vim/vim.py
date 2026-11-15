@@ -9,7 +9,8 @@ caret.Caret draws vim's cursor over it. A mouse drag in Normal mode starts Visua
 The Caret also draws the cursor in a read-only editor, where Qt draws none.
 
 Outside Insert mode, keys typed on the Ukrainian layout work as the Latin keys in the
-same place (layout_map), so `к` is `r` and Ctrl+к is Ctrl+R.
+same place (layout_map), so `к` is `r` and Ctrl+к is Ctrl+R. The character after r is
+text, so it stays as typed: `кц` replaces with ц.
 
 Every position goes through text.Lines, which works in whole characters (a family
 emoji is one) and converts to Qt's UTF-16 positions.
@@ -39,7 +40,7 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import QPlainTextEdit
 
 from side_vim.caret import Caret, char_width
-from side_vim.edits import Register, join, join_parts, undo_cursor, visual_start
+from side_vim.edits import Register, copy_chars, join, join_parts, undo_cursor, visual_start
 from side_vim.keys import ESC, key_token, map_layout
 from side_vim.layouts import UKRAINIAN
 from side_vim.mode import Mode
@@ -57,10 +58,14 @@ from side_vim.motions import (
     visual_range,
 )
 from side_vim.parser import (
+    ABOVE,
+    BELOW,
     CTRL_KEYS,
     INSERT_COMMANDS,
     LINE,
+    LINE_BREAK,
     OPERATORS,
+    REPLACE,
     SPELL,
     WINDOW,
     Command,
@@ -239,6 +244,7 @@ class VimMode(QObject):
             "<C-r>": self._undo_command,
             "v": self._start_visual_command,
             "V": self._start_visual_command,
+            REPLACE: self._replace,
             WINDOW: self._window,
         }
         normal |= dict.fromkeys(SPELL, self._spell)
@@ -248,6 +254,7 @@ class VimMode(QObject):
             "o": self._swap_ends,
             "v": self._switch_visual,
             "V": self._switch_visual,
+            REPLACE: self._visual_replace,
         }
         return normal, visual
 
@@ -348,14 +355,18 @@ class VimMode(QObject):
         return False
 
     def _token(self, event: QKeyEvent) -> str | None:
-        """The key as vim reads it now: through layout_map, outside Insert mode. In
-        Insert mode only Ctrl+х maps, to Esc, since it's the key of Ctrl+[."""
         token = key_token(event)
-        if token is None:
-            return None
+        return None if token is None else self._mapped(token)
+
+    def _mapped(self, token: str) -> str:
+        """The key as vim reads it now: through layout_map, outside Insert mode. In
+        Insert mode only Ctrl+х maps, to Esc, since it's the key of Ctrl+[. r's
+        character is text, so only Ctrl keys map then, for Ctrl+V and Ctrl+K."""
         mapped = map_layout(token, self.layout_map)
         if self._mode is Mode.INSERT:
             return ESC if mapped == ESC else token
+        if self._parser.wants_text and not token.startswith("<C-"):
+            return token
         return mapped
 
     def _read_only(self) -> bool:
@@ -391,7 +402,7 @@ class VimMode(QObject):
         if not self._takes(token):
             return self._blocks(event)
         assert token is not None
-        if token == ESC:
+        if token == ESC and not self._parser.wants_text:
             self._escape()
             return True
         self._feed(token)
@@ -413,7 +424,7 @@ class VimMode(QObject):
                 cursor.insertText("".join(chars[i:]))
                 self._editor.setTextCursor(cursor)
                 return
-            self._feed(map_layout(ch, self.layout_map))
+            self._feed(self._mapped(ch))
 
     def _escape(self) -> None:
         if self._mode is Mode.INSERT:
@@ -787,6 +798,54 @@ class VimMode(QObject):
         cursor = self._editor.textCursor()
         cursor.setPosition(begin)
         self._typing_starts(cursor)
+
+    def _replace(self, command: Command) -> None:
+        """r: count characters from the cursor become the character typed, and the
+        cursor goes to the last one. A line break takes their place only once. With
+        fewer characters left on the line, nothing happens. Otherwise it's an undo step,
+        as in vim, even if the text stays the same."""
+        char = command.key
+        assert char is not None
+        count = command.count or 1
+        lines = self._lines()
+        pos = self._pos(lines)
+        # Qt turns a carriage return into a line break, so it can't go in
+        if pos.col + count > len(lines[pos.line]) or char == "\r":
+            return
+        cursor = Pos(pos.line, pos.col + count - 1)
+        if char == LINE_BREAK:
+            new = "\n"
+            cursor = Pos(pos.line + 1, 0)
+        elif char in (BELOW, ABOVE):
+            line = pos.line + (1 if char == BELOW else -1)
+            other = lines[line] if 0 <= line < len(lines) else ()
+            copied = copy_chars(lines[pos.line], pos.col, count, other, self._tabstop())
+            new = "".join(copied)
+        else:
+            new = char * count
+        with self._change(pos) as edit:
+            edit.setPosition(self._to_qt(lines, pos))
+            edit.setPosition(self._to_qt(lines, Pos(pos.line, pos.col + count)), KEEP_ANCHOR)
+            edit.insertText(new)
+        self._put(self._lines(), cursor)
+
+    def _visual_replace(self, command: Command) -> None:
+        """r in Visual mode: every selected character becomes the character typed. Line
+        breaks stay, and the cursor goes to the start."""
+        char = command.key
+        assert char is not None
+        if char == "\r":
+            return  # Qt can't hold it (see _replace): like a cancelled r, stay in Visual
+        lines, r, start = self._visual_range()
+        with self._change(start) as edit:
+            for line in range(r.start.line, r.end.line + 1):
+                first = 0 if r.linewise or line > r.start.line else r.start.col
+                last = len(lines[line]) if r.linewise or line < r.end.line else r.end.col
+                if first < last:
+                    edit.setPosition(self._to_qt(lines, Pos(line, first)))
+                    edit.setPosition(self._to_qt(lines, Pos(line, last)), KEEP_ANCHOR)
+                    edit.insertText(char * (last - first))
+        self._put(self._lines(), Pos(r.start.line, 0) if r.linewise else r.start)
 
     def _start_visual_command(self, command: Command) -> None:
         self._start_visual(Mode.VISUAL if command.name == "v" else Mode.VISUAL_LINE)

@@ -1,0 +1,3148 @@
+{
+  "vim": "vim 9.1, patches 1-16, 647, 678, 697",
+  "defaults": {
+    "group": "replace"
+  },
+  "cases": [
+    {
+      "id": "replace-plain",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXc def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-count",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3rX",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXXXdef\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-count-to-line-end",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "3rX",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc XXX\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-count-too-long",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "3rX",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-count-too-long-keeps-register",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "yl3rX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "replace-empty-line",
+      "text": "abc\n\ndef",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\n\ndef"
+      }
+    },
+    {
+      "id": "replace-empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "replace-last-line",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        1,
+        6
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          1,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxyz uvX"
+      }
+    },
+    {
+      "id": "replace-tab-under-cursor",
+      "text": "a\tb",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXb"
+      }
+    },
+    {
+      "id": "replace-space",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r ",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a c"
+      }
+    },
+    {
+      "id": "replace-to-less-than",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a<c"
+      }
+    },
+    {
+      "id": "replace-cancel-esc",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "replace-cancel-count-esc",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2r<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc"
+      }
+    },
+    {
+      "id": "replace-cancel-then-x",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<Esc>x",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "ac"
+      }
+    },
+    {
+      "id": "replace-cancel-ctrl-bracket",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<C-[>x",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "ac"
+      }
+    },
+    {
+      "id": "replace-cancel-left",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<Left>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-cancel-bs",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<BS>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-cancel-del",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<Del>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-cancel-shift-tab",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<S-Tab>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-cancel-ctrl-at",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-@>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "replace-ctrl-a",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-a>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u0001def"
+      }
+    },
+    {
+      "id": "replace-undo",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3rX|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "replace-undo-redo",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3rX|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXXXdef"
+      }
+    },
+    {
+      "id": "replace-undo-puts-cursor-back",
+      "text": "abc def",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "rX|0|u",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "replace-two-undo-steps",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "rX|lrY|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXc def"
+      }
+    },
+    {
+      "id": "replace-enter",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "replace-enter-mid",
+      "text": "abcdef",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "r<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\ndef"
+      }
+    },
+    {
+      "id": "replace-enter-count",
+      "text": "abcdef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3r<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\nef"
+      }
+    },
+    {
+      "id": "replace-enter-count-too-long",
+      "text": "abcdef",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "3r<CR>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-enter-keeps-blanks",
+      "text": "abc  def",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "r<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc \ndef"
+      }
+    },
+    {
+      "id": "replace-enter-keeps-blanks-after",
+      "text": "abc  def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\n def"
+      }
+    },
+    {
+      "id": "replace-enter-no-indent",
+      "text": "  abc def",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "r<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "  abc\ndef"
+      }
+    },
+    {
+      "id": "replace-enter-at-line-end",
+      "text": "abc",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "r<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\n"
+      }
+    },
+    {
+      "id": "replace-enter-undo-redo",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<CR>|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "replace-ctrl-j",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-j>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "replace-ctrl-m",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-m>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "replace-tab",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<Tab>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\tdef"
+      }
+    },
+    {
+      "id": "replace-tab-count",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2r<Tab>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\t\t def"
+      }
+    },
+    {
+      "id": "replace-ctrl-i",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-i>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\tdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-esc",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v><Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u001bdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-tab",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v><Tab>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\tdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-ctrl-v",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v><C-v>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u0016def"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-ctrl-c",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v><C-c>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u0003def"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-letter",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>q",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcqdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-decimal",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>065",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcAdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-decimal-then-key",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>123x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "{",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-decimal-short",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>65x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcAdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-decimal-short-then-key",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>65xx",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "A",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-decimal-one-digit",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>8q",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\bdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-decimal-over-255",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>300",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcÿdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-decimal-256",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>256x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "ÿ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-hex",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>x41",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcAdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-hex-upper",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>XFF",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcÿdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-hex-then-key",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>xffx",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "ÿ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-hex-no-digits",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>xq",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcqdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-hex-esc",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>x<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u001bdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-octal",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>o101",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcAdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-octal-short",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>o47x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc'def"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-octal-not-a-digit",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>o8",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc8def"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-octal-over-255",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>o477",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcÿdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-unicode",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>u00e9",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcédef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-unicode-short",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>ue9l",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcédef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-unicode-five-digits",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>u12345",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcሴdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-unicode-no-digits",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>uq",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcqdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-long-unicode",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>U0001F600",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc😀def"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-long-unicode-short",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>U1F600q",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc😀def"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-count",
+      "text": "abc def",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3r<C-v>065",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "AAA def"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-cancel-left",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v><Left>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-cancel-bs",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v><BS>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-ctrl-v-prefix-cancel-left",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-v>x<Left>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          " ",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-digraph",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>e:",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcëdef"
+      }
+    },
+    {
+      "id": "replace-digraph-reversed",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>:e",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcëdef"
+      }
+    },
+    {
+      "id": "replace-digraph-count",
+      "text": "abc def",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2r<C-k>a*",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ααc def"
+      }
+    },
+    {
+      "id": "replace-digraph-cyrillic",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>i=",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcиdef"
+      }
+    },
+    {
+      "id": "replace-digraph-none",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>zq",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcqdef"
+      }
+    },
+    {
+      "id": "replace-digraph-same-twice",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>ee",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcedef"
+      }
+    },
+    {
+      "id": "replace-digraph-space-after",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>e ",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcådef"
+      }
+    },
+    {
+      "id": "replace-digraph-space-before",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k> e",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcådef"
+      }
+    },
+    {
+      "id": "replace-digraph-two-spaces",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>  ",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "replace-digraph-esc",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k><Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u000bdef"
+      }
+    },
+    {
+      "id": "replace-digraph-esc-second",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>e<Esc>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u000bdef"
+      }
+    },
+    {
+      "id": "replace-digraph-left",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k><Left>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u000bdef"
+      }
+    },
+    {
+      "id": "replace-digraph-left-second",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>e<Left>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u000bdef"
+      }
+    },
+    {
+      "id": "replace-digraph-ctrl-at",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>e<C-@>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u000bdef"
+      }
+    },
+    {
+      "id": "replace-digraph-enter",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>e<CR>",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "replace-digraph-tab",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>e<Tab>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\tdef"
+      }
+    },
+    {
+      "id": "replace-digraph-cr",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>CR",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "replace-digraph-nul",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>NU",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "replace-digraph-nel",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>NL",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcdef"
+      }
+    },
+    {
+      "id": "replace-digraph-escape-char",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>EC",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "replace-digraph-ctrl-c-char",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>EX",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\u0003def"
+      }
+    },
+    {
+      "id": "replace-digraph-ctrl-e-char",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<C-k>EQ",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ayc def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-digraph-ctrl-v-char",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k>SY065",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcAdef"
+      }
+    },
+    {
+      "id": "replace-digraph-ctrl-v-key",
+      "text": "abc def",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-k><C-v>x",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcxdef"
+      }
+    },
+    {
+      "id": "replace-below",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ayc def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-below-count",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ayz def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-above",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "r<C-y>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxbz uvw"
+      }
+    },
+    {
+      "id": "replace-above-count",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        1,
+        4
+      ],
+      "keys": "3r<C-y>",
+      "expected": {
+        "cursor": [
+          1,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxyz def"
+      }
+    },
+    {
+      "id": "replace-below-on-last-line",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-above-on-first-line",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<C-y>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-below-short-line",
+      "text": "abc def\nxy",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxy"
+      }
+    },
+    {
+      "id": "replace-below-count-past-its-end",
+      "text": "abc def\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "4r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ayz def\nxyz"
+      }
+    },
+    {
+      "id": "replace-below-count-partly",
+      "text": "abc\nxy",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xyc\nxy"
+      }
+    },
+    {
+      "id": "replace-below-count-too-long",
+      "text": "abc\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nxyz"
+      }
+    },
+    {
+      "id": "replace-below-nothing-there-moves-cursor",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "replace-below-nothing-there-undo",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "x|r<C-e>|u",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "y",
+          false
+        ],
+        "text": "abc def\nxz uvw"
+      }
+    },
+    {
+      "id": "replace-below-nothing-there-moves-cursor-undo",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3r<C-e>|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "replace-same-character-undo",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x|rc|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "ac def"
+      }
+    },
+    {
+      "id": "replace-below-from-a-tab",
+      "text": "a\tb\nxyzwvutsr",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "asb\nxyzwvutsr"
+      }
+    },
+    {
+      "id": "replace-below-after-a-tab",
+      "text": "a\tb\nxyzwvutsr",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\tr\nxyzwvutsr"
+      }
+    },
+    {
+      "id": "replace-below-a-tab",
+      "text": "abcdefghi\na\tb",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\tefghi\na\tb"
+      }
+    },
+    {
+      "id": "replace-below-count-over-tabs",
+      "text": "abcdefghi\na\tb",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "3r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ab\tbefghi\na\tb"
+      }
+    },
+    {
+      "id": "replace-below-two-tabs",
+      "text": "a\t\tb\nabcdefghijklmnop",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ahcb\nabcdefghijklmnop"
+      }
+    },
+    {
+      "id": "replace-below-wide",
+      "text": "abcd\n日本",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a日cd\n日本"
+      }
+    },
+    {
+      "id": "replace-below-from-wide",
+      "text": "日本\nabcd",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日c\nabcd"
+      }
+    },
+    {
+      "id": "replace-below-count-from-wide",
+      "text": "日本語\nabcdef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nabcdef"
+      }
+    },
+    {
+      "id": "replace-below-count-to-wide",
+      "text": "abc\n日",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日bc\n日"
+      }
+    },
+    {
+      "id": "replace-below-wide-then-narrow",
+      "text": "日b\nxyz",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2r<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "xy\nxyz"
+      }
+    },
+    {
+      "id": "replace-below-undo-redo",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3r<C-e>|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ayz def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-above-accent",
+      "text": "aé\nxyz",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "r<C-y>",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aé\nxéz"
+      }
+    },
+    {
+      "id": "replace-on-an-accent",
+      "text": "café",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "cafX"
+      }
+    },
+    {
+      "id": "replace-on-a-split-accent",
+      "text": "café",
+      "cursor": [
+        0,
+        3
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "cafX"
+      }
+    },
+    {
+      "id": "replace-to-an-accent",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "ré",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aéc"
+      }
+    },
+    {
+      "id": "replace-to-a-split-accent",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2ré",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aéé"
+      }
+    },
+    {
+      "id": "replace-on-wide",
+      "text": "日本語",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2rX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "XX語"
+      }
+    },
+    {
+      "id": "replace-to-wide",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2r日",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日日c"
+      }
+    },
+    {
+      "id": "replace-on-emoji",
+      "text": "a😀c",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "rX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXc"
+      }
+    },
+    {
+      "id": "replace-to-emoji",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2r😀",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "😀😀c"
+      }
+    },
+    {
+      "id": "replace-to-cyrillic",
+      "text": "абв",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "rц",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "цбв"
+      }
+    },
+    {
+      "id": "replace-to-cyrillic-count",
+      "text": "абв",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3rї",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "їїї"
+      }
+    },
+    {
+      "id": "replace-visual",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vllrX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXXXdef\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-visual-two-lines",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "vjrX",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc dXX\nXXXXXXw"
+      }
+    },
+    {
+      "id": "replace-visual-backward",
+      "text": "abc def",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "vhhrX",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abcXXXf"
+      }
+    },
+    {
+      "id": "replace-visual-upward",
+      "text": "abc def\nxyz",
+      "cursor": [
+        1,
+        2
+      ],
+      "keys": "vkrX",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abXXXXX\nXXX"
+      }
+    },
+    {
+      "id": "replace-visual-count-ignored",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vl3rX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXX def"
+      }
+    },
+    {
+      "id": "replace-visual-line",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "VrX",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "XXXXXXX\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-visual-line-empty-line",
+      "text": "abc\n\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "VjjrX",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "XXX\n\nXXX"
+      }
+    },
+    {
+      "id": "replace-visual-line-upward",
+      "text": "abc\nxyz",
+      "cursor": [
+        1,
+        2
+      ],
+      "keys": "VkrX",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "XXX\nXXX"
+      }
+    },
+    {
+      "id": "replace-visual-line-upward-undo",
+      "text": "abc\nxyz",
+      "cursor": [
+        1,
+        2
+      ],
+      "keys": "VkrX|u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nxyz"
+      }
+    },
+    {
+      "id": "replace-visual-line-undo",
+      "text": "abc\nxyz",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "VjrX|u",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nxyz"
+      }
+    },
+    {
+      "id": "replace-visual-over-empty-line",
+      "text": "abc\n\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vjjrX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXX\n\nXXz"
+      }
+    },
+    {
+      "id": "replace-visual-past-line-end",
+      "text": "abc\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "v$rX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aXX\nxyz"
+      }
+    },
+    {
+      "id": "replace-visual-esc-keeps-selection",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlr<Esc>d",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "a def"
+      }
+    },
+    {
+      "id": "replace-visual-left-keeps-selection",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlr<Left>d",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "a def"
+      }
+    },
+    {
+      "id": "replace-visual-tab",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlr<Tab>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\t\t def"
+      }
+    },
+    {
+      "id": "replace-visual-ctrl-v",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlr<C-v>065",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aAA def"
+      }
+    },
+    {
+      "id": "replace-visual-digraph",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlr<C-k>e:",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aëë def"
+      }
+    },
+    {
+      "id": "replace-visual-digraph-nel",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlr<C-k>NL",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a def"
+      }
+    },
+    {
+      "id": "replace-visual-ctrl-e",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vlr<C-e>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\u0005\u0005 def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-visual-ctrl-c",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vllr<C-c>",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "a\u0003\u0003\u0003def"
+      }
+    },
+    {
+      "id": "replace-visual-undo",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "vjrX|u",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def\nxyz uvw"
+      }
+    },
+    {
+      "id": "replace-visual-undo-redo",
+      "text": "abc def\nxyz uvw",
+      "cursor": [
+        0,
+        5
+      ],
+      "keys": "vjrX|u|<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc dXX\nXXXXXXw"
+      }
+    },
+    {
+      "id": "replace-visual-keeps-register",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "yevlrX",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "bc",
+          false
+        ],
+        "text": "aXX def"
+      }
+    },
+    {
+      "id": "replace-visual-on-wide",
+      "text": "日本語",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vlrX",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "XX語"
+      }
+    },
+    {
+      "id": "replace-visual-to-wide",
+      "text": "abcd",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vlr日",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "日日cd"
+      }
+    },
+    {
+      "id": "replace-visual-on-tab",
+      "text": "a\tb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vlrX",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "XXb"
+      }
+    },
+    {
+      "id": "replace-visual-empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vrX",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    }
+  ]
+}

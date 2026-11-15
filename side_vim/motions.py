@@ -229,6 +229,19 @@ def screen_col(text: Line, col: int, tabstop: int = 8) -> int:
     return vcol
 
 
+def char_at_screen_col(text: Line, vcol: int, tabstop: int = 8) -> str | None:
+    """The character that covers a screen column (vim's ins_copychar). None past the
+    line end."""
+    start = col = 0
+    while start < vcol and col < len(text):
+        width = _width(text[col], start, tabstop)
+        if start + width > vcol:
+            return text[col]
+        start += width
+        col += 1
+    return text[col] if col < len(text) else None
+
+
 def column_for(text: Line, want: int, visual: bool = False, tabstop: int = 8) -> int:
     """The column j and k land on for a wanted screen column (vim's coladvance). In
     Visual mode the cursor may sit on the line end."""

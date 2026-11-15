@@ -1,4 +1,4 @@
-"""Read vim key notation, shared by the test driver and the recorder."""
+"""Read vim key notation, shared by the parser, the test driver and the recorder."""
 
 import re
 

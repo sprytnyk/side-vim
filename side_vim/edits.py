@@ -1,11 +1,12 @@
-"""Edits vim makes that are worked out on plain text: joining lines, and where the
-cursor goes after undo, redo and Visual mode operators. No Qt here.
+"""Edits vim makes that are worked out on plain text: joining lines, copying from the
+next line for r, and where the cursor goes after undo, redo and Visual mode
+operators. No Qt here.
 """
 
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from side_vim.motions import BLANKS, Line, Pos, first_non_blank
+from side_vim.motions import BLANKS, Line, Pos, char_at_screen_col, first_non_blank, screen_col
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,22 @@ def join(lines: Sequence[str]) -> tuple[str, int]:
         cursor = len(out)
         out += space + line[blanks:]
     return out, cursor
+
+
+def copy_chars(line: Line, col: int, count: int, other: Line, tabstop: int = 8) -> list[str]:
+    """What vim's r Ctrl+E and r Ctrl+Y make of count characters from col: each becomes
+    the character at its screen column in the other line, below or above. One with
+    nothing there stays. The first one's column is where vim shows the cursor, the
+    last cell of a tab; the others' is their first cell, in the line as changed so far.
+    """
+    chars = list(line)
+    for i in range(col, col + count):
+        # cut at i, the line ends there, so screen_col gives the first cell even of a tab
+        vcol = screen_col(chars, i, tabstop) if i == col else screen_col(chars[:i], i, tabstop)
+        found = char_at_screen_col(other, vcol, tabstop)
+        if found is not None:
+            chars[i] = found
+    return chars[col : col + count]
 
 
 def undo_cursor(lines: Sequence[Line], saved: Pos | None, first: int, last: int) -> Pos:
