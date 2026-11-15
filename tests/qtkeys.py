@@ -42,19 +42,23 @@ def press(widget: QWidget, token: str) -> None:
             modifiers |= control_modifier() if m == "C" else MODIFIERS[m]
         if name in NAMES:
             QTest.keyClick(widget, NAMES[name], modifiers)
-        else:
+        elif name.isascii():
             QTest.keyClick(widget, Qt.Key(ord(name.upper())), modifiers)
+        else:
+            type_text(widget, name, modifiers)
     elif token.isascii():
         QTest.keyClick(widget, token)
     else:
         type_text(widget, token)
 
 
-def type_text(widget: QWidget, text: str) -> None:
+def type_text(
+    widget: QWidget, text: str, modifiers: Qt.KeyboardModifier = Qt.KeyboardModifier.NoModifier
+) -> None:
     """Text QTest can't type (anything not ASCII), as one key press."""
     key = ord(text.upper()) if len(text) == 1 else Qt.Key.Key_unknown
     for kind in (QEvent.Type.KeyPress, QEvent.Type.KeyRelease):
-        event = QKeyEvent(kind, key, Qt.KeyboardModifier.NoModifier, text)
+        event = QKeyEvent(kind, key, modifiers, text)
         QApplication.sendEvent(widget, event)
 
 

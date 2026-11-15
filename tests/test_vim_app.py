@@ -321,14 +321,14 @@ def test_insert_mode_types_cyrillic(editor: QPlainTextEdit) -> None:
 def test_ctrl_and_the_key_of_the_bracket_is_esc(editor: QPlainTextEdit) -> None:
     vim = start_vim(editor, "abc")
     send(editor, "i")
-    QTest.keyClick(editor, Qt.Key(0x445), control_modifier())  # Ctrl+х
+    send(editor, "<C-х>")  # Ctrl+[
     assert vim.mode is Mode.NORMAL
     send(editor, "v")
-    QTest.keyClick(editor, Qt.Key(0x445), control_modifier())
+    send(editor, "<C-х>")
     assert vim.mode is Mode.NORMAL
     vim.layout_map = None
     send(editor, "i")
-    QTest.keyClick(editor, Qt.Key(0x445), control_modifier())
+    send(editor, "<C-х>")
     assert vim.mode is Mode.INSERT
 
 
