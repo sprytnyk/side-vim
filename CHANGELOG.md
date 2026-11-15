@@ -15,3 +15,7 @@
 
 - Leave Insert mode safely after the app switches documents.
 - Keep a document marked as saved when leaving Insert mode after a save.
+
+### Changes
+
+- Include a release skill for signed releases and PyPI publishing.
