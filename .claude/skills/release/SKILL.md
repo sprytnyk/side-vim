@@ -60,7 +60,7 @@ changing the version.
 Run `uv version X.Y.Z`. The real version lives in `pyproject.toml`; include the
 resulting `uv.lock` change. Add `## X.Y.Z - YYYY-MM-DD` to `CHANGELOG.md`, newest
 first, with entries from the commits. Use only sections with content: Breaking,
-Highlights, Fixes, Changes, Removed. Write plain, short sentences. Do not add an
+Features, Fixes, Changes, Removed. Write plain, short sentences. Do not add an
 Unreleased section.
 
 Show the proposed version and changelog to the user and wait for review before
