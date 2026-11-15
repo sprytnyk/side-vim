@@ -8,6 +8,8 @@ from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
+import shiboken6
+from PySide6.QtCore import QEvent
 from PySide6.QtWidgets import QApplication, QPlainTextEdit
 
 import side_vim.vim as vim_module
@@ -31,10 +33,23 @@ def home(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 
 @pytest.fixture(scope="session")
-def qapp(home: Path) -> QApplication:
+def qapp(home: Path) -> Iterator[QApplication]:
     app = QApplication.instance() or QApplication([])
     assert isinstance(app, QApplication)
-    return app
+    yield app
+    app.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    shiboken6.delete(app)
+
+
+@pytest.fixture(autouse=True)
+def flush_deletes() -> Iterator[None]:
+    """Run the deletes a test queued with deleteLater() as soon as the test ends.
+    Otherwise Qt runs them in a later test's event loop, and any error they cause
+    fails that test instead."""
+    yield
+    app = QApplication.instance()
+    if app is not None:
+        app.sendPostedEvents(None, QEvent.Type.DeferredDelete)
 
 
 @pytest.fixture
