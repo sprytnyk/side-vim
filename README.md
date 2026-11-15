@@ -179,24 +179,5 @@ Set these up by hand before the first tag:
    goes into GitHub. See the [PyPI setup guide](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
    and [GitHub approval guide](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/review-deployments).
 
-For each release:
-
-1. On `main`, check the README and run `make check`. If key handling changed,
-   run `make mac-keys` on a Mac.
-2. Run `uv version X.Y.Z`. Write the dated `CHANGELOG.md` section from the commits
-   since the previous release, using only sections with entries: Breaking,
-   Highlights, Fixes, Changes and Removed. Review it before committing.
-3. Build and test the wheel in a temporary environment. Make the signed
-   `chore(release): vX.Y.Z` commit and signed `vX.Y.Z` tag with key
-   `0xC00C0F0D647BD3C6`. Push `main` and that tag to `origin`.
-4. The release workflow runs CI, checks that the tag matches the package version,
-   and builds the wheel and source distribution. Review the run and approve the
-   `pypi` job. It publishes those files using
-   [uv trusted publishing](https://docs.astral.sh/uv/guides/integration/github/#publishing-to-pypi).
-5. Confirm the version is on PyPI, then create a GitHub release using just the
-   changelog section as its notes. Attach the wheel downloaded from PyPI, after
-   checking its sha256 against PyPI's, with a `SHA256SUMS` file for it and
-   `SHA256SUMS.asc`, a signature of that file made with the release key.
-
 The project [release skill](https://github.com/sprytnyk/side-vim/blob/main/.claude/skills/release/SKILL.md)
 has the command sequence and approval points.
