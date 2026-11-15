@@ -76,6 +76,7 @@ from side_vim.parser import (
 from side_vim.scroll import SCROLL_KEYS, scroll
 from side_vim.search import search
 from side_vim.text import PARAGRAPH_SEPARATOR, Lines, split_clusters, utf16_len
+from side_vim.unicode import switch_case
 
 VISUAL_MODES = frozenset({Mode.VISUAL, Mode.VISUAL_LINE})
 
@@ -255,6 +256,7 @@ class VimMode(QObject):
             "v": self._start_visual_command,
             "V": self._start_visual_command,
             REPLACE: self._replace,
+            "~": self._switch_case,
             WINDOW: self._window,
         }
         normal |= dict.fromkeys(SPELL, self._spell)
@@ -265,6 +267,7 @@ class VimMode(QObject):
             "v": self._switch_visual,
             "V": self._switch_visual,
             REPLACE: self._visual_replace,
+            "~": self._visual_switch_case,
         }
         return normal, visual
 
@@ -847,12 +850,40 @@ class VimMode(QObject):
         self._put(self._lines(), cursor)
 
     def _visual_replace(self, command: Command) -> None:
-        """r in Visual mode: every selected character becomes the character typed. Line
-        breaks stay, and the cursor goes to the start."""
+        """r in Visual mode: every selected character becomes the character typed, and
+        the cursor goes to the start."""
         char = command.key
         assert char is not None
         if char == "\r":
             return  # Qt can't hold it (see _replace): like a cancelled r, stay in Visual
+        r, _ = self._change_each_char(lambda _: char)
+        self._put(self._lines(), Pos(r.start.line, 0) if r.linewise else r.start)
+
+    def _switch_case(self, command: Command) -> None:
+        """~: count characters from the cursor switch case, up to the line end, and the
+        cursor goes to the one after them. On an empty line nothing happens. Otherwise
+        it's an undo step, as in vim, even if no character has a case."""
+        lines = self._lines()
+        pos = self._pos(lines)
+        text = lines[pos.line]
+        if not text:
+            return
+        end = min(pos.col + (command.count or 1), len(text))
+        with self._change(pos) as edit:
+            edit.setPosition(self._to_qt(lines, pos))
+            edit.setPosition(self._to_qt(lines, Pos(pos.line, end)), KEEP_ANCHOR)
+            edit.insertText("".join(map(switch_case, text[pos.col : end])))
+        self._put(self._lines(), Pos(pos.line, end))
+
+    def _visual_switch_case(self, command: Command) -> None:
+        """~ in Visual mode: every selected character switches case, and the cursor goes
+        where the selection starts (see visual_start)."""
+        _, start = self._change_each_char(switch_case)
+        self._put(self._lines(), start)
+
+    def _change_each_char(self, change: Callable[[str], str]) -> tuple[Range, Pos]:
+        """End Visual mode and turn each selected character into change(character), as
+        one undo step. Line breaks stay. Returns the range and where it starts."""
         lines, r, start = self._visual_range()
         with self._change(start) as edit:
             for line in range(r.start.line, r.end.line + 1):
@@ -861,8 +892,8 @@ class VimMode(QObject):
                 if first < last:
                     edit.setPosition(self._to_qt(lines, Pos(line, first)))
                     edit.setPosition(self._to_qt(lines, Pos(line, last)), KEEP_ANCHOR)
-                    edit.insertText(char * (last - first))
-        self._put(self._lines(), Pos(r.start.line, 0) if r.linewise else r.start)
+                    edit.insertText("".join(map(change, lines[line][first:last])))
+        return r, start
 
     def _start_visual_command(self, command: Command) -> None:
         self._start_visual(Mode.VISUAL if command.name == "v" else Mode.VISUAL_LINE)

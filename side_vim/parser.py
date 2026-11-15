@@ -71,13 +71,16 @@ NORMAL_ACTIONS = {
     "v": False,
     "V": False,
     REPLACE: True,
+    "~": True,
     WINDOW: False,
     **SPELL,
 } | COMMON_ACTIONS
 
 # Commands that act on the selection or the mode, in Visual mode. `x` is `d` here.
 VISUAL_ACTIONS = (
-    OPERATORS | {"p": True, "o": False, "v": False, "V": False, REPLACE: True} | COMMON_ACTIONS
+    OPERATORS
+    | {"p": True, "o": False, "v": False, "V": False, REPLACE: True, "~": True}
+    | COMMON_ACTIONS
 )
 
 # The Normal mode commands that start Insert mode.

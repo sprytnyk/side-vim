@@ -21,7 +21,7 @@ format:
 record:
 	uv run python scripts/record_vim.py
 
-# dumps vim's character classes and widths into side_vim/_unicode_data.py
+# dumps vim's character classes, widths and what ~ does into side_vim/_unicode_data.py
 unicode:
 	uv run python scripts/unicode_tables.py
 	uv run ruff format side_vim/_unicode_data.py

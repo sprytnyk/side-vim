@@ -255,6 +255,10 @@ def test_every_command_has_a_handler(editor: QPlainTextEdit) -> None:
         "r<C-e>",
         "vrX",
         "Vr<Tab>",
+        "~",
+        "3~",
+        "v~",
+        "V~",
     ],
 )
 def test_a_read_only_editor_doesnt_edit(editor: QPlainTextEdit, keys: str) -> None:

@@ -83,9 +83,10 @@ repeats the typed text: `3ix<Esc>` inserts `xxx`.
 | Delete, change, yank | `d c y` followed by a motion; `dd cc yy`, `x D C` |
 | Paste, join | `p P`, `J` |
 | Replace characters | `r` and a character: `3rx` turns three characters into `xxx` |
+| Switch case | `~`: `3~` turns `abc` into `ABC` and moves past it |
 | Undo, redo | `u`, `Ctrl+R` |
 | Select | `v` for characters, `V` for lines; motions extend the selection |
-| Edit a selection | `d c y x p r`; `o` switches its ends |
+| Edit a selection | `d c y x p r ~`; `o` switches its ends |
 | Search | `/ ?` through the app hook, then `n N` |
 | Scroll a line | `Ctrl+E`, `Ctrl+Y` |
 | Scroll half a screen | `Ctrl+D`, `Ctrl+U` |
@@ -105,7 +106,8 @@ code such as `065` or `u20ac`. `Ctrl+K` and two characters put in a
 `r`. These work as in Vim.
 
 This release has only the keys above. It has no repeat (`.`), text objects,
-`f t ~`, colon commands, macros, marks, named registers or block selection.
+`f t`, `g~ gu gU`, colon commands, macros, marks, named registers or block
+selection.
 
 ## Differences from Vim
 

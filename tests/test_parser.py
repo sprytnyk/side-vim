@@ -245,6 +245,8 @@ def test_ctrl_keys() -> None:
         (Command("z="), False, True),  # replaces the word
         (Command("]s"), False, False),
         (Command("zg"), False, False),
+        (Command("~"), False, True),
+        (Command("~"), True, True),
     ],
 )
 def test_changes_text(command: Command, visual: bool, changes: bool) -> None:

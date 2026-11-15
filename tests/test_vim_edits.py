@@ -133,6 +133,8 @@ UNDO_TEXT = "abc def ghi\n  jkl\nmno pqr\nstu"
         "3rX|lrY",
         "2r<CR>",
         "vjrX|Vr<C-k>e:",
+        "3~|l~",
+        "vj~|Vj~",
     ],
 )
 def test_each_command_is_one_undo_step(editor: QPlainTextEdit, keys: str) -> None:

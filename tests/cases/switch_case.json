@@ -1,0 +1,768 @@
+{
+  "vim": "vim 9.1, patches 1-16, 647, 678, 697",
+  "defaults": {
+    "group": "switch_case"
+  },
+  "cases": [
+    {
+      "id": "tilde-plain",
+      "text": "abc def\nxyz",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "~",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBc def\nxyz"
+      }
+    },
+    {
+      "id": "tilde-upper",
+      "text": "ABC",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBC"
+      }
+    },
+    {
+      "id": "tilde-count",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3~",
+      "expected": {
+        "cursor": [
+          0,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBC def"
+      }
+    },
+    {
+      "id": "tilde-count-past-line-end",
+      "text": "abc def\nxyz",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "9~",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc DEF\nxyz"
+      }
+    },
+    {
+      "id": "tilde-at-line-end",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "~",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abC\ndef"
+      }
+    },
+    {
+      "id": "tilde-empty-line",
+      "text": "abc\n\ndef",
+      "cursor": [
+        1,
+        0
+      ],
+      "keys": "~",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\n\ndef"
+      }
+    },
+    {
+      "id": "tilde-empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "~",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "tilde-no-case",
+      "text": "1+2 ab",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3~",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "1+2 ab"
+      }
+    },
+    {
+      "id": "tilde-no-case-is-undo-step",
+      "text": "1bc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "x|0~|u",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "b",
+          false
+        ],
+        "text": "1c"
+      }
+    },
+    {
+      "id": "tilde-empty-line-isnt-undo-step",
+      "text": "a\n\nb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "x|j~|u",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "a\n\nb"
+      }
+    },
+    {
+      "id": "tilde-undo",
+      "text": "abc def",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "3~|0u",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc def"
+      }
+    },
+    {
+      "id": "tilde-redo",
+      "text": "abc def",
+      "cursor": [
+        0,
+        2
+      ],
+      "keys": "3~|u|0<C-r>",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abC Def"
+      }
+    },
+    {
+      "id": "tilde-twice",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "~|~",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ABc"
+      }
+    },
+    {
+      "id": "tilde-keeps-register",
+      "text": "abc",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "yl~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "a",
+          false
+        ],
+        "text": "Abc"
+      }
+    },
+    {
+      "id": "tilde-wanted-column",
+      "text": "abcdef\nxy\nabcdef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "3~jj",
+      "expected": {
+        "cursor": [
+          2,
+          4
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBCDef\nxy\nabcdef"
+      }
+    },
+    {
+      "id": "tilde-accent",
+      "text": "éa",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ÉA"
+      }
+    },
+    {
+      "id": "tilde-combining-accent",
+      "text": "éx",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "2~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ÉX"
+      }
+    },
+    {
+      "id": "tilde-ukrainian",
+      "text": "їжак Ґ",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "6~",
+      "expected": {
+        "cursor": [
+          0,
+          5
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ЇЖАК ґ"
+      }
+    },
+    {
+      "id": "tilde-greek",
+      "text": "Σσςΐ",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "4~",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "σΣΣΐ"
+      }
+    },
+    {
+      "id": "tilde-special-letters",
+      "text": "ßǅİſKµᾀ",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "7~",
+      "expected": {
+        "cursor": [
+          0,
+          6
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ßǄiSkΜᾈ"
+      }
+    },
+    {
+      "id": "tilde-wide",
+      "text": "ab中cd",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "2~",
+      "expected": {
+        "cursor": [
+          0,
+          3
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aB中cd"
+      }
+    },
+    {
+      "id": "tilde-tab",
+      "text": "a\tb",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "3~",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "A\tB"
+      }
+    },
+    {
+      "id": "visual-tilde",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vll~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBC def"
+      }
+    },
+    {
+      "id": "visual-tilde-backwards",
+      "text": "abc def",
+      "cursor": [
+        0,
+        4
+      ],
+      "keys": "vhh~",
+      "expected": {
+        "cursor": [
+          0,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abC Def"
+      }
+    },
+    {
+      "id": "visual-tilde-swapped-ends",
+      "text": "abc def",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vllo~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBC def"
+      }
+    },
+    {
+      "id": "visual-tilde-one",
+      "text": "abc",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "v~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBc"
+      }
+    },
+    {
+      "id": "visual-tilde-lines",
+      "text": "abc\nDEF\nghi",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vj~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBC\ndeF\nghi"
+      }
+    },
+    {
+      "id": "visual-tilde-lines-up",
+      "text": "abc\nDEF\nghi",
+      "cursor": [
+        2,
+        1
+      ],
+      "keys": "vk~",
+      "expected": {
+        "cursor": [
+          1,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nDef\nGHi"
+      }
+    },
+    {
+      "id": "visual-tilde-line-break",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "v$~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBC\ndef"
+      }
+    },
+    {
+      "id": "visual-tilde-empty-line",
+      "text": "abc\n\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vjj~",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "aBC\n\nDEf"
+      }
+    },
+    {
+      "id": "visual-tilde-no-case",
+      "text": "123",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vl~",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "123"
+      }
+    },
+    {
+      "id": "visual-tilde-count",
+      "text": "abcdef",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "vl3~",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "ABcdef"
+      }
+    },
+    {
+      "id": "visual-tilde-undo",
+      "text": "abc\ndef",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "vj~|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef"
+      }
+    },
+    {
+      "id": "visual-line-tilde",
+      "text": "abc\nDEF\nghi",
+      "cursor": [
+        1,
+        2
+      ],
+      "keys": "Vj~",
+      "expected": {
+        "cursor": [
+          1,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef\nGHI"
+      }
+    },
+    {
+      "id": "visual-line-tilde-up",
+      "text": "abc\nDEF\nghi",
+      "cursor": [
+        2,
+        2
+      ],
+      "keys": "Vk~",
+      "expected": {
+        "cursor": [
+          1,
+          2
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\ndef\nGHI"
+      }
+    },
+    {
+      "id": "visual-line-tilde-empty-lines",
+      "text": "ab\n\ncd",
+      "cursor": [
+        0,
+        1
+      ],
+      "keys": "Vjj~",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "AB\n\nCD"
+      }
+    },
+    {
+      "id": "visual-line-tilde-empty-text",
+      "text": "",
+      "cursor": [
+        0,
+        0
+      ],
+      "keys": "V~",
+      "expected": {
+        "cursor": [
+          0,
+          0
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": ""
+      }
+    },
+    {
+      "id": "visual-line-tilde-undo",
+      "text": "abc\nDEF",
+      "cursor": [
+        1,
+        1
+      ],
+      "keys": "Vk~|u",
+      "expected": {
+        "cursor": [
+          0,
+          1
+        ],
+        "register": [
+          "",
+          false
+        ],
+        "text": "abc\nDEF"
+      }
+    }
+  ]
+}

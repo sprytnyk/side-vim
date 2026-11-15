@@ -147,7 +147,7 @@ ALT_X = pytest.param("<A-x>", marks=pytest.mark.skipif(IS_MAC, reason="Option+x 
 
 
 @pytest.mark.parametrize(
-    "keys", ["z", "q", " ", "<BS>", "<Del>", "<CR>", "<Tab>", "<S-Tab>", ALT_X, "~", "к"]
+    "keys", ["z", "q", " ", "<BS>", "<Del>", "<CR>", "<Tab>", "<S-Tab>", ALT_X, "&", "к"]
 )
 def test_normal_mode_keys_never_edit(editor: QPlainTextEdit, keys: str) -> None:
     start_vim(editor, "abc\ndef", 0, 1)

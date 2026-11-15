@@ -1,10 +1,16 @@
-"""Character classes and widths. Expected values are vim 9.1's charclass() and
-strdisplaywidth()."""
+"""Character classes, widths and case. Expected values are vim 9.1's charclass(),
+strdisplaywidth() and ~."""
 
 import pytest
 
-from side_vim._unicode_data import CLASS_STARTS, CLASS_VALUES, WIDTH_STARTS, WIDTH_VALUES
-from side_vim.unicode import cell_width, char_class
+from side_vim._unicode_data import (
+    CLASS_STARTS,
+    CLASS_VALUES,
+    SWITCH_CASE,
+    WIDTH_STARTS,
+    WIDTH_VALUES,
+)
+from side_vim.unicode import cell_width, char_class, switch_case
 
 
 @pytest.mark.parametrize(
@@ -79,3 +85,31 @@ def test_lookup_finds_every_run_edge() -> None:
         if 0xD800 <= start <= 0xDFFF:
             continue
         assert cell_width(chr(start)) == WIDTH_VALUES[i]
+
+
+@pytest.mark.parametrize(
+    ("ch", "switched"),
+    [
+        ("a", "A"),
+        ("A", "a"),
+        ("7", "7"),
+        ("ї", "Ї"),
+        ("Ґ", "ґ"),
+        ("ß", "ß"),  # Python makes SS
+        ("ﬁ", "ﬁ"),  # Python makes FI
+        ("ǅ", "Ǆ"),  # Python leaves it
+        ("İ", "i"),  # Python adds a dot above
+        ("ſ", "S"),  # but S becomes s
+        ("e\u0301", "E\u0301"),  # only the letter, the accent stays
+        ("\U0001f1fa\U0001f1e6", "\U0001f1fa\U0001f1e6"),
+        ("", ""),  # the end of a line
+    ],
+)
+def test_switch_case_matches_vim(ch: str, switched: str) -> None:
+    assert switch_case(ch) == switched
+
+
+def test_switch_case_keeps_the_utf16_length() -> None:
+    """Qt positions count UTF-16 units, so ~ must not change a character's length."""
+    for before, after in SWITCH_CASE.items():
+        assert (before > 0xFFFF) == (after > 0xFFFF)

@@ -1,14 +1,20 @@
-"""Character classes and cell widths, as vim sees them. No Qt here.
+"""Character classes, cell widths and case, as vim sees them. No Qt here.
 
 A "character" here is one character as the user sees it: a grapheme cluster, which may
 be several code points (a family emoji, a flag, a letter plus an accent). Its first
-code point decides its class and width, as in vim, where accents belong to the
-letter before them.
+code point decides its class and width, and is the only one ~ changes, as in vim,
+where accents belong to the letter before them.
 """
 
 from bisect import bisect_right
 
-from side_vim._unicode_data import CLASS_STARTS, CLASS_VALUES, WIDTH_STARTS, WIDTH_VALUES
+from side_vim._unicode_data import (
+    CLASS_STARTS,
+    CLASS_VALUES,
+    SWITCH_CASE,
+    WIDTH_STARTS,
+    WIDTH_VALUES,
+)
 
 
 def char_class(ch: str, bigword: bool = False) -> int:
@@ -29,3 +35,13 @@ def cell_width(ch: str) -> int:
     if not ch:
         return 0
     return WIDTH_VALUES[bisect_right(WIDTH_STARTS, ord(ch[0])) - 1]
+
+
+def switch_case(ch: str) -> str:
+    """The character with its case switched, as vim's ~ does it. This is vim's table,
+    not Python's: ß and ﬁ stay as they are, ǅ becomes Ǆ, and the result is always one
+    character."""
+    if not ch:
+        return ch
+    switched = SWITCH_CASE.get(ord(ch[0]))
+    return ch if switched is None else chr(switched) + ch[1:]
