@@ -232,11 +232,13 @@ NO_KEYS = Qt.KeyboardModifier.NoModifier
 
 
 def point(editor: QPlainTextEdit, pos: Pos) -> QPoint:
-    """The point just before the character at pos."""
+    """A point just inside the character at pos. Outside Insert mode the editor is in
+    overwrite mode, where a click goes on the character under it, and the character's
+    left edge can fall inside the pixel column before it."""
     cursor = QTextCursor(editor.document())
     cursor.setPosition(Lines(editor.document().toRawText()).to_qt(pos))
     rect = editor.cursorRect(cursor)
-    return QPoint(rect.x(), rect.center().y())
+    return QPoint(rect.x() + 1, rect.center().y())
 
 
 def drag(editor: QPlainTextEdit, a: Pos, b: Pos) -> None:

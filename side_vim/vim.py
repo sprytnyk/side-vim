@@ -177,6 +177,7 @@ class VimMode(QObject):
         self._want_at: tuple[int, Version] | None = None
         self._block_on = False
         self._plain_width = editor.cursorWidth()
+        self._plain_overwrite = editor.overwriteMode()
         # The undo steps vim knows, newest last: Qt's steps from the top of the
         # document's stack, and the few only vim has. Valid while _version() is still
         # _synced.
@@ -274,7 +275,7 @@ class VimMode(QObject):
             self._set_mode(Mode.NORMAL)
             self._on_cursor_moved()
         else:
-            self._update_cursor_width()
+            self._update_cursor()
 
     def detach(self) -> None:
         """Take vim off the editor for good."""
@@ -325,12 +326,12 @@ class VimMode(QObject):
                 self._saved_flags = None
             if self._mode is Mode.INSERT and self._read_only():
                 self._leave_insert()
-            self._update_cursor_width()
+            self._update_cursor()
         if kind in (QEvent.Type.FocusIn, QEvent.Type.FocusOut):
             self._caret.restart_blink()
         if kind == QEvent.Type.FontChange:
             # the editor lays out the text again first
-            QTimer.singleShot(0, self, self._update_cursor_width)
+            QTimer.singleShot(0, self, self._update_cursor)
         return False
 
     def _token(self, event: QKeyEvent) -> str | None:
@@ -452,7 +453,7 @@ class VimMode(QObject):
         cursor = self._editor.textCursor()
         cursor.setPosition(self._to_qt(lines, pos))
         self._editor.setTextCursor(cursor)
-        self._update_cursor_width()
+        self._update_cursor()
 
     def _put(self, lines: Lines, pos: Pos) -> None:
         """Go to pos, kept on a character of a line that exists, as Normal mode wants."""
@@ -602,7 +603,7 @@ class VimMode(QObject):
             if self._mouse_down:
                 self._adopt_selection(cursor)
             else:
-                self._update_cursor_width()
+                self._update_cursor()
             return
         lines = self._lines()
         pos = self._from_qt(lines, cursor.position())
@@ -610,32 +611,44 @@ class VimMode(QObject):
         if self._to_qt(lines, fixed) != cursor.position():
             self._go(lines, fixed)
         else:
-            self._update_cursor_width()
+            self._update_cursor()
 
-    def _update_cursor_width(self) -> None:
+    def _update_cursor(self) -> None:
         """A block cursor in Normal mode, the editor's own cursor in Insert mode. In
-        Visual mode the editor's cursor is hidden and the Caret draws vim's."""
+        Visual mode the editor's cursor is hidden and the Caret draws vim's.
+
+        Qt draws a wide cursor by inverting what's under it, so a dim character, like a
+        comment, stays dim on the block. In overwrite mode Qt draws the character in
+        the background colour on the block, as vim does, so overwrite mode is on
+        outside Insert mode. Typing doesn't change, since vim takes the keys there."""
         visual = self._enabled and self._mode in VISUAL_MODES and self._end is not None
         if self._enabled and self._mode is not Mode.INSERT:
             if not self._block_on:
                 self._plain_width = self._editor.cursorWidth()
+                self._plain_overwrite = self._editor.overwriteMode()
                 self._block_on = True
-            self._set_cursor_width(0 if visual else char_width(self._editor, self._position()))
+            width = 0 if visual else char_width(self._editor, self._position())
+            self._set_cursor(width, overwrite=True)
         elif self._block_on:
             self._block_on = False
-            self._set_cursor_width(self._plain_width)
+            self._set_cursor(self._plain_width, self._plain_overwrite)
         self._hide_editor_cursor(visual)
         # a read-only editor draws no cursor of its own
         no_cursor = not self._editor.textInteractionFlags() & DRAWS_CURSOR
         normal = self._enabled and self._mode is Mode.NORMAL and no_cursor
         self._caret.show_at(self._position() if visual or normal else None)
 
-    def _set_cursor_width(self, width: int) -> None:
-        """Qt repaints only the cursor's new area when its width changes, so the block
-        turning into Insert mode's line left the rest of the block on screen."""
-        if self._editor.cursorWidth() != width:
-            self._editor.viewport().update(self._editor.cursorRect())
-            self._editor.setCursorWidth(width)
+    def _set_cursor(self, width: int, overwrite: bool) -> None:
+        """Qt repaints only the cursor's new area when its width changes, and nothing
+        when overwrite mode changes, so the block turning into Insert mode's line left
+        the rest of the block on screen. Both areas are repainted here; the old one is
+        read first, since overwrite mode makes it wider."""
+        editor = self._editor
+        if (editor.cursorWidth(), editor.overwriteMode()) != (width, overwrite):
+            editor.viewport().update(editor.cursorRect())
+            editor.setOverwriteMode(overwrite)
+            editor.setCursorWidth(width)
+            editor.viewport().update(editor.cursorRect())
 
     def _hide_editor_cursor(self, hide: bool) -> None:
         """Width 0 doesn't hide the editor's cursor everywhere: on a screen scaled by a
@@ -815,7 +828,7 @@ class VimMode(QObject):
                 self._editor.setTextCursor(cursor)
             finally:
                 self._busy = False
-        self._update_cursor_width()
+        self._update_cursor()
 
     def _adopt_selection(self, cursor: QTextCursor) -> None:
         """Visual mode for a selection the mouse or the app made: the same characters,
@@ -847,7 +860,7 @@ class VimMode(QObject):
             and not self._mouse_down
         )
         if valid and self._qt_selection(self._lines()) == (cursor.anchor(), cursor.position()):
-            self._update_cursor_width()
+            self._update_cursor()
         elif cursor.hasSelection():
             self._adopt_selection(cursor)
         else:
@@ -1329,7 +1342,7 @@ class VimMode(QObject):
     def _set_mode(self, mode: Mode) -> None:
         changed = mode is not self._mode
         self._mode = mode
-        self._update_cursor_width()
+        self._update_cursor()
         if changed:
             self.mode_changed.emit(mode)
 

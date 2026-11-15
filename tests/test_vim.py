@@ -3,12 +3,22 @@
 Expected results marked "vim" were checked against vim 9.1 (`vim -u NONE`).
 """
 
+from collections import Counter
 from collections.abc import Iterator
 from math import ceil
 
 import pytest
-from PySide6.QtCore import QEvent, QPoint, Qt
-from PySide6.QtGui import QGuiApplication, QInputMethodEvent, QKeyEvent, QKeySequence
+from PySide6.QtCore import QEvent, QPoint, QSize, Qt
+from PySide6.QtGui import (
+    QColor,
+    QFont,
+    QGuiApplication,
+    QInputMethodEvent,
+    QKeyEvent,
+    QKeySequence,
+    QTextCharFormat,
+    QTextCursor,
+)
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QPlainTextEdit, QVBoxLayout, QWidget
 from qtkeys import cursor_of, put_cursor, send, start_vim, text_of, type_text
@@ -165,9 +175,12 @@ def test_normal_mode_never_types_joined_characters(editor: QPlainTextEdit, text:
 
 
 def test_insert_key_doesnt_turn_on_overwrite(editor: QPlainTextEdit) -> None:
+    """Normal mode keeps overwrite mode on for its block cursor, but typing in Insert
+    mode afterwards still inserts."""
     start_vim(editor, "abc")
-    send(editor, "<Insert>")
+    send(editor, "<Insert>iX")
     assert not editor.overwriteMode()
+    assert text_of(editor) == "Xabc"
 
 
 def commit(editor: QPlainTextEdit, text: str) -> None:
@@ -374,6 +387,75 @@ def test_block_cursor(editor: QPlainTextEdit) -> None:
 def test_block_cursor_on_an_empty_line(editor: QPlainTextEdit) -> None:
     start_vim(editor, "")
     assert editor.cursorWidth() == max(editor.fontMetrics().horizontalAdvance("x"), 1)
+
+
+def contrast(a: QColor, b: QColor) -> float:
+    """The WCAG contrast ratio of two colours, from 1 to 21."""
+
+    def luminance(c: QColor) -> float:
+        channels = [v / 255 for v in c.getRgb()[:3]]
+        linear = [v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4 for v in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    dark, light = sorted([luminance(a), luminance(b)])
+    return (light + 0.05) / (dark + 0.05)
+
+
+def test_block_cursor_draws_a_dim_character_readably(editor: QPlainTextEdit) -> None:
+    """Qt draws a wide cursor by inverting what's under it, so a dim character, like a
+    comment, stayed dim on the block. Vim's draws it in the background colour. Read
+    from the window's painted pixels: grab() paints again, and differently."""
+    font = QFont(editor.font())
+    font.setPointSize(28)  # strokes thick enough to have solid pixels
+    editor.setFont(font)
+    start_vim(editor, "W")
+    dim = QTextCharFormat()
+    dim.setForeground(QColor("#cccccc"))  # light grey on white, like a comment
+    whole = QTextCursor(editor.document())
+    whole.select(QTextCursor.SelectionType.Document)
+    whole.mergeCharFormat(dim)
+    editor.activateWindow()
+    editor.setFocus()
+    assert QTest.qWaitForWindowActive(editor)
+    editor.viewport().repaint()
+    rect = editor.cursorRect()
+    # the cursor's rect reaches one pixel past the block at the bottom
+    rect.setSize(QSize(editor.cursorWidth(), rect.height() - 1))
+    corner = editor.viewport().mapToGlobal(rect.topLeft())
+    pixmap = editor.screen().grabWindow(0, corner.x(), corner.y(), rect.width(), rect.height())
+    shot = pixmap.toImage()
+    pixels = [QColor(shot.pixel(x, y)) for x in range(shot.width()) for y in range(shot.height())]
+    block = Counter(c.rgb() for c in pixels).most_common(1)[0][0]
+    assert contrast(QColor(block), editor.palette().text().color()) < 1.1
+    assert max(contrast(QColor(block), c) for c in pixels) > 7
+
+
+def test_overwrite_mode_outside_insert_mode(editor: QPlainTextEdit) -> None:
+    """Overwrite mode is what draws the block cursor with its character; the editor's
+    own setting comes back in Insert mode and when vim is off."""
+    vim = start_vim(editor, "abc")
+    assert editor.overwriteMode()
+    send(editor, "i")
+    assert not editor.overwriteMode()
+    send(editor, "<Esc>v")
+    assert editor.overwriteMode()
+    send(editor, "<Esc>")
+    vim.set_enabled(False)
+    assert not editor.overwriteMode()
+    vim.set_enabled(True)
+    assert editor.overwriteMode()
+    vim.detach()
+    assert not editor.overwriteMode()
+
+
+def test_the_apps_own_overwrite_mode_comes_back(editor: QPlainTextEdit) -> None:
+    editor.setOverwriteMode(True)
+    vim = start_vim(editor, "abc")
+    send(editor, "i")
+    assert editor.overwriteMode()
+    send(editor, "<Esc>")
+    vim.detach()
+    assert editor.overwriteMode()
 
 
 def click(editor: QPlainTextEdit, line: int, x_offset: int) -> None:
