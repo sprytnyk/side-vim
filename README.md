@@ -14,9 +14,6 @@ installs PySide6-Essentials.
 uv add side-vim
 ```
 
-Version 0.1.0 is not on PyPI yet. Until then, run the demo from this checkout
-with `make run`.
-
 ## Usage
 
 ```python
