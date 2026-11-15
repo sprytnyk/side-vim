@@ -102,12 +102,15 @@ def key_token(event: QKeyEvent, mac: bool = IS_MAC) -> str | None:
     key = event.key()
     if key in MODIFIER_KEYS:
         return None
-    mods = event.modifiers() & ~(
-        Qt.KeyboardModifier.KeypadModifier | Qt.KeyboardModifier.GroupSwitchModifier
-    )
+    mods = event.modifiers()
     ctrl = control_modifier(mac)
     # Cmd on macOS, the Meta (Super) key elsewhere: always the app's
-    if mods & (Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.MetaModifier) & ~ctrl:
+    app_modifier = (
+        Qt.KeyboardModifier.MetaModifier
+        if ctrl == Qt.KeyboardModifier.ControlModifier
+        else Qt.KeyboardModifier.ControlModifier
+    )
+    if mods & app_modifier:
         return None
     shift = "S-" if mods & Qt.KeyboardModifier.ShiftModifier else ""
     alt = "A-" if mods & Qt.KeyboardModifier.AltModifier else ""

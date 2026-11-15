@@ -61,6 +61,24 @@ def token(
         (Qt.Key.Key_Insert, NONE, "", "<Insert>"),
         (Qt.Key.Key_X, Qt.KeyboardModifier.AltModifier, "x", "<A-x>"),
         (Qt.Key.Key_X, Qt.KeyboardModifier.MetaModifier, "x", None),  # the Super key
+        (
+            Qt.Key.Key_X,
+            Qt.KeyboardModifier.MetaModifier | Qt.KeyboardModifier.ControlModifier,
+            "\x18",
+            None,
+        ),
+        (
+            Qt.Key.Key_X,
+            Qt.KeyboardModifier.MetaModifier | Qt.KeyboardModifier.KeypadModifier,
+            "x",
+            None,
+        ),
+        (
+            Qt.Key.Key_X,
+            Qt.KeyboardModifier.MetaModifier | Qt.KeyboardModifier.GroupSwitchModifier,
+            "x",
+            None,
+        ),
         (Qt.Key.Key_PageDown, NONE, "", None),
         (Qt.Key.Key_F1, NONE, "", None),
         (Qt.Key.Key_Shift, Qt.KeyboardModifier.ShiftModifier, "", None),
@@ -88,6 +106,12 @@ def test_linux_and_windows(
         (Qt.Key.Key_R, Qt.KeyboardModifier.MetaModifier, "\x12", "<C-r>"),
         (Qt.Key.Key_R, Qt.KeyboardModifier.ControlModifier, "r", None),
         (Qt.Key.Key_V, Qt.KeyboardModifier.ControlModifier, "v", None),
+        (
+            Qt.Key.Key_X,
+            Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.MetaModifier,
+            "\x18",
+            None,
+        ),
         (Qt.Key.Key_BracketLeft, Qt.KeyboardModifier.MetaModifier, "\x1b", ESC),
         (Qt.Key.Key_BracketLeft, Qt.KeyboardModifier.ControlModifier, "[", None),
         (Qt.Key.Key_Escape, NONE, "\x1b", ESC),
