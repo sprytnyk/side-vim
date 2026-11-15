@@ -390,10 +390,13 @@ def test_the_app_can_go_back_to_normal_mode(editor: QPlainTextEdit) -> None:
 def test_switching_documents_in_insert_mode(
     editor: QPlainTextEdit, shared: bool, finish: str
 ) -> None:
+    if shared:
+        # A tabbed app owns its shared documents independently of the editor.
+        document = QTextDocument()
+        document.setDocumentLayout(QPlainTextDocumentLayout(document))
+        editor.setDocument(document)
     vim = start_vim(editor, "old")
     previous = editor.document()
-    if shared:
-        previous.setParent(None)  # an app with tabs keeps its documents alive
     send(editor, "3ix")
     replacement = QTextDocument(editor)
     replacement.setDocumentLayout(QPlainTextDocumentLayout(replacement))
