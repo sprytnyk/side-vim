@@ -1,5 +1,11 @@
 # side-vim
 
+[![PyPI](https://img.shields.io/pypi/v/side-vim)](https://pypi.org/project/side-vim/)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](#install)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![Made in Ukraine](https://img.shields.io/badge/made_in-Ukraine-ffd700.svg?labelColor=0057b7)
+[![Linux test coverage](https://codecov.io/gh/sprytnyk/side-vim/branch/main/graph/badge.svg)](https://codecov.io/gh/sprytnyk/side-vim)
+
 A Vim mode for PySide6's `QPlainTextEdit`. Attach it to an existing editor to add
 Normal, Insert, Visual and Visual Line modes.
 
@@ -187,6 +193,9 @@ and 3.14, and the lowest allowed PySide6 on Python 3.12.
 The tests replay saved [Vim cases](https://github.com/sprytnyk/side-vim/tree/main/tests/cases),
 so CI doesn't need Vim. Recording them needs Vim, and the scrolling cases need a
 Unix terminal.
+
+On each push to `main`, GitHub Actions runs the Linux test suite and updates the
+coverage badge. The test log lists the 15 slowest setup, test or cleanup steps.
 
 On a Mac, `make mac-keys` opens the demo and presses keys through macOS. It checks
 Ctrl and Cmd keys, search, read-only mode and the Ukrainian layout, and prints PASS

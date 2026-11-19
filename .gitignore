@@ -14,6 +14,8 @@ dist/
 venv/
 .ruff_cache/
 .pytest_cache/
+/.coverage
+/coverage.lcov
 
 # IDE
 .vscode/
