@@ -6,6 +6,7 @@ Nothing may crash, the cursor must stay in the text, and no operator may cut a
 character in half.
 """
 
+import functools
 import random
 
 import pytest
@@ -33,7 +34,14 @@ def random_lines(rng: random.Random) -> list[tuple[str, ...]]:
 
 def whole(text: str) -> bool:
     """True if Qt splits the text into characters that are all from CHARS."""
-    return all(set(split_clusters(line)) <= set(CHARS) for line in text.split("\n"))
+    return all(whole_line(line) for line in text.split("\n"))
+
+
+@functools.cache
+def whole_line(line: str) -> bool:
+    """whole() for one line. The fuzz tests check the same short lines over and over,
+    and splitting them again each time was most of their run time."""
+    return set(split_clusters(line)) <= set(CHARS)
 
 
 def delete(lines: list[tuple[str, ...]], start: Pos, end: Pos, linewise: bool) -> str:
