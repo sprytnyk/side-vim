@@ -31,7 +31,8 @@ jobs:
             -r .github/coverage-requirements.txt
       - name: Run tests and measure coverage
         run: |
-          uv run --no-sync coverage run --branch --source=side_vim -m pytest --durations=15
+          # -n0: coverage only measures this process, not pytest-xdist's workers
+          uv run --no-sync coverage run --branch --source=side_vim -m pytest -n0 --durations=15
           uv run --no-sync coverage lcov
       - name: Upload coverage to Codecov
         if: github.repository == 'sprytnyk/side-vim'

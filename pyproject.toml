@@ -17,6 +17,7 @@ dev = [
     "pytest>=8",
     "ruff>=0.8",
     "pip-audit>=2.7",
+    "pytest-xdist>=3.6",
 ]
 
 [build-system]
@@ -36,3 +37,5 @@ select = ["E", "F", "W", "I", "B", "UP", "SIM"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# one worker per CPU (pytest-xdist); add -n0 to run in one process
+addopts = "-n auto"
