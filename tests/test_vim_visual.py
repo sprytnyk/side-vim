@@ -438,7 +438,7 @@ def caret_pixels(editor: QPlainTextEdit, vim: VimMode) -> set[str]:
     caret = vim._caret
     seen = set()
     for _ in range(6):
-        QTest.qWait(60)
+        QTest.qWait(30)
         image = editor.viewport().grab().toImage()
         seen.add(image.pixelColor(caret.geometry().center()).name())
     return seen
@@ -448,7 +448,7 @@ def caret_pixels(editor: QPlainTextEdit, vim: VimMode) -> set[str]:
 def fast_blink(qapp: QApplication) -> Iterator[None]:
     hints = QGuiApplication.styleHints()
     flash = hints.cursorFlashTime()
-    hints.setCursorFlashTime(160)
+    hints.setCursorFlashTime(80)
     yield
     hints.setCursorFlashTime(flash)
 
@@ -472,6 +472,8 @@ from PySide6.QtWidgets import QApplication, QPlainTextEdit
 from side_vim import VimMode
 
 app = QApplication([])
+# blink 5 times faster than the default; 8 looks still see two blinks
+app.styleHints().setCursorFlashTime(200)
 editor = QPlainTextEdit()
 editor.resize(400, 200)
 editor.show()
@@ -486,7 +488,7 @@ rect = editor.cursorRect(cursor)
 ratio = editor.devicePixelRatioF()
 seen = set()
 for _ in range(8):
-    QTest.qWait(150)
+    QTest.qWait(30)
     image = editor.viewport().grab().toImage()
     x = round(rect.x() * ratio)
     column = tuple(
