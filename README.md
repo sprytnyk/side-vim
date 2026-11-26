@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 ![Made in Ukraine](https://img.shields.io/badge/made_in-Ukraine-ffd700.svg?labelColor=0057b7)
 [![Linux test coverage](https://codecov.io/gh/sprytnyk/side-vim/branch/main/graph/badge.svg)](https://codecov.io/gh/sprytnyk/side-vim)
-![AI Generated](https://img.shields.io/badge/AI-generated-orange)
+![AI-assisted](https://img.shields.io/badge/AI-assisted-orange)
 
 A Vim mode for PySide6's `QPlainTextEdit`. Attach it to an existing editor to add
 Normal, Insert, Visual and Visual Line modes.
